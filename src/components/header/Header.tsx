@@ -10,7 +10,7 @@ interface MetricProps extends StackProps {
 function Metric(props: MetricProps) {
     const { icon, children, ...rest } = props;
     return (
-        <HStack {...rest}>
+        <HStack {...rest} spacing='6px'>
             <Icon as={icon} w={3} h={3} />
             <Text color='rgba(45, 177, 0, 1)' fontFamily='Inter' fontSize={12} fontWeight='600'>
                 {children}
@@ -27,12 +27,13 @@ export function Header() {
                     spacing={0}
                     paddingTop={{ base: '11px', md: '11px', lg: '16px' }}
                     paddingX='16px'
+                    justifyContent='space-between'
                 >
-                    <HStack spacing='18.9vw'>
-                        <Box>
-                            <Icon as={Logo} w={8} h={8} />
-                        </Box>
-                        <HStack px={2} spacing={0}>
+                    <Box>
+                        <Icon as={Logo} w={8} h={8} />
+                    </Box>
+                    <HStack spacing={0} textAlign='right'>
+                        <HStack spacing={0}>
                             <Box w={14} h={6}>
                                 <Metric icon={FavouriteNotes}>185</Metric>
                             </Box>
@@ -43,10 +44,10 @@ export function Header() {
                                 <Metric icon={Likes}>587</Metric>
                             </Box>
                         </HStack>
+                        <Box w={12} h={12} pt='10px' pr='12px'>
+                            <Icon as={Burger} w={6} h={6} />
+                        </Box>
                     </HStack>
-                    <Box w={12} h={12} pt='10px' pr='14px'>
-                        <Icon as={Burger} w={6} h={6} />
-                    </Box>
                 </HStack>
             </Box>
         </>
