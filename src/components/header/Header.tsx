@@ -36,10 +36,12 @@ export function Header() {
         <>
             <Box as='header' bg='rgba(255, 255, 211, 1)'>
                 <HStack
-                    spacing={{ base: 0, xl: '128px' }}
-                    paddingTop={{ base: '11px', md: '11px', lg: '16px' }}
-                    paddingBottom={{ lg: '12px' }}
-                    paddingX={{ base: '16px', md: '20px' }}
+                    spacing={{ base: 0, xl: '7.9rem' }}
+                    paddingTop={{ base: '11px', md: '11px', xl: '16px' }}
+                    paddingBottom={{ xl: '12px' }}
+                    paddingX={{ base: '16px', md: '20px', xl: '20px' }}
+                    marginRight={{ xl: '56px' }}
+                    paddingRight={{ xl: '0px' }}
                     justifyContent={{ base: 'space-between', xl: 'normal' }}
                 >
                     <Box>
@@ -95,28 +97,17 @@ export function Header() {
                             w={{ base: '48px', xl: '432px' }}
                             h={12}
                             pt={{ base: '9px', xl: '0px' }}
-                            pr='12px'
+                            pr={{ base: '12px', xl: '0px' }}
                         >
                             <Hide above='xl'>
                                 <Icon as={Burger} w={6} h={6} />
                             </Hide>
                             <Show above='xl'>
-                                <Card
-                                    shadow='none'
-                                    w='432px'
-                                    pl={{ '2xl': '28px' }}
-                                    bg='transparent'
-                                >
+                                <Card shadow='none' w='432px' bg='transparent'>
                                     <CardHeader p={0} bg='rgba(255, 255, 211, 1)'>
-                                        <HStack
-                                            justifyContent='flex-start'
-                                            px={{
-                                                xl: '19.8px',
-                                                '2xl': 'clamp(19.8px, 1.25vw, 24px)',
-                                            }}
-                                            spacing='11px'
-                                        >
+                                        <HStack justifyContent='flex-start' spacing='12px'>
                                             <Avatar
+                                                ml='56px'
                                                 p={0}
                                                 name='Екатерина Константинопольская'
                                                 src='./avatar.jpg'
@@ -125,11 +116,12 @@ export function Header() {
                                             <Box>
                                                 <VStack spacing={0} alignItems='flex-start'>
                                                     <Heading
-                                                        fontSize='17.8px'
+                                                        fontSize='17.7px'
                                                         fontWeight='500'
                                                         lineHeight='28px'
                                                         fontFamily='Inter'
                                                         letterSpacing='0%'
+                                                        pt='0.5px'
                                                     >
                                                         Екатерина Константинопольская
                                                     </Heading>
@@ -137,7 +129,8 @@ export function Header() {
                                                         color='rgba(0, 0, 0, 0.64)'
                                                         lineHeight='20px'
                                                         fontFamily='Inter'
-                                                        fontSize='13.8px'
+                                                        fontSize='13.6px'
+                                                        mt='-1px'
                                                     >
                                                         @bake_and_pie
                                                     </Text>
