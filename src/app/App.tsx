@@ -2,7 +2,7 @@ import './App.css';
 
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
 
-import Header from '~/components/header/Header';
+import { Header } from '~/components/header/Header';
 
 function App() {
     return (

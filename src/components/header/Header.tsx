@@ -1,70 +1,54 @@
-import { Box, Flex } from '@chakra-ui/react';
-import { Image } from '@chakra-ui/react';
+import { Box, HStack, Icon, StackProps } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
+import { ElementType } from 'react';
 
-function Header() {
+import { Burger, FavouriteNotes, Likes, Logo, Subscribers } from '~/icons/Icon';
+
+interface MetricProps extends StackProps {
+    icon: ElementType;
+}
+function Metric(props: MetricProps) {
+    const { icon, children, ...rest } = props;
+    return (
+        <HStack {...rest}>
+            <Icon as={icon} w={3} h={3} />
+            <Text color='rgba(45, 177, 0, 1)' fontFamily='Inter' fontSize={12} fontWeight='600'>
+                {children}
+            </Text>
+        </HStack>
+    );
+}
+
+export function Header() {
     return (
         <>
-            <Box as='header' bg='rgba(255, 255, 211, 1)' w='360px' h='64px'>
-                <Flex h='100%' w='100%' flexWrap='wrap'>
-                    <Box w='16px' h='8px'></Box>
-                    <Box w='32px' h='32px' mt='16px'>
-                        <Image src='/logo.svg'></Image>
-                    </Box>
-                    <Box w='8px' h='4px'></Box>
-                    <Box w='53px' h='24px'></Box>
-                    <Box w='187px' h='24px' mt='23px'>
-                        <Flex justifyContent='flex-end'>
-                            <Box w='56px' h='24px'>
-                                <Flex gap='6px'>
-                                    <Image src='/left-icon.svg'></Image>
-                                    <Text
-                                        fontFamily='Inter'
-                                        fontWeight='600'
-                                        fontSize='12px'
-                                        color='rgba(45, 177, 0, 1)'
-                                    >
-                                        185
-                                    </Text>
-                                </Flex>
+            <Box as='header' bg='rgba(255, 255, 211, 1)'>
+                <HStack
+                    spacing={0}
+                    paddingTop={{ base: '11px', md: '11px', lg: '16px' }}
+                    paddingX='16px'
+                >
+                    <HStack spacing='18.9vw'>
+                        <Box>
+                            <Icon as={Logo} w={8} h={8} />
+                        </Box>
+                        <HStack px={2} spacing={0}>
+                            <Box w={14} h={6}>
+                                <Metric icon={FavouriteNotes}>185</Metric>
                             </Box>
-                            <Box w='58px' h='24px'>
-                                <Flex gap='6px'>
-                                    <Image src='/center-icon.svg'></Image>
-                                    <Text
-                                        fontFamily='Inter'
-                                        fontWeight='600'
-                                        fontSize='12px'
-                                        color='rgba(45, 177, 0, 1)'
-                                    >
-                                        589
-                                    </Text>
-                                </Flex>
+                            <Box w='58px' h={6}>
+                                <Metric icon={Subscribers}>589</Metric>
                             </Box>
-                            <Box w='57px' h='24px'>
-                                <Flex gap='6px'>
-                                    <Image src='/right-icon.svg'></Image>
-                                    <Text
-                                        fontFamily='Inter'
-                                        fontWeight='600'
-                                        fontSize='12px'
-                                        color='rgba(45, 177, 0, 1)'
-                                    >
-                                        587
-                                    </Text>
-                                </Flex>
+                            <Box w='57px' h={6}>
+                                <Metric icon={Likes}>587</Metric>
                             </Box>
-                        </Flex>
+                        </HStack>
+                    </HStack>
+                    <Box w={12} h={12} pt='10px' pr='14px'>
+                        <Icon as={Burger} w={6} h={6} />
                     </Box>
-                    <Box w='48px' h='48px' mt='8px'>
-                        <Image src='Icon-Button.svg'></Image>
-                    </Box>
-                    ``
-                    <Box w='16px' h='8px'></Box>
-                </Flex>
+                </HStack>
             </Box>
         </>
     );
 }
-
-export default Header;
