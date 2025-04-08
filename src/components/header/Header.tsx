@@ -19,7 +19,7 @@ import { Metrics } from '../metrics/Metrics';
 export function Header() {
     return (
         <>
-            <Box as='header' bg='rgba(255, 255, 211, 1)'>
+            <Box as='header' bg='rgba(255, 255, 211, 1)' data-test-id='header' w='100%'>
                 <HStack
                     spacing={{ base: 0, xl: '7.9rem' }}
                     paddingTop={{ base: '11px', md: '11px', xl: '16px' }}
@@ -60,7 +60,7 @@ export function Header() {
                             </Hide>
                             <Show above='xl'>
                                 <Heading
-                                    fontSize={15.75}
+                                    fontSize={16}
                                     lineHeight={6}
                                     fontWeight='400'
                                     padding={0}
@@ -93,7 +93,7 @@ export function Header() {
                                             <Box>
                                                 <VStack spacing={0} alignItems='flex-start'>
                                                     <Heading
-                                                        fontSize='17.7px'
+                                                        fontSize='18.2px'
                                                         fontWeight='500'
                                                         lineHeight='28px'
                                                         fontFamily='Inter'
@@ -106,7 +106,7 @@ export function Header() {
                                                         color='rgba(0, 0, 0, 0.64)'
                                                         lineHeight='20px'
                                                         fontFamily='Inter'
-                                                        fontSize='13.6px'
+                                                        fontSize='14px'
                                                         mt='-1px'
                                                     >
                                                         @bake_and_pie

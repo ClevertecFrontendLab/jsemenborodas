@@ -3,6 +3,7 @@ import './App.css';
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
 
 import { Header } from '~/components/header/Header';
+import { Main } from '~/components/main/Main';
 
 function App() {
     return (
@@ -12,7 +13,9 @@ function App() {
                     <GridItem>
                         <Header></Header>
                     </GridItem>
-                    <GridItem>Main</GridItem>
+                    <GridItem>
+                        <Main></Main>
+                    </GridItem>
                     <GridItem>Footer</GridItem>
                 </Grid>
             </ChakraProvider>
