@@ -1,16 +1,12 @@
 import './App.css';
 
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
-import { extendTheme } from '@chakra-ui/react';
 
 import { Header } from '~/components/header/Header';
 import { Main } from '~/components/main/Main';
 
-import { switchTheme } from '../components/searchForm/CustomSwitchTheme';
+import { theme } from '../components/theme/theme';
 
-export const theme = extendTheme({
-    components: { Switch: switchTheme },
-});
 function App() {
     return (
         <>
