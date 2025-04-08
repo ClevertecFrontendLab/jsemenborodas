@@ -35,7 +35,7 @@ export const NewRecipeData = [
     },
     {
         id: 4,
-        title: 'Оладьи на кефире "Пышные"',
+        title: `Оладьи на кефире "Пышныe"`,
         image: thirdDelicious,
         follows: 0,
         likes: 1,

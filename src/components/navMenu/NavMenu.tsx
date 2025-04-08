@@ -17,7 +17,7 @@ import { NavMenuData } from './NavMenuData';
 export function NavMenu() {
     return (
         <>
-            <Box position='fixed'>
+            <Box position='fixed' zIndex='200'>
                 <VStack
                     h='calc(100vh - 80px)'
                     w='256px'
@@ -52,8 +52,9 @@ export function NavMenu() {
                             <AccordionItem key={item.id} border='none'>
                                 <AccordionButton
                                     py={0}
-                                    pr={0}
-                                    pl={5}
+                                    px={0}
+                                    pr={2}
+                                    ml={5}
                                     w='230px'
                                     _expanded={{ bg: '#EAFFC7' }}
                                 >
@@ -85,7 +86,6 @@ export function NavMenu() {
                                                 pl='52px'
                                             >
                                                 <Heading
-                                                    borderLeft='1px solid black'
                                                     as='h5'
                                                     fontSize='16px'
                                                     fontWeight='500'

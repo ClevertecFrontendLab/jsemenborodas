@@ -25,7 +25,7 @@ export function Header() {
                 data-test-id='header'
                 w='100%'
                 position='fixed'
-                maxW='1920px'
+                maxW={{ base: '1920px', sm: '100vw', xl: '1920px' }}
                 zIndex='200'
                 pb='2px'
             >
@@ -33,7 +33,7 @@ export function Header() {
                     spacing={{ base: 0, xl: '7.9rem' }}
                     paddingTop={{ base: '11px', md: '10px', xl: '16px' }}
                     paddingBottom={{ xl: '16px' }}
-                    paddingX={{ base: '16px', md: '40px', xl: '20px' }}
+                    paddingX={{ base: '16px', md: '20px', xl: '20px' }}
                     marginRight={{ xl: '56px' }}
                     paddingRight={{ xl: '0px' }}
                     justifyContent={{ base: 'space-between', xl: 'normal' }}
@@ -93,7 +93,7 @@ export function Header() {
                                     <CardHeader p={0} bg='rgba(255, 255, 211, 1)'>
                                         <HStack justifyContent='flex-start' spacing='12px'>
                                             <Avatar
-                                                ml='53px'
+                                                ml={{ xl: '53px', '2xl': '55px' }}
                                                 p={0}
                                                 name='Екатерина Константинопольская'
                                                 src='./avatar.jpg'
