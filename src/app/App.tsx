@@ -6,7 +6,6 @@ import { Header } from '~/components/header/Header';
 import { Main } from '~/components/main/Main';
 
 import { theme } from '../components/theme/theme';
-
 function App() {
     return (
         <>
