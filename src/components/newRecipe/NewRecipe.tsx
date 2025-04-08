@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 
-import { NewRecipeData } from './newRecipeData';
+import { NewRecipeData } from './NewRecipeData';
 
 export function NewRecipe() {
     return (
