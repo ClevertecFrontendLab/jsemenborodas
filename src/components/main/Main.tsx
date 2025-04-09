@@ -1,5 +1,6 @@
 import { Box, HStack, Show, VStack } from '@chakra-ui/react';
 
+import { CookBlog } from '../cookBlog/cookBlog';
 import { Juciest } from '../juciest/Juciest';
 import { MetricsDesktop } from '../metrics/MetricsDesktop';
 import { NavMenu } from '../navMenu/NavMenu';
@@ -15,6 +16,7 @@ export function Main() {
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
+                overflow='hidden'
             >
                 <Show above='xl'>
                     <Box w='300px' as='nav' bg='red300'>
@@ -45,7 +47,9 @@ export function Main() {
                             <Box as='section'>
                                 <Juciest></Juciest>
                             </Box>
-                            <Box as='section'></Box>
+                            <Box as='section'>
+                                <CookBlog></CookBlog>
+                            </Box>
                             <Box as='section'></Box>
                         </Box>
                     </VStack>
