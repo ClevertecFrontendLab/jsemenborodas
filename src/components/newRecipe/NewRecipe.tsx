@@ -1,36 +1,11 @@
-import {
-    Box,
-    Button,
-    Heading,
-    Hide,
-    HStack,
-    Icon,
-    Show,
-    StackProps,
-    VStack,
-} from '@chakra-ui/react';
+import { Box, Button, Heading, Hide, HStack, Icon, Show, VStack } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
-import { ElementType } from 'react';
 
 import { FavouriteNotes, leftArrow, Likes, rightArrow } from '~/icons/Icon';
 
+import { MetricsDefault } from '../metrics/MetricsDefault';
 import { NewRecipeData } from './NewRecipeData';
-
-interface MetricProps extends StackProps {
-    icon: ElementType;
-}
-function Metric(props: MetricProps) {
-    const { icon, children, ...rest } = props;
-    return (
-        <HStack {...rest} spacing='6px'>
-            <Icon as={icon} w={3} h={3} />
-            <Text color='rgba(45, 177, 0, 1)' fontFamily='Inter' fontSize={12} fontWeight='600'>
-                {children}
-            </Text>
-        </HStack>
-    );
-}
 
 export function NewRecipe() {
     return (
@@ -122,6 +97,7 @@ export function NewRecipe() {
                                     h='100%'
                                     borderTopRadius='8px'
                                 ></Image>
+
                                 <Hide above='xl'>
                                     <HStack
                                         w='fit-content'
@@ -167,6 +143,7 @@ export function NewRecipe() {
                                 >
                                     {recipe.title}
                                 </Heading>
+
                                 <Show above='xl'>
                                     <Text
                                         w={{ xl: '270px', '2xl': '280px' }}
@@ -216,16 +193,16 @@ export function NewRecipe() {
                                             mr={{ xl: '9px', '2xl': '-1px' }}
                                         >
                                             {recipe.follows > 0 && (
-                                                <Metric
+                                                <MetricsDefault
                                                     w={{ xl: '32px' }}
                                                     icon={FavouriteNotes}
-                                                >{`${recipe.follows}`}</Metric>
+                                                >{`${recipe.follows}`}</MetricsDefault>
                                             )}
                                             {recipe.likes > 0 && (
-                                                <Metric
+                                                <MetricsDefault
                                                     w={{ xl: '32px' }}
                                                     icon={Likes}
-                                                >{`${recipe.likes}`}</Metric>
+                                                >{`${recipe.likes}`}</MetricsDefault>
                                             )}
                                         </HStack>
                                     </HStack>

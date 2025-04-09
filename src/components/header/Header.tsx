@@ -25,8 +25,9 @@ export function Header() {
                 data-test-id='header'
                 w='100%'
                 position='fixed'
+                top='0'
                 maxW={{ base: '1920px', sm: '100vw', xl: '1920px' }}
-                zIndex='200'
+                zIndex='1200'
                 pb='2px'
             >
                 <HStack

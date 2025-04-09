@@ -1,5 +1,6 @@
 import { Box, HStack, Show, VStack } from '@chakra-ui/react';
 
+import { Juciest } from '../juciest/Juciest';
 import { MetricsDesktop } from '../metrics/MetricsDesktop';
 import { NavMenu } from '../navMenu/NavMenu';
 import { NewRecipe } from '../newRecipe/NewRecipe';
@@ -41,7 +42,9 @@ export function Main() {
                             <Box as='section'>
                                 <NewRecipe></NewRecipe>
                             </Box>
-                            <Box as='section'></Box>
+                            <Box as='section'>
+                                <Juciest></Juciest>
+                            </Box>
                             <Box as='section'></Box>
                             <Box as='section'></Box>
                         </Box>
