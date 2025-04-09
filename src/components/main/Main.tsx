@@ -37,7 +37,7 @@ export function Main() {
                         <Box as='section' px={{ base: '0px', md: '0px', xl: '0' }}>
                             <SearchForm2></SearchForm2>
                         </Box>
-                        <Box w={{ xl: '100%' }}>
+                        <Box w={{ xl: '100%' }} maxW={{ xl: '1360px' }}>
                             <Box as='section'>
                                 <NewRecipe></NewRecipe>
                             </Box>

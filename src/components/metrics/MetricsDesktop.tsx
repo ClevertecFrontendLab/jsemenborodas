@@ -27,7 +27,7 @@ function Metric(props: MetricProps) {
 export function MetricsDesktop() {
     return (
         <>
-            <Box position='absolute' right='35px' top='25px'>
+            <Box position='absolute' right='35px' top={{ xl: '25px', '2xl': '25px' }}>
                 <Box w='85px' h={10} mb='23px'>
                     <Metric icon={FavouriteNotes}>185</Metric>
                 </Box>

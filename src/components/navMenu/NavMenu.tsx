@@ -22,7 +22,7 @@ export function NavMenu() {
                     h='calc(100vh - 80px)'
                     w='256px'
                     boxShadow='0px 1px 3px 0px #0000001F'
-                    pt='34px'
+                    pt={{ xl: '34px', '2xl': '34px' }}
                 >
                     <Accordion
                         w='256px'

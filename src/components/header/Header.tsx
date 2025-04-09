@@ -31,7 +31,7 @@ export function Header() {
             >
                 <HStack
                     spacing={{ base: 0, xl: '7.9rem' }}
-                    paddingTop={{ base: '11px', md: '10px', xl: '16px' }}
+                    paddingTop={{ base: '11px', md: '10px', xl: '16px', '2xl': '16px' }}
                     paddingBottom={{ xl: '16px' }}
                     paddingX={{ base: '16px', md: '20px', xl: '20px' }}
                     marginRight={{ xl: '56px' }}

@@ -19,7 +19,7 @@ export function SearchForm2() {
     return (
         <>
             <Box
-                mt={{ base: '17px', xl: '32px' }}
+                mt={{ base: '17px', xl: '32px', '2xl': '32px' }}
                 ml={{ xl: '5px' }}
                 w={{
                     base: 'calc(328px + (727 - 328) * ((100vw - 360px) / (768 - 360)))',
