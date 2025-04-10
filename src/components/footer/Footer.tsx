@@ -12,7 +12,7 @@ export function Footer() {
             <Hide above='xl'>
                 <HStack w='100%' h='84px' spacing={0} bg='#FFFFD3' mt='16px'>
                     <Button
-                        bg='radial-gradient(circle, #C4FF61 0%, #FFFFD3 100%)'
+                        bg='radial-gradient(circle, #C4FF61 0%, #FFFFD3 40%)'
                         w='25%'
                         h='100%'
                         pt={{ base: '14px', md: '12px' }}

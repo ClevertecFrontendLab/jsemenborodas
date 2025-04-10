@@ -1,5 +1,6 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 
+import { AddRecipe } from '../addRecipe/AddRecipe';
 import { CookBlog } from '../cookBlog/cookBlog';
 import { Juciest } from '../juciest/Juciest';
 import { MetricsDesktop } from '../metrics/MetricsDesktop';
@@ -70,6 +71,9 @@ export function Main() {
                         <Show above='xl'>
                             <Box minW='208px' pl='48px' pt='22px' position='fixed'>
                                 <MetricsDesktop />
+                            </Box>
+                            <Box minW='208px' position='fixed' bottom='-12px' pl='3px'>
+                                <AddRecipe></AddRecipe>
                             </Box>
                         </Show>
                     </GridItem>

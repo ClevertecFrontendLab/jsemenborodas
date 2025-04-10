@@ -25,7 +25,7 @@ export function Juciest() {
         <>
             <Box
                 px={{ base: '16px', md: '0px', xl: '0px' }}
-                mt={{ base: '9px', xl: '60px', '3xl': '109px' }}
+                mt={{ base: '34px', xl: '34px', '3xl': '28px' }}
                 ml={{ xl: '3.2px' }}
                 minW={{ xl: '880px', '3xl': '100%' }}
             >

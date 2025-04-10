@@ -25,6 +25,7 @@ export function NewRecipe() {
                 pr={{ base: '0' }}
                 ml={{ xl: '3.2px' }}
                 my={{ base: '25px', xl: '14px', '2xl': '0px' }}
+                mb={{ xl: '40px', '2xl': '80px' }}
             >
                 <Show above='xl'>
                     <Box
