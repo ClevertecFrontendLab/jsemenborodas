@@ -17,6 +17,7 @@ export function NewRecipe() {
                     md: 'calc(880px + (1440px - 880px) * ((100vw - 880px) / (1440 - 880)))',
                     xl: '1360px',
                 }}
+                minW={{ xl: '880px' }}
                 w={{ xl: '100%' }}
                 h={{ xl: '466px' }}
                 position='relative'

@@ -25,28 +25,28 @@ export function Juciest() {
         <>
             <Box
                 px={{ base: '16px', md: '0px', xl: '0px' }}
-                mt={{ base: '34px', xl: '75px', '2xl': '109px' }}
+                mt={{ base: '9px', xl: '60px', '3xl': '109px' }}
                 ml={{ xl: '3.2px' }}
-                minW={{ xl: '880px' }}
+                minW={{ xl: '880px', '3xl': '100%' }}
             >
                 <HStack justifyContent='space-between'>
                     <Heading
-                        fontSize={{ base: '24px', xl: '36px', '2xl': '48px' }}
+                        fontSize={{ base: '24px', xl: '36px', '3xl': '48px' }}
                         fontFamily='Inter'
                         fontWeight='500'
-                        lineHeight={{ base: '32px', xl: '40px', '2xl': '48px' }}
-                        letterSpacing={{ base: '0.4px', '2xl': '1.6px' }}
+                        lineHeight={{ base: '32px', xl: '40px', '3xl': '48px' }}
+                        letterSpacing={{ base: '0.4px', xl: '1px', '3xl': '1.6px' }}
                         textAlign='left'
                     >
                         Самое сочное
                     </Heading>
                     <Show above='xl'>
                         <Button
-                            w={{ xl: '167px', '2xl': '197px' }}
-                            h={{ xl: '40px', '2xl': '48px' }}
+                            w={{ xl: '167px', '3xl': '197px' }}
+                            h={{ xl: '40px', '3xl': '48px' }}
                             paddingX={{ xl: '16.5px' }}
-                            pt={{ xl: '1px', '2xl': '4.5px' }}
-                            pl={{ base: '15px', '2xl': '20px' }}
+                            pt={{ xl: '1px', '3xl': '4.5px' }}
+                            pl={{ base: '15px', '3xl': '20px' }}
                             bg='#B1FF2E'
                             mt={{ md: '-2px' }}
                             borderRadius='6px'
@@ -56,8 +56,8 @@ export function Juciest() {
                                     fontWeight={600}
                                     fontFamily='Inter'
                                     lineHeight='24px'
-                                    letterSpacing={{ '2xl': '0.2px' }}
-                                    fontSize={{ base: '16px', '2xl': '18px' }}
+                                    letterSpacing={{ '3xl': '0.2px' }}
+                                    fontSize={{ base: '16px', '3xl': '18px' }}
                                 >
                                     Вся подборка
                                 </Text>
@@ -70,33 +70,35 @@ export function Juciest() {
                 <Grid
                     border='none'
                     borderColor='transparent'
-                    mt={{ base: '11px', xl: '16px', '2xl': '24px' }}
+                    mt={{ base: '11px', xl: '16px', '3xl': '24px' }}
                     templateColumns={{
                         md: 'repeat(2, 1fr)',
                         xl: 'repeat(1,1fr)',
-                        '2xl': 'repeat(2,1fr)',
+                        '3xl': 'repeat(2,50%)',
                     }}
-                    gap={{ base: '12px', md: '16px', '2xl': '24px' }}
+                    gap={{ base: '12px', md: '16px', '3xl': '12px' }}
+                    columnGap={{ '3xl': '12px' }}
+                    rowGap={{ '3xl': '24px' }}
                 >
                     {JuciestData.map((recipe) => (
                         <GridItem>
                             <Card
                                 borderRadius={8}
-                                w={{ base: '100%', md: '100%', xl: '100%', '2xl': '50%' }}
-                                maxW={{ '2xl': '668px' }}
+                                w={{ base: '100%', md: '100%', xl: '100%', '3xl': '100%' }}
+                                maxW={{ '3xl': '668px' }}
                                 h={{ base: '128px', xl: '244px' }}
                             >
                                 <CardBody p={0} w='100%' h='100%' borderLeftRadius={8}>
                                     <HStack
                                         p={0}
-                                        w={{ base: '100%' }}
+                                        w={{ base: '100%', xl: '50%', '3xl': '51.8%' }}
                                         h='100%'
                                         spacing={0}
                                         borderLeftRadius={8}
                                     >
                                         <Box
-                                            w={{ base: '158px', xl: '346px' }}
-                                            minW={{ xl: '346px' }}
+                                            w={{ base: '158px', xl: '78.5%', '3xl': '100%' }}
+                                            minW={{ xl: '78.5%', '3xl': '100%' }}
                                             h='100%'
                                             borderLeftRadius={8}
                                         >
@@ -165,30 +167,36 @@ export function Juciest() {
                                             </Hide>
                                         </Box>
                                         <Box
-                                            w={{ base: 'calc(100% - 158px)', '2xl': '100%' }}
+                                            w={{
+                                                base: 'calc(100% - 158px)',
+                                                xl: '125%',
+                                            }}
                                             h={{ xl: '100%' }}
+                                            pl={{ xl: '24px', '3xl': 0 }}
                                         >
                                             <VStack
                                                 spacing={0}
-                                                mt={{ base: '4px' }}
+                                                mt={{ base: '6px', '3xl': '4px' }}
+                                                mr={{ base: '4px' }}
+                                                alignItems={{ base: 'flex-end' }}
                                                 textAlign='left'
                                             >
                                                 <HStack
                                                     w={{
                                                         base: '154px',
-                                                        md: '100%',
-                                                        xl: '486px',
-                                                        '2xl': '274px',
+                                                        md: '183px',
+                                                        xl: '506.5px',
+                                                        '3xl': '274px',
                                                     }}
                                                     h={{ base: '24px' }}
-                                                    spacing={{ base: '17px', '2xl': '8px' }}
+                                                    spacing={{ base: '17px', '3xl': '8px' }}
                                                     ml={{
-                                                        base: '8px',
-                                                        md: '24px',
+                                                        base: '0px',
+                                                        md: '0px',
                                                         xl: '0px',
-                                                        '2xl': '20px',
+                                                        '3xl': '0px',
                                                     }}
-                                                    mt={{ xl: '16px' }}
+                                                    mt={{ xl: '16.5px' }}
                                                     justifyContent={{ xl: 'space-between' }}
                                                 >
                                                     <Show above='xl'>
@@ -200,8 +208,11 @@ export function Juciest() {
                                                             fontSize='14px'
                                                             lineHeight='20px'
                                                             bg='#FFFFD3'
-                                                            p='0px 8px 0px 9px'
-                                                            spacing={{ xl: '7px', '2xl': '7px' }}
+                                                            p={{
+                                                                xl: '0px 8px 0px 9px',
+                                                                '3xl': '0px 8px 0px 2px',
+                                                            }}
+                                                            spacing={{ xl: '7px', '3xl': '7px' }}
                                                         >
                                                             <Image
                                                                 src={recipe.tagIcon}
@@ -212,7 +223,7 @@ export function Juciest() {
                                                     </Show>
                                                     <Box>
                                                         <HStack
-                                                            mr={{ xl: '5.5px', '2xl': '6px' }}
+                                                            mr={{ xl: '24.5px', '3xl': '12px' }}
                                                             spacing='16.5px'
                                                         >
                                                             <MetricsDefault
@@ -246,61 +257,83 @@ export function Juciest() {
                                                         </HStack>
                                                     </Box>
                                                 </HStack>
-                                                <Heading
-                                                    as='h4'
+                                                <HStack
                                                     w={{
-                                                        base: '154px',
-                                                        md: '100%',
-                                                        '2xl': '274px',
+                                                        base: '158px',
+                                                        md: '194px',
+                                                        xl: '506.5px',
+                                                        '3xl': '280px',
                                                     }}
-                                                    h={{ base: '68px', xl: '62px', '2xl': '28px' }}
-                                                    fontSize={{ base: '15.5px', xl: '19.7px' }}
-                                                    fontFamily='Inter'
-                                                    lineHeight={{ base: '24px' }}
-                                                    textAlign='left'
-                                                    ml={{
-                                                        base: '0px',
-                                                        md: '15px',
-                                                        xl: '45px',
-                                                        '2xl': '19px',
-                                                    }}
-                                                    letterSpacing={{ base: '0' }}
-                                                    pt={{
-                                                        base: '1px',
-                                                        xl: '26.5px',
-                                                        '2xl': '0px',
-                                                    }}
-                                                    mt={{ '2xl': '26px' }}
-                                                    sx={{ wordSpacing: '0.8px' }}
-                                                    whiteSpace={{ '2xl': 'nowrap' }}
-                                                    textOverflow={{ '2xl': 'ellipsis' }}
-                                                    overflow={{ '2xl': 'hidden' }}
                                                 >
-                                                    {recipe.title}
-                                                </Heading>
+                                                    <Heading
+                                                        as='h4'
+                                                        w={{
+                                                            base: '154px',
+                                                            xl: '486px',
+                                                            '3xl': '274px',
+                                                        }}
+                                                        h={{
+                                                            base: '68px',
+                                                            xl: '60px',
+                                                            '3xl': '28px',
+                                                        }}
+                                                        fontSize={{ base: '15.5px', xl: '19.7px' }}
+                                                        fontFamily='Inter'
+                                                        lineHeight={{ base: '24px' }}
+                                                        textAlign='left'
+                                                        ml={{
+                                                            base: '0px',
+                                                            md: '8px',
+                                                            xl: '0px',
+                                                            '3xl': '0px',
+                                                        }}
+                                                        letterSpacing={{ base: '0' }}
+                                                        pt={{
+                                                            base: '1px',
+                                                            xl: '24px',
+                                                            '3xl': '0px',
+                                                        }}
+                                                        mt={{ '3xl': '26px' }}
+                                                        sx={{ wordSpacing: '0.8px' }}
+                                                        whiteSpace={{ '3xl': 'nowrap' }}
+                                                        textOverflow={{ '3xl': 'ellipsis' }}
+                                                        overflow={{ '3xl': 'hidden' }}
+                                                        width={{ xl: '80%' }}
+                                                    >
+                                                        {recipe.title}
+                                                    </Heading>
+                                                </HStack>
                                                 <Show above='xl'>
                                                     <Text
-                                                        w={{ xl: '486px', '2xl': '280px' }}
+                                                        w={{ xl: '506.5px', '3xl': '280px' }}
                                                         h='64px'
-                                                        ml={{ '2xl': '25px' }}
+                                                        ml={{ '3xl': '25px' }}
                                                         fontFamily='Inter'
                                                         fontSize={{ xl: '13.98px' }}
                                                         lineHeight='20px'
                                                         textAlign='left'
-                                                        mt={{ '2xl': '6px' }}
-                                                        noOfLines={{ '2xl': 3 }}
+                                                        mt={{ xl: '0', '3xl': '6px' }}
+                                                        noOfLines={{ '3xl': 3 }}
                                                     >
                                                         {recipe.description}
                                                     </Text>
                                                 </Show>
 
                                                 <HStack
-                                                    w={{ base: '154px', md: '100%' }}
+                                                    w={{
+                                                        base: '154px',
+                                                        md: '100%',
+                                                    }}
                                                     h={{ base: '24px' }}
                                                     justifyContent='flex-end'
-                                                    mr={{ md: '16px', xl: '46px', '2xl': '10px' }}
-                                                    mt={{ md: '1px', xl: '26px', '2xl': '28px' }}
-                                                    spacing='8px'
+                                                    mr={{
+                                                        base: '4px',
+                                                        md: '16px',
+                                                        xl: '20px',
+                                                        '3xl': '7px',
+                                                    }}
+                                                    mt={{ md: '1px', xl: '26px', '3xl': '28px' }}
+                                                    spacing={{ base: '12px', md: '8px' }}
                                                 >
                                                     <Button
                                                         size='base'

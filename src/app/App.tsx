@@ -10,7 +10,12 @@ function App() {
     return (
         <>
             <ChakraProvider theme={theme}>
-                <Grid minH='100vh' templateRows='auto 1fr auto'>
+                <Grid
+                    minH='100vh'
+                    templateRows={{ base: 'auto 1fr auto' }}
+                    maxW={{ xl: 'calc(100vw)' }}
+                    overflow='hidden'
+                >
                     <GridItem>
                         <Header></Header>
                     </GridItem>

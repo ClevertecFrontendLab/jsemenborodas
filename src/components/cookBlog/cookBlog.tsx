@@ -4,6 +4,7 @@ import {
     Card,
     CardBody,
     CardHeader,
+    Flex,
     Grid,
     GridItem,
     Heading,
@@ -22,7 +23,8 @@ export function CookBlog() {
         <>
             <Box
                 w={{ base: '100%', md: '100%' }}
-                h={{ base: '600px', md: '272px', xl: '264px', '2xl': '304px' }}
+                h={{ base: '600px', md: '272px', xl: '264px', '3xl': '304px' }}
+                minW={{ xl: '880px' }}
                 p={{ base: '0px 16px 0px 16px', md: '0' }}
                 mt={{ base: '32px', xl: '40px' }}
                 borderRadius='16px'
@@ -39,8 +41,8 @@ export function CookBlog() {
                             <Heading
                                 as='h3'
                                 fontFamily='Inter'
-                                fontSize={{ base: '24px', xl: '30px', '2xl': '36px' }}
-                                lineHeight={{ base: '32px', xl: '36px', '2xl': '40px' }}
+                                fontSize={{ base: '24px', xl: '30px', '3xl': '36px' }}
+                                lineHeight={{ base: '32px', xl: '36px', '3xl': '40px' }}
                                 fontWeight={500}
                                 letterSpacing={{ base: '0.5px', xl: '1px' }}
                             >
@@ -52,16 +54,16 @@ export function CookBlog() {
                                     p={0}
                                     w={{ base: '149px' }}
                                     h={{ base: '40px' }}
-                                    mr={{ xl: '20px', '2xl': '35px' }}
-                                    pt={{ '2xl': '7px' }}
+                                    mr={{ xl: '20px', '3xl': '35px' }}
+                                    pt={{ '3xl': '7px' }}
                                 >
                                     <HStack spacing='11px'>
                                         <Text
                                             fontFamily='Inter'
                                             fontWeight={600}
-                                            fontSize={{ base: '16px', '2xl': '18px' }}
+                                            fontSize={{ base: '16px', '3xl': '18px' }}
                                             lineHeight={{ base: '24px' }}
-                                            letterSpacing={{ base: '0.1px', '2xl': '0.3px' }}
+                                            letterSpacing={{ base: '0.1px', '3xl': '0.3px' }}
                                         >
                                             Все авторы
                                         </Text>
@@ -71,23 +73,24 @@ export function CookBlog() {
                             </Show>
                         </HStack>
                     </Box>
-                    <Grid gap='0px' templateColumns={{ md: 'repeat(3, 1fr)' }}>
+                    <Grid gap='0px' templateColumns={{ md: 'repeat(3, 33.333%)' }}>
                         {CookBlogData.map((card) => (
                             <GridItem
                                 pr={{ base: '12px', xl: '12px' }}
-                                h={{ base: '152px', xl: '160px', '2xl': '184px' }}
+                                h={{ base: '152px', xl: '160px', '3xl': '184px' }}
                                 bg='transparent'
-                                mt={{ base: '12px', xl: '16px', '2xl': '32px' }}
+                                mt={{ base: '12px', xl: '18px', '3xl': '32px' }}
                                 maxW='98%'
                             >
-                                <Card bg='white' h='100%' borderRadius={8}>
+                                <Card bg='white' h='100%' borderRadius={8} maxW='100%'>
                                     <CardHeader
                                         p={{
                                             base: '16px 0px 0px 17px',
-                                            '2xl': '24px 0px 0px 24px',
+                                            xl: '16px 0px 0px 16.5px',
+                                            '3xl': '24px 0px 0px 24px',
                                         }}
                                     >
-                                        <HStack spacing={{ base: 0 }} justifyContent='flex-start'>
+                                        <Flex justifyContent='flex-start' w='100%'>
                                             <VStack>
                                                 {' '}
                                                 <Image
@@ -104,9 +107,9 @@ export function CookBlog() {
                                                 pl={{ base: '8px', xl: '11px' }}
                                                 w={{
                                                     base: '240px',
-                                                    md: '184px',
+                                                    md: 'calc(100% - 32px)',
                                                     xl: '185px',
-                                                    '2xl': '320px',
+                                                    '3xl': '320px',
                                                 }}
                                             >
                                                 <Text
@@ -123,6 +126,7 @@ export function CookBlog() {
                                                         WebkitLineClamp: '1',
                                                     }}
                                                     w='100%'
+                                                    pt={{ '3xl': '2px' }}
                                                 >
                                                     {card.name}
                                                 </Text>
@@ -132,20 +136,21 @@ export function CookBlog() {
                                                     fontFamily='Inter'
                                                     fontSize={{ base: '12px', xl: '14px' }}
                                                     lineHeight={{ base: '16px' }}
+                                                    pt={{ xl: '5px' }}
                                                 >
                                                     {card.link}
                                                 </Text>
                                             </VStack>
-                                        </HStack>
+                                        </Flex>
                                     </CardHeader>
                                     <CardBody
-                                        w={{ base: '100%', '2xl': '420px' }}
+                                        w={{ base: '100%', '3xl': '420px' }}
                                         h='100%'
                                         textAlign='left'
                                         p={{
-                                            base: '16px 20px 0px 16px',
-                                            xl: '16px 10px 0px 15.5px',
-                                            '2xl': '28px 10px 0px 24px',
+                                            base: '16px 12px 0px 16px',
+                                            xl: '14px 10px 0px 15.5px',
+                                            '3xl': '28px 10px 0px 24px',
                                         }}
                                         letterSpacing={{ xl: '0px' }}
                                     >
