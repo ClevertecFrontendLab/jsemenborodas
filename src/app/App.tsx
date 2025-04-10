@@ -2,6 +2,7 @@ import './App.css';
 
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
 
+import { Footer } from '~/components/footer/Footer';
 import { Header } from '~/components/header/Header';
 import { Main } from '~/components/main/Main';
 
@@ -22,7 +23,9 @@ function App() {
                     <GridItem>
                         <Main></Main>
                     </GridItem>
-                    <GridItem>Footer</GridItem>
+                    <GridItem>
+                        <Footer></Footer>
+                    </GridItem>
                 </Grid>
             </ChakraProvider>
         </>
