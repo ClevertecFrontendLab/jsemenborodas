@@ -1,14 +1,11 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 
-import { JuciestOnJuciest } from '~/components/juciest/JuciestOnJuciest';
-import { VeganKitchen } from '~/components/veganKitchen/veganKitchen';
-
 import { AddRecipe } from '../../addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../metrics/MetricsDesktop';
 import { NavMenu } from '../../navMenu/NavMenu';
 import { SearchForm2 } from '../../searchForm/SearchForm2';
 
-export function JuciestPage() {
+export function VeganKitchenPage() {
     return (
         <>
             <Box
@@ -47,18 +44,8 @@ export function JuciestPage() {
                                 }}
                                 minW={{ xl: '880px' }}
                             >
-                                <Box
-                                    as='section'
-                                    px={{ base: '16px', md: '0px', xl: '0' }}
-                                    pl={{ '3xl': '0px' }}
-                                    w={{ '3xl': '100%' }}
-                                    flexDirection='column'
-                                    alignItems='center'
-                                    display='flex'
-                                >
+                                <Box as='section' px={{ base: '0px', md: '0px', xl: '0' }}>
                                     <SearchForm2></SearchForm2>
-                                    <JuciestOnJuciest></JuciestOnJuciest>
-                                    <VeganKitchen></VeganKitchen>
                                 </Box>
                                 <Box
                                     w={{ xl: '100%' }}

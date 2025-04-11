@@ -27,11 +27,12 @@ export function VeganKitchen() {
                 mt={{ base: '40px', md: '42px', xl: '62px', '3xl': '60px' }}
                 h={{ xl: '308px' }}
                 mb={{ base: '100px', xl: 0 }}
+                pr={{ base: '32px', xl: '0' }}
+                ml={{}}
             >
                 <Grid>
                     <GridItem>
                         <Grid
-                            px={{ base: '16px', md: '0', xl: '3px' }}
                             templateColumns={{ xl: '33% 1fr' }}
                             gap={{ xl: '14px', '3xl': '245px' }}
                         >
@@ -42,12 +43,16 @@ export function VeganKitchen() {
                                     fontWeight={500}
                                     fontSize={{ base: '24px', xl: '36px', '3xl': '48px' }}
                                     letterSpacing={{ base: '0.4px', xl: '1px', '3xl': '1.5px' }}
+                                    pl={{ xl: '4px', '3xl': '4px' }}
+                                    pt={{ xl: '2px', '3xl': '8px' }}
+                                    lineHeight={{ xl: '40px' }}
                                 >
                                     Веганская кухня
                                 </Heading>
                             </GridItem>
                             <GridItem mt={{ base: '12px', xl: '4px' }}>
                                 <Text
+                                    w='99%'
                                     textAlign={{ base: 'left' }}
                                     fontFamily='Inter'
                                     fontWeight={500}
@@ -63,7 +68,7 @@ export function VeganKitchen() {
                             </GridItem>
                         </Grid>
                     </GridItem>
-                    <GridItem h={{ base: '540px', md: '172px' }} mt={{ base: '16px', xl: '20px' }}>
+                    <GridItem h={{ base: '540px', md: '172px' }} mt={{ base: '16px', xl: '24px' }}>
                         <Grid
                             templateRows={{ base: 'repeat(3, 1fr)', md: '1fr' }}
                             templateColumns={{
@@ -72,8 +77,8 @@ export function VeganKitchen() {
                                 xl: '31.9% 31.9% 31.5%',
                                 '2xl': '23.9% 23.9% 1fr',
                             }}
-                            px={{ base: '16px', md: '0', '2xl': '2px' }}
-                            gap={{ base: '12px', xl: '20px', '2xl': '24px' }}
+                            gap={{ base: '12px', xl: '18px', '2xl': '22px' }}
+                            ml={{ xl: '4px' }}
                         >
                             {veganKitchenData.map((item) => (
                                 <GridItem
@@ -89,7 +94,7 @@ export function VeganKitchen() {
                                         <CardBody
                                             p={{ base: '12px' }}
                                             pt={{ xl: '16px', '2xl': '20px' }}
-                                            pl={{ xl: '16.5px', '2xl': '22.5px' }}
+                                            pl={{ xl: '16.5px', '2xl': '21.5px' }}
                                             pb={{ '2xl': 0 }}
                                         >
                                             <VStack alignItems='flex-start'>
@@ -119,10 +124,11 @@ export function VeganKitchen() {
                                                     <Text
                                                         fontFamily='Inter'
                                                         fontWeight={400}
-                                                        fontSize={{ base: '14px' }}
+                                                        fontSize={{ base: '13.9px' }}
                                                         lineHeight={{ base: '20px' }}
                                                         textAlign='left'
                                                         noOfLines={3}
+                                                        mt={{ '3xl': '2px' }}
                                                     >
                                                         {item.description}
                                                     </Text>
@@ -135,7 +141,11 @@ export function VeganKitchen() {
                                             pr={{ base: '17px', md: '18px', '2xl': '30.5px' }}
                                             pl={{ '2xl': '32px' }}
                                         >
-                                            <HStack justifyContent='space-between' w='100%'>
+                                            <HStack
+                                                justifyContent='space-between'
+                                                w='100%'
+                                                ml={{ xl: '4px', '2xl': '0px' }}
+                                            >
                                                 <Box bg='#FFFFD3'>
                                                     <HStack>
                                                         <Image src={item.tagIcon}></Image>

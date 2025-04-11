@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
+import { useNavigate } from 'react-router';
 
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 
@@ -21,13 +22,15 @@ import { MetricsDefault } from '../metrics/MetricsDefault';
 import { JuciestData } from './juciestData';
 import RightArrow from './juciestImages/Vector.png';
 export function Juciest() {
+    const navigate = useNavigate();
     return (
         <>
             <Box
-                px={{ base: '16px', md: '0px', xl: '0px' }}
+                pr={{ base: '32px', md: '32px', xl: '0px' }}
                 mt={{ base: '34px', xl: '34px', '3xl': '28px' }}
                 ml={{ xl: '3.2px' }}
                 minW={{ xl: '880px', '3xl': '100%' }}
+                h={{ xl: '', '3xl': '585px' }}
             >
                 <HStack justifyContent='space-between'>
                     <Heading
@@ -51,6 +54,7 @@ export function Juciest() {
                             mt={{ md: '-2px' }}
                             borderRadius='6px'
                             data-test-id='juiciest-link'
+                            onClick={() => navigate('/VeganKitchen')}
                         >
                             <HStack spacing='10px'>
                                 <Text
@@ -78,12 +82,13 @@ export function Juciest() {
                         '3xl': 'repeat(2,50%)',
                     }}
                     gap={{ base: '12px', md: '16px', '3xl': '12px' }}
-                    columnGap={{ '3xl': '12px' }}
-                    rowGap={{ '3xl': '24px' }}
+                    columnGap={{ md: '13.9px', '3xl': '12px' }}
+                    rowGap={{ md: '16px', '3xl': '24px' }}
                 >
                     {JuciestData.map((recipe) => (
                         <GridItem>
                             <Card
+                                border='1px solid #00000014'
                                 borderRadius={8}
                                 w={{ base: '100%', md: '100%', xl: '100%', '3xl': '100%' }}
                                 maxW={{ '3xl': '668px' }}
@@ -117,7 +122,7 @@ export function Juciest() {
                                                             w='fit-content'
                                                             h='28px'
                                                             transform={{
-                                                                xl: 'translateY(-48px) translateX(24px)',
+                                                                xl: 'translateY(-46px) translateX(24px)',
                                                             }}
                                                             borderRadius='4px'
                                                             padding='4px 8px'
@@ -177,7 +182,7 @@ export function Juciest() {
                                         >
                                             <VStack
                                                 spacing={0}
-                                                mt={{ base: '6px', '3xl': '4px' }}
+                                                mt={{ base: '6px', xl: '3px', '3xl': '4px' }}
                                                 mr={{ base: '4px' }}
                                                 alignItems={{ base: 'flex-end' }}
                                                 textAlign='left'
@@ -291,7 +296,7 @@ export function Juciest() {
                                                         letterSpacing={{ base: '0' }}
                                                         pt={{
                                                             base: '1px',
-                                                            xl: '24px',
+                                                            xl: '25px',
                                                             '3xl': '0px',
                                                         }}
                                                         mt={{ '3xl': '26px' }}
@@ -329,12 +334,17 @@ export function Juciest() {
                                                     justifyContent='flex-end'
                                                     mr={{
                                                         base: '4px',
-                                                        md: '16px',
+                                                        md: '4px',
                                                         xl: '20px',
                                                         '3xl': '7px',
                                                     }}
-                                                    mt={{ md: '1px', xl: '26px', '3xl': '28px' }}
-                                                    spacing={{ base: '12px', md: '8px' }}
+                                                    mt={{ md: '1px', xl: '29px', '3xl': '28px' }}
+                                                    spacing={{
+                                                        base: '12px',
+                                                        md: '12px',
+                                                        xl: '8px',
+                                                    }}
+                                                    pb={{ md: '1px' }}
                                                 >
                                                     <Button
                                                         size='base'
@@ -392,6 +402,7 @@ export function Juciest() {
                     ))}
                     <GridItem
                         data-test-id='juiciest-link-mobile'
+                        height={{ xl: '0' }}
                         sx={{
                             visibility: {
                                 xl: 'hidden',
@@ -400,15 +411,17 @@ export function Juciest() {
                     >
                         <Button
                             w='167px'
-                            h='40px'
+                            h={{ base: '40px', xl: 0 }}
                             paddingX='16px'
-                            mx={{ base: 'auto', md: '79%' }}
+                            mx={{ base: 'auto', md: '78.5%' }}
                             pl={{ base: '15px' }}
                             bg='#B1FF2E'
-                            mt={{ md: '-2px' }}
+                            mt={{ md: '-3px' }}
+                            onClick={() => navigate('/VeganKitchen')}
                         >
-                            <HStack spacing='10px'>
+                            <HStack spacing='10px' height={{ xl: '0' }}>
                                 <Text
+                                    height={{ xl: '0' }}
                                     fontWeight={600}
                                     fontFamily='Inter'
                                     lineHeight='24px'

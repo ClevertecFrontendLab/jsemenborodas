@@ -25,8 +25,8 @@ export function CookBlog() {
                 w={{ base: '100%', md: '100%' }}
                 h={{ base: '600px', md: '272px', xl: '264px', '3xl': '304px' }}
                 minW={{ xl: '880px' }}
-                p={{ base: '0px 16px 0px 16px', md: '0' }}
-                mt={{ base: '32px', xl: '40px' }}
+                pr={{ base: '32px', xl: '0' }}
+                mt={{ base: '32px', xl: '24px', '3xl': '38px' }}
                 borderRadius='16px'
                 overflow='hidden'
             >
@@ -54,7 +54,8 @@ export function CookBlog() {
                                     p={0}
                                     w={{ base: '149px' }}
                                     h={{ base: '40px' }}
-                                    mr={{ xl: '20px', '3xl': '35px' }}
+                                    mr={{ xl: '20px', '3xl': '32px' }}
+                                    mt={{ '3xl': '3px' }}
                                     pt={{ '3xl': '7px' }}
                                 >
                                     <HStack spacing='11px'>

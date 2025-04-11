@@ -18,13 +18,15 @@ import { useLocation } from 'react-router';
 
 import { Burger, FullLogo, Logo } from '~/icons/Icon';
 
+import AvatarImg from '../../../public/avatar.jpg';
 import { Metrics } from '../metrics/Metrics';
 
 export function Header() {
     const location = useLocation();
     const breadCrumbNames: Record<string, string> = {
-        '/JuciestPage': 'Самые Сочные',
-        '/SecondDelicious': 'Вторые Блюда',
+        '/Juciest': 'Самое сочное',
+        '/SecondDelicious': 'Вторые блюда',
+        '/VeganKitchen': 'Веганская кухня',
     };
     const pathNames = location.pathname.split('/').filter((x) => x);
     return (
@@ -86,7 +88,7 @@ export function Header() {
                                     padding={0}
                                     fontFamily='Inter'
                                 >
-                                    <Breadcrumb separator='>'>
+                                    <Breadcrumb separator={<Text w='8px'> &gt; </Text>}>
                                         <BreadcrumbItem>
                                             <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
                                         </BreadcrumbItem>
@@ -122,7 +124,7 @@ export function Header() {
                                                 ml={{ xl: '53px', '2xl': '55px' }}
                                                 p={0}
                                                 name='Екатерина Константинопольская'
-                                                src='./avatar.jpg'
+                                                src={AvatarImg}
                                                 bg='transparent'
                                             ></Avatar>
                                             <Box>

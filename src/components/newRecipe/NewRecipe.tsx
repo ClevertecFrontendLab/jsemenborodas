@@ -21,7 +21,6 @@ export function NewRecipe() {
                 w={{ xl: '100%' }}
                 h={{ xl: '466px' }}
                 position='relative'
-                px={{ base: '16px', sm: '0px', xl: '0' }}
                 pr={{ base: '0' }}
                 ml={{ xl: '3.2px' }}
                 my={{ base: '25px', xl: '14px', '2xl': '0px' }}

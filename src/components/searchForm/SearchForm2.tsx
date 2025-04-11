@@ -13,9 +13,20 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
+import { useLocation } from 'react-router';
 
 import { Filter, Search } from '~/icons/SearchInputIcon';
 export function SearchForm2() {
+    const location = useLocation();
+    const Name: Record<string, string> = {
+        '/': 'Приятного аппетита!',
+        Juciest: 'Самое сочное',
+        VeganKitchen: 'Веганская кухня',
+    };
+
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    const firstSegment = pathSegments[0];
+    const title = Name[firstSegment] || 'Приятного аппетита!';
     return (
         <>
             <Box
@@ -26,6 +37,8 @@ export function SearchForm2() {
                     md: 'calc(727px + (880 - 727) * ((100vw - 768px) / (1440 - 768)))',
                     xl: 'calc(578px + (898 - 578) * ((100vw - 1440px) / (1920 - 1440)))',
                 }}
+                mx={{ base: 'auto' }}
+                mr={{ base: '32px', xl: '0' }}
             >
                 <VStack>
                     <Box mb={{ xl: '16px' }}>
@@ -36,7 +49,7 @@ export function SearchForm2() {
                             lineHeight={{ base: '32px', xl: '48px' }}
                             letterSpacing={{ base: '0.3px', xl: '1px' }}
                         >
-                            Приятного аппетита!
+                            {title}
                         </Heading>
                     </Box>
 

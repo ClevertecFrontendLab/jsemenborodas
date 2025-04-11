@@ -50,7 +50,12 @@ export function Main() {
                                 <Box as='section' px={{ base: '0px', md: '0px', xl: '0' }}>
                                     <SearchForm2></SearchForm2>
                                 </Box>
-                                <Box w={{ xl: '100%' }} maxW={{ xl: '1360px' }} overflow='hidden'>
+                                <Box
+                                    w={{ xl: '100%' }}
+                                    maxW={{ xl: '1360px' }}
+                                    overflow='hidden'
+                                    px={{ base: '16px', md: '0', '2xl': '2px' }}
+                                >
                                     <Box as='section' overflow='hidden'>
                                         <NewRecipe></NewRecipe>
                                     </Box>
