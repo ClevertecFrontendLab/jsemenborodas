@@ -26,6 +26,7 @@ export function VeganKitchen() {
                 w='100%'
                 mt={{ base: '40px', md: '42px', xl: '62px', '3xl': '60px' }}
                 h={{ xl: '308px' }}
+                mb={{ base: '100px', xl: 0 }}
             >
                 <Grid>
                     <GridItem>

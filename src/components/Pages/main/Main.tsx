@@ -1,13 +1,13 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 
-import { AddRecipe } from '../addRecipe/AddRecipe';
-import { CookBlog } from '../cookBlog/cookBlog';
-import { Juciest } from '../juciest/Juciest';
-import { MetricsDesktop } from '../metrics/MetricsDesktop';
-import { NavMenu } from '../navMenu/NavMenu';
-import { NewRecipe } from '../newRecipe/NewRecipe';
-import { SearchForm2 } from '../searchForm/SearchForm2';
-import { VeganKitchen } from '../veganKitchen/veganKitchen';
+import { AddRecipe } from '../../addRecipe/AddRecipe';
+import { CookBlog } from '../../cookBlog/cookBlog';
+import { Juciest } from '../../juciest/Juciest';
+import { MetricsDesktop } from '../../metrics/MetricsDesktop';
+import { NavMenu } from '../../navMenu/NavMenu';
+import { NewRecipe } from '../../newRecipe/NewRecipe';
+import { SearchForm2 } from '../../searchForm/SearchForm2';
+import { VeganKitchen } from '../../veganKitchen/veganKitchen';
 export function Main() {
     return (
         <>

@@ -1,6 +1,9 @@
 import {
     Avatar,
     Box,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
     Card,
     CardHeader,
     Heading,
@@ -11,12 +14,19 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
+import { useLocation } from 'react-router';
 
 import { Burger, FullLogo, Logo } from '~/icons/Icon';
 
 import { Metrics } from '../metrics/Metrics';
 
 export function Header() {
+    const location = useLocation();
+    const breadCrumbNames: Record<string, string> = {
+        '/JuciestPage': 'Самые Сочные',
+        '/SecondDelicious': 'Вторые Блюда',
+    };
+    const pathNames = location.pathname.split('/').filter((x) => x);
     return (
         <>
             <Box
@@ -76,7 +86,22 @@ export function Header() {
                                     padding={0}
                                     fontFamily='Inter'
                                 >
-                                    Главная
+                                    <Breadcrumb separator='>'>
+                                        <BreadcrumbItem>
+                                            <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
+                                        </BreadcrumbItem>
+                                        {pathNames.map((_, index) => {
+                                            const route = `/${pathNames[index]}`;
+                                            const displayName = breadCrumbNames[route];
+                                            return (
+                                                <BreadcrumbItem key={route}>
+                                                    <BreadcrumbLink href={route}>
+                                                        {displayName}
+                                                    </BreadcrumbLink>
+                                                </BreadcrumbItem>
+                                            );
+                                        })}
+                                    </Breadcrumb>
                                 </Heading>
                             </Show>
                         </HStack>

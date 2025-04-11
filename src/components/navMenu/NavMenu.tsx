@@ -67,6 +67,11 @@ export function NavMenu() {
                                                 fontSize='16px'
                                                 lineHeight='24px'
                                                 fontWeight='500'
+                                                data-test-id={
+                                                    item.title === 'Веганская кухня'
+                                                        ? 'vegan-cuisine'
+                                                        : undefined
+                                                }
                                             >
                                                 {' '}
                                                 {item.title}

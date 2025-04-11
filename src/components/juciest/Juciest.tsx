@@ -50,6 +50,7 @@ export function Juciest() {
                             bg='#B1FF2E'
                             mt={{ md: '-2px' }}
                             borderRadius='6px'
+                            data-test-id='juiciest-link'
                         >
                             <HStack spacing='10px'>
                                 <Text
@@ -389,31 +390,36 @@ export function Juciest() {
                             </Card>
                         </GridItem>
                     ))}
-                    <Hide above='xl'>
-                        <GridItem>
-                            <Button
-                                w='167px'
-                                h='40px'
-                                paddingX='16px'
-                                mx={{ base: 'auto', md: '79%' }}
-                                pl={{ base: '15px' }}
-                                bg='#B1FF2E'
-                                mt={{ md: '-2px' }}
-                            >
-                                <HStack spacing='10px'>
-                                    <Text
-                                        fontWeight={600}
-                                        fontFamily='Inter'
-                                        lineHeight='24px'
-                                        fontSize={{ base: '16px' }}
-                                    >
-                                        Вся подборка
-                                    </Text>
-                                    <Image src={RightArrow} w='14px' h='8px'></Image>
-                                </HStack>
-                            </Button>
-                        </GridItem>
-                    </Hide>
+                    <GridItem
+                        data-test-id='juiciest-link-mobile'
+                        sx={{
+                            visibility: {
+                                xl: 'hidden',
+                            },
+                        }}
+                    >
+                        <Button
+                            w='167px'
+                            h='40px'
+                            paddingX='16px'
+                            mx={{ base: 'auto', md: '79%' }}
+                            pl={{ base: '15px' }}
+                            bg='#B1FF2E'
+                            mt={{ md: '-2px' }}
+                        >
+                            <HStack spacing='10px'>
+                                <Text
+                                    fontWeight={600}
+                                    fontFamily='Inter'
+                                    lineHeight='24px'
+                                    fontSize={{ base: '16px' }}
+                                >
+                                    Вся подборка
+                                </Text>
+                                <Image src={RightArrow} w='14px' h='8px'></Image>
+                            </HStack>
+                        </Button>
+                    </GridItem>
                 </Grid>
             </Box>
         </>

@@ -10,7 +10,16 @@ export function Footer() {
     return (
         <>
             <Hide above='xl'>
-                <HStack w='100%' h='84px' spacing={0} bg='#FFFFD3' mt='16px'>
+                <HStack
+                    w='100%'
+                    h='84px'
+                    spacing={0}
+                    bg='#FFFFD3'
+                    mt='16px'
+                    data-test-id='footer'
+                    position='fixed'
+                    bottom='0px'
+                >
                     <Button
                         bg='radial-gradient(circle, #C4FF61 0%, #FFFFD3 40%)'
                         w='25%'
