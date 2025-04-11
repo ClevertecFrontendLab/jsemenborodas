@@ -11,10 +11,12 @@ import {
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
+import { useNavigate } from 'react-router';
 
 import exiticon from '../../../public/exitIcon.png';
 import { NavMenuData } from './NavMenuData';
 export function NavMenu() {
+    const navigate = useNavigate();
     return (
         <>
             <Box position='fixed' zIndex='200'>
@@ -72,6 +74,7 @@ export function NavMenu() {
                                                         ? 'vegan-cuisine'
                                                         : undefined
                                                 }
+                                                onClick={() => navigate('/Juciest')}
                                             >
                                                 {' '}
                                                 {item.title}

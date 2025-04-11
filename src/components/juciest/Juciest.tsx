@@ -54,7 +54,7 @@ export function Juciest() {
                             mt={{ md: '-2px' }}
                             borderRadius='6px'
                             data-test-id='juiciest-link'
-                            onClick={() => navigate('/VeganKitchen')}
+                            onClick={() => navigate('/VeganKitchen/SecondDelicious')}
                         >
                             <HStack spacing='10px'>
                                 <Text
