@@ -35,7 +35,7 @@ export function SearchForm2() {
                 w={{
                     base: 'calc(328px + (727 - 328) * ((100vw - 360px) / (768 - 360)))',
                     md: 'calc(727px + (880 - 727) * ((100vw - 768px) / (1440 - 768)))',
-                    xl: 'calc(578px + (898 - 578) * ((100vw - 1440px) / (1920 - 1440)))',
+                    xl: '100%',
                 }}
                 mx={{ base: 'auto' }}
                 mr={{ base: '32px', xl: '0' }}
@@ -52,6 +52,25 @@ export function SearchForm2() {
                             {title}
                         </Heading>
                     </Box>
+                    {title === 'Веганская кухня' && (
+                        <Box>
+                            <Text
+                                fontFamily='Inter'
+                                color='#0000007A'
+                                fontWeight={500}
+                                fontSize={{ base: '14px', xl: '16px' }}
+                                w={{ base: '328px', md: '727px', xl: '696px' }}
+                                textAlign='center'
+                                mt={{ base: '4px', md: '6px', xl: '-12px' }}
+                                letterSpacing={{ xl: '0.1px' }}
+                                mb={{ xl: '16px' }}
+                            >
+                                Интересны не только убеждённым вегетарианцам, но и тем, кто хочет
+                                попробовать вегетарианскую диету и готовить вкусные вегетарианские
+                                блюда.
+                            </Text>
+                        </Box>
+                    )}
 
                     <Box
                         mt={{ base: '7px' }}

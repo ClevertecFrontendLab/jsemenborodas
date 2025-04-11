@@ -417,7 +417,7 @@ export function Juciest() {
                             pl={{ base: '15px' }}
                             bg='#B1FF2E'
                             mt={{ md: '-3px' }}
-                            onClick={() => navigate('/VeganKitchen')}
+                            onClick={() => navigate('/VeganKitchen/SecondDelicious')}
                         >
                             <HStack spacing='10px' height={{ xl: '0' }}>
                                 <Text

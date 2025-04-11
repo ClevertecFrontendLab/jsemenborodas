@@ -1,5 +1,7 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 
+import { Tabs } from '~/components/tabs/Tabs';
+
 import { AddRecipe } from '../../addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../metrics/MetricsDesktop';
 import { NavMenu } from '../../navMenu/NavMenu';
@@ -31,7 +33,7 @@ export function VeganKitchenPage() {
                     <GridItem minW={{ xl: '880px' }}>
                         {' '}
                         <HStack
-                            px={{ md: '20px', xl: '0' }}
+                            px={{ md: '0px', xl: '0' }}
                             spacing='0px'
                             justifyContent={{ base: 'center', xl: 'flex-start' }}
                             position='relative'
@@ -44,8 +46,20 @@ export function VeganKitchenPage() {
                                 }}
                                 minW={{ xl: '880px' }}
                             >
-                                <Box as='section' px={{ base: '0px', md: '0px', xl: '0' }}>
-                                    <SearchForm2></SearchForm2>
+                                <Box as='section' maxW='100vw'>
+                                    <Box
+                                        px={{ base: '16px', md: '20px', xl: '0px' }}
+                                        pt={{ md: '2px', xl: '0px' }}
+                                    >
+                                        <SearchForm2></SearchForm2>
+                                    </Box>
+
+                                    <Box
+                                        w={{ xl: '100%' }}
+                                        maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
+                                    >
+                                        <Tabs></Tabs>
+                                    </Box>
                                 </Box>
                                 <Box
                                     w={{ xl: '100%' }}
