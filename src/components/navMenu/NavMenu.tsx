@@ -26,7 +26,6 @@ export function NavMenu() {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const secondSegment = pathSegments[1];
     const title = Name[secondSegment];
-    console.log(typeof title);
     return (
         <>
             <Box position='fixed' zIndex='200'>
@@ -117,6 +116,36 @@ export function NavMenu() {
                                                     fontFamily='Inter'
                                                     whiteSpace='nowrap'
                                                     letterSpacing='0.1px'
+                                                    sx={{
+                                                        '&::before':
+                                                            title === 'Второе блюдо'
+                                                                ? {
+                                                                      content: '""',
+                                                                      position: 'absolute',
+                                                                      left:
+                                                                          child.title ===
+                                                                          'Вторые блюда'
+                                                                              ? '48px'
+                                                                              : '55px',
+                                                                      transform:
+                                                                          child.title ===
+                                                                          'Вторые блюда'
+                                                                              ? 'translateY(-2px)'
+                                                                              : '',
+                                                                      height:
+                                                                          child.title ===
+                                                                          'Вторые блюда'
+                                                                              ? '28px'
+                                                                              : '24px',
+                                                                      width:
+                                                                          child.title ===
+                                                                          'Вторые блюда'
+                                                                              ? '8px'
+                                                                              : '1px',
+                                                                      backgroundColor: '#C4FF61',
+                                                                  }
+                                                                : {},
+                                                    }}
                                                 >
                                                     {Object.values(child.title).join('')}
                                                 </Heading>
