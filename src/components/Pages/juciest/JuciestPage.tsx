@@ -60,8 +60,9 @@ export function JuciestPage() {
                                     <Box mt={{ base: '34px' }} pr={{ base: '32px', xl: '0' }}>
                                         <JuciestOnJuciest></JuciestOnJuciest>
                                     </Box>
-
-                                    <VeganKitchen></VeganKitchen>
+                                    <Box pr={{ base: '32px', xl: '0' }}>
+                                        <VeganKitchen></VeganKitchen>
+                                    </Box>
                                 </Box>
                                 <Box
                                     w={{ xl: '100%' }}
