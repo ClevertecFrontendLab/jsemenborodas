@@ -54,7 +54,7 @@ export function Juciest() {
                             mt={{ md: '-2px' }}
                             borderRadius='6px'
                             data-test-id='juiciest-link'
-                            onClick={() => navigate('/VeganKitchen/SecondDelicious')}
+                            onClick={() => navigate('/Juciest')}
                             className='custom-cursor'
                             cursor='none'
                         >
@@ -423,7 +423,7 @@ export function Juciest() {
                             pl={{ base: '15px' }}
                             bg='#B1FF2E'
                             mt={{ md: '-3px' }}
-                            onClick={() => navigate('/VeganKitchen/SecondDelicious')}
+                            onClick={() => navigate('/Juciest')}
                         >
                             <HStack spacing='10px' height={{ xl: '0' }}>
                                 <Text

@@ -38,7 +38,7 @@ export function NavMenu() {
                     ml='8px'
                 >
                     <Accordion
-                        onClick={() => navigate('/Juciest')}
+                        onClick={() => navigate('/VeganKitchen/SecondDelicious')}
                         border='1px solid #0000001A'
                         borderRadius='8px'
                         defaultIndex={(title === 'Второе блюдо' && 6) || undefined}
