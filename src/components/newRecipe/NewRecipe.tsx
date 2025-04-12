@@ -30,7 +30,6 @@ export function NewRecipe() {
                     <Box
                         position='relative'
                         top={{ xl: '248px', '2xl': '268px' }}
-                        zIndex='500'
                         w='100%'
                         h={{ xl: '40px', '2xl': '48px' }}
                         overflow={{ xl: 'hidden', '2xl': 'visible' }}
@@ -43,6 +42,7 @@ export function NewRecipe() {
                             top='0px'
                             left='-8px'
                             borderRadius='6px'
+                            zIndex='500'
                         >
                             <Icon as={leftArrow} w={{ '2xl': '24px' }}></Icon>
                         </Button>
@@ -54,6 +54,7 @@ export function NewRecipe() {
                             right='-8px'
                             borderRadius='6px'
                             position='absolute'
+                            zIndex='500'
                         >
                             <Icon as={rightArrow} w={{ '2xl': '24px' }}></Icon>
                         </Button>
@@ -85,6 +86,7 @@ export function NewRecipe() {
                             position='relative'
                             border='1px solid #00000014'
                             borderRadius='8px'
+                            className='custom-cursor'
                         >
                             <Box
                                 w={{ base: '158px', xl: '277px', '2xl': '322px' }}

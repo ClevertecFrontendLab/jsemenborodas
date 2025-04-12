@@ -83,7 +83,13 @@ export function CookBlog() {
                                 mt={{ base: '12px', xl: '18px', '3xl': '32px' }}
                                 maxW='98%'
                             >
-                                <Card bg='white' h='100%' borderRadius={8} maxW='100%'>
+                                <Card
+                                    bg='white'
+                                    h='100%'
+                                    borderRadius={8}
+                                    maxW='100%'
+                                    className='custom-cursor'
+                                >
                                     <CardHeader
                                         p={{
                                             base: '16px 0px 0px 17px',

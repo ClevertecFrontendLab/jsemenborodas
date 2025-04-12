@@ -38,6 +38,7 @@ export function NavMenu() {
                     ml='8px'
                 >
                     <Accordion
+                        onClick={() => navigate('/Juciest')}
                         border='1px solid #0000001A'
                         borderRadius='8px'
                         defaultIndex={(title === 'Второе блюдо' && 6) || undefined}
@@ -82,14 +83,18 @@ export function NavMenu() {
                                                 fontFamily='Inter'
                                                 fontSize='16px'
                                                 lineHeight='24px'
-                                                fontWeight='500'
+                                                fontWeight={
+                                                    title === 'Второе блюдо' &&
+                                                    item.title === 'Веганская кухня'
+                                                        ? 700
+                                                        : 500
+                                                }
                                                 letterSpacing='0.4px'
                                                 data-test-id={
                                                     item.title === 'Веганская кухня'
                                                         ? 'vegan-cuisine'
                                                         : undefined
                                                 }
-                                                onClick={() => navigate('/Juciest')}
                                             >
                                                 {' '}
                                                 {item.title}
@@ -112,10 +117,15 @@ export function NavMenu() {
                                                 <Heading
                                                     as='h5'
                                                     fontSize='16px'
-                                                    fontWeight='500'
                                                     fontFamily='Inter'
                                                     whiteSpace='nowrap'
                                                     letterSpacing='0.1px'
+                                                    fontWeight={
+                                                        title === 'Второе блюдо' &&
+                                                        child.title === 'Вторые блюда'
+                                                            ? 700
+                                                            : 500
+                                                    }
                                                     sx={{
                                                         '&::before':
                                                             title === 'Второе блюдо'

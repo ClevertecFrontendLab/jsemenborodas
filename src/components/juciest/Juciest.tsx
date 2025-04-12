@@ -55,6 +55,8 @@ export function Juciest() {
                             borderRadius='6px'
                             data-test-id='juiciest-link'
                             onClick={() => navigate('/VeganKitchen/SecondDelicious')}
+                            className='custom-cursor'
+                            cursor='none'
                         >
                             <HStack spacing='10px'>
                                 <Text
@@ -93,6 +95,7 @@ export function Juciest() {
                                 w={{ base: '100%', md: '100%', xl: '100%', '3xl': '100%' }}
                                 maxW={{ '3xl': '668px' }}
                                 h={{ base: '128px', xl: '244px' }}
+                                className='custom-cursor'
                             >
                                 <CardBody p={0} w='100%' h='100%' borderLeftRadius={8}>
                                     <HStack
@@ -353,11 +356,13 @@ export function Juciest() {
                                                         border='1px solid #0000007A'
                                                         borderRadius='6px'
                                                         bg='transparent'
+                                                        cursor='none'
                                                     >
                                                         <HStack>
                                                             <Icon
                                                                 as={FavouriteNotes}
                                                                 w='12px'
+                                                                cursor='none'
                                                             ></Icon>
                                                             <Show above='xl'>
                                                                 <Text
@@ -376,6 +381,7 @@ export function Juciest() {
                                                         h={{ base: '24px', xl: '32px' }}
                                                         bg='#000000EB'
                                                         borderRadius='6px'
+                                                        cursor='none'
                                                     >
                                                         <HStack spacing='7.5px'>
                                                             <Text

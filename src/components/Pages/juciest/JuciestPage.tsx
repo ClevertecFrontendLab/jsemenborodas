@@ -57,7 +57,10 @@ export function JuciestPage() {
                                     display='flex'
                                 >
                                     <SearchForm2></SearchForm2>
-                                    <JuciestOnJuciest></JuciestOnJuciest>
+                                    <Box mt={{ base: '34px' }} pr={{ base: '32px', xl: '0' }}>
+                                        <JuciestOnJuciest></JuciestOnJuciest>
+                                    </Box>
+
                                     <VeganKitchen></VeganKitchen>
                                 </Box>
                                 <Box

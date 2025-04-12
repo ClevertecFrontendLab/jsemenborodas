@@ -7,7 +7,12 @@ export function AddRecipe() {
     return (
         <>
             <Box w='208px' h='208px'>
-                <Button w='100%' h='100%' bg='radial-gradient(circle, #C4FF61 0%, #FFFFFF 50%)'>
+                <Button
+                    w='100%'
+                    h='100%'
+                    bg='radial-gradient(circle, #C4FF61 0%, #FFFFFF 50%)'
+                    _hover={{ background: 'normal' }}
+                >
                     <VStack>
                         <Box bg='black' borderRadius='50%' w='48px' h='48px'>
                             <VStack>

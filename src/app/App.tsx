@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router';
 
 import { Footer } from '~/components/footer/Footer';
 import { Header } from '~/components/header/Header';
+import { CursorTracker } from '~/components/theme/CursorTracker';
 
 import { AppRoutes } from '../components/routes/Routes';
 import { theme } from '../components/theme/theme';
@@ -13,6 +14,7 @@ function App() {
         <>
             <BrowserRouter>
                 <ChakraProvider theme={theme}>
+                    <CursorTracker></CursorTracker>
                     <Grid
                         minH='100vh'
                         templateRows={{ base: 'auto 1fr auto' }}

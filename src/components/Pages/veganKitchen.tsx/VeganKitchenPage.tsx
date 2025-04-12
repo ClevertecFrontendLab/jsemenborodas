@@ -1,6 +1,8 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 
+import { JuciestOnJuciest } from '~/components/juciest/JuciestOnJuciest';
 import { Tabs } from '~/components/tabs/Tabs';
+import { VeganKitchen } from '~/components/veganKitchen/veganKitchen';
 
 import { AddRecipe } from '../../addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../metrics/MetricsDesktop';
@@ -59,6 +61,23 @@ export function VeganKitchenPage() {
                                         maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
                                     >
                                         <Tabs></Tabs>
+                                    </Box>
+                                    <Box
+                                        as='section'
+                                        ml={{ base: '16px', md: '18px', xl: 0, '2xl': '1px' }}
+                                        flexDirection='column'
+                                        alignItems='center'
+                                        display='flex'
+                                        mt={{ base: '24px', md: '25px', xl: '30px', '2xl': '24px' }}
+                                        pr={{ base: '16px', md: '18px', xl: 0 }}
+                                    >
+                                        <JuciestOnJuciest></JuciestOnJuciest>
+                                    </Box>
+                                    <Box
+                                        pl={{ base: '16px', xl: 0 }}
+                                        pr={{ base: '16px', xl: '0' }}
+                                    >
+                                        <VeganKitchen></VeganKitchen>
                                     </Box>
                                 </Box>
                                 <Box

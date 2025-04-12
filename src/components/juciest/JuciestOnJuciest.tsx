@@ -12,21 +12,27 @@ import {
 } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
+import { useLocation } from 'react-router';
 
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 
-import { JuciestData } from '../Data/JuciestPageData/JuciestPageData';
+import { JuciestData } from '../Data/JuciestPageData';
+import { VeganPageData } from '../Data/VeganPageData';
 import { MetricsDefault } from '../metrics/MetricsDefault';
 export function JuciestOnJuciest() {
+    const location = useLocation();
+    const Name: Record<string, string> = {
+        '/': 'Приятного аппетита!',
+        Juciest: 'Самое сочное',
+        SecondDelicious: 'Второе блюдо',
+    };
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    const secondSegment = pathSegments[1];
+    const title = Name[secondSegment];
+    console.log(title);
     return (
         <>
-            <Box
-                w='100%'
-                pr={{ base: '30px', xl: 0 }}
-                mt={{ base: '34px' }}
-                rowGap={{ base: '0px' }}
-                pl={{ xl: '4px' }}
-            >
+            <Box w='100%' rowGap={{ base: '0px' }} pl={{ xl: '4px' }}>
                 <Grid
                     w='100%'
                     h='100%'
@@ -39,16 +45,17 @@ export function JuciestOnJuciest() {
                     rowGap={4}
                     columnGap={{ md: '15px', '2xl': '24px' }}
                 >
-                    {JuciestData.map((item) => (
+                    {(title === 'Второе блюдо' ? VeganPageData : JuciestData).map((item) => (
                         <Card
                             border='1px solid #00000014'
                             w='100%'
                             h={{ base: '128px', xl: '244px' }}
                             borderRadius='8px'
                             overflow='hidden'
+                            minW={{ xl: '880px', '2xl': '0' }}
                         >
-                            <CardBody p={0} maxH={{ xl: '244px' }}>
-                                <HStack h='100%'>
+                            <CardBody p={0} maxH={{ xl: '244px' }} w='100%' maxW='100%'>
+                                <HStack h='100%' maxW='100%'>
                                     <Box
                                         overflow='hidden'
                                         minW={{
@@ -112,7 +119,7 @@ export function JuciestOnJuciest() {
                                                         pb={1}
                                                         borderRadius={4}
                                                     >
-                                                        <HStack>
+                                                        <HStack minW={0}>
                                                             <Image
                                                                 w='16px'
                                                                 h='16px'
@@ -122,6 +129,9 @@ export function JuciestOnJuciest() {
                                                                 fontFamily='Inter'
                                                                 fontWeight={400}
                                                                 fontSize={14}
+                                                                whiteSpace='nowrap'
+                                                                overflow='hidden'
+                                                                noOfLines={1}
                                                             >
                                                                 {i.name} рекомендует
                                                             </Text>
@@ -135,9 +145,11 @@ export function JuciestOnJuciest() {
                                         mb={{ base: '12px', xl: '0px' }}
                                         position='relative'
                                         w='100%'
+                                        maxW='100%'
                                         ml={{ xl: '12px' }}
                                     >
                                         <VStack
+                                            maxW='100%'
                                             w='100%'
                                             spacing={0}
                                             alignItems='flex-start'
@@ -145,10 +157,12 @@ export function JuciestOnJuciest() {
                                             pr={{ xl: '28px' }}
                                         >
                                             <HStack
+                                                maxW='100%'
                                                 h='24px'
                                                 ml={{ base: '4px', xl: '3px' }}
                                                 justifyContent={{ xl: 'space-between' }}
                                                 w={{ xl: '100%' }}
+                                                flexWrap='wrap'
                                             >
                                                 <Show above='xl'>
                                                     <HStack
@@ -168,6 +182,8 @@ export function JuciestOnJuciest() {
                                                             fontFamily='Inter'
                                                             fontSize='14px'
                                                             fontWeight={500}
+                                                            noOfLines={1}
+                                                            overflow='hidden'
                                                         >
                                                             {item.tag}
                                                         </Text>
@@ -217,6 +233,7 @@ export function JuciestOnJuciest() {
                                                 right={{ base: '9px', xl: '20px' }}
                                                 bottom={{ base: '9px', xl: '20px' }}
                                                 spacing={{ base: '12px', xl: '8px' }}
+                                                maxW='100%'
                                             >
                                                 <Button
                                                     size='base'

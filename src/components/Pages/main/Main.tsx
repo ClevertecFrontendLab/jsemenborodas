@@ -65,7 +65,11 @@ export function Main() {
                                     <Box as='section' overflow='hidden'>
                                         <CookBlog></CookBlog>
                                     </Box>
-                                    <Box as='section' overflow='hidden'>
+                                    <Box
+                                        as='section'
+                                        overflow='hidden'
+                                        pr={{ base: '32px', xl: '0' }}
+                                    >
                                         <VeganKitchen></VeganKitchen>
                                     </Box>
                                 </Box>

@@ -1,12 +1,14 @@
 import { Box, Button, Center, Hide, HStack, VStack } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
+import { useNavigate } from 'react-router';
 
 import Avatar from '../../../public/avatar.jpg';
 import Notes from './FooterImages/IconButton.png';
 import Home from './FooterImages/left-icon.png';
 import Search from './FooterImages/Vector.png';
 export function Footer() {
+    const navigate = useNavigate();
     return (
         <>
             <Hide above='xl'>
@@ -25,6 +27,7 @@ export function Footer() {
                         w='25%'
                         h='100%'
                         pt={{ base: '14px', md: '12px' }}
+                        onClick={() => navigate('/')}
                     >
                         <VStack spacing={0} pt='0px' h='100%'>
                             <Box bg='black' w='40px' h='40px' borderRadius='50%'>
