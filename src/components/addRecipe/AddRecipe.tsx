@@ -10,11 +10,17 @@ export function AddRecipe() {
                 <Button
                     w='100%'
                     h='100%'
-                    bg='radial-gradient(circle 75px at center, #C4FF61 0%, #FFFFFF 100%)'
                     _hover={{ background: 'normal' }}
+                    bg='radial-gradient(circle 75px at center, rgba(196, 255, 97, 0.5) 0%, #FFFFFF 100%)'
                 >
                     <VStack>
-                        <Box bg='black' borderRadius='50%' w='48px' h='48px'>
+                        <Box
+                            bg='black'
+                            borderRadius='50%'
+                            w='48px'
+                            h='48px'
+                            transform='translateY(25%)'
+                        >
                             <VStack>
                                 <Image
                                     src={Notes}
@@ -31,6 +37,7 @@ export function AddRecipe() {
                                 lineHeight='16px'
                                 fontSize='12px'
                                 fontWeight={400}
+                                transform='translateY(12px)'
                                 mt='4px'
                             >
                                 Записать рецепт

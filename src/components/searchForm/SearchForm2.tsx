@@ -148,7 +148,7 @@ export function SearchForm2() {
                                 <Box>
                                     <Select
                                         placeholder='Выберите из списка...'
-                                        _placeholder={{ color: '#000000A3' }}
+                                        color='#000000A3'
                                         w='234px'
                                         h='40px'
                                         borderRadius='6px'

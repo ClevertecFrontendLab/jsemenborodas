@@ -93,7 +93,7 @@ export function VeganKitchenPage() {
                             <Box minW='208px' pl='48px' pt='22px' position='fixed'>
                                 <MetricsDesktop />
                             </Box>
-                            <Box minW='208px' position='fixed' bottom='-12px' pl='3px'>
+                            <Box minW='208px' position='fixed' bottom='1px' pl='5px'>
                                 <AddRecipe></AddRecipe>
                             </Box>
                         </Show>

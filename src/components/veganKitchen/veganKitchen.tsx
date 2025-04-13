@@ -215,6 +215,8 @@ export function VeganKitchen() {
                                                                 lineHeight={{ base: '20px' }}
                                                                 fontWeight={400}
                                                                 whiteSpace='nowrap'
+                                                                textOverflow='ellipsis'
+                                                                overflow='hidden'
                                                             >
                                                                 {item.tag}
                                                             </Text>

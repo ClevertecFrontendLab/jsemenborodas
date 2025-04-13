@@ -28,8 +28,14 @@ export function NavMenu() {
     const title = Name[secondSegment];
     return (
         <>
-            <Box position='fixed' zIndex='200'>
-                <VStack h='calc(100vh - 80px)' w='256px' pt={{ xl: '33px' }} ml='8px'>
+            <Box position='fixed' zIndex='200' boxShadow='none'>
+                <VStack
+                    h='calc(100vh - 80px)'
+                    w='256px'
+                    pt={{ xl: '33px' }}
+                    ml='8px'
+                    boxShadow='none'
+                >
                     <Accordion
                         onClick={() => navigate('/VeganKitchen/SecondDelicious')}
                         border='1px solid #0000001A'
@@ -61,7 +67,7 @@ export function NavMenu() {
                         }}
                     >
                         {NavMenuData.map((item) => (
-                            <AccordionItem key={item.id} border='none'>
+                            <AccordionItem key={item.id} border='none' boxShadow='none'>
                                 <AccordionButton
                                     py={0}
                                     px={0}
@@ -98,7 +104,13 @@ export function NavMenu() {
                                     </Box>
                                     <AccordionIcon w='24px' h='32px'></AccordionIcon>
                                 </AccordionButton>
-                                <AccordionPanel overflowY='auto' pb={0} pt={0} overflow='hidden'>
+                                <AccordionPanel
+                                    overflowY='auto'
+                                    pb={0}
+                                    pt={0}
+                                    overflow='hidden'
+                                    boxShadow='none'
+                                >
                                     <VStack spacing={0}>
                                         {item.childrens.map((child) => (
                                             <Box
