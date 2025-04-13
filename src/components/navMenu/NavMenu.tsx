@@ -120,8 +120,8 @@ export function NavMenu() {
                                                 w='230px'
                                                 h='36px'
                                                 textAlign='left'
-                                                pl='50px'
-                                                pt={2}
+                                                pl='55px'
+                                                pt='10px'
                                                 position='relative'
                                             >
                                                 <Heading
@@ -145,8 +145,8 @@ export function NavMenu() {
                                                                       left:
                                                                           child.title ===
                                                                           'Вторые блюда'
-                                                                              ? '31px'
-                                                                              : '38px',
+                                                                              ? '35px'
+                                                                              : '43px',
                                                                       transform:
                                                                           child.title ===
                                                                           'Вторые блюда'
