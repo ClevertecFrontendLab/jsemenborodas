@@ -177,7 +177,7 @@ export function NavMenu() {
                         ))}
                     </Accordion>
                     <Box as='footer' position='fixed' bottom='37px'>
-                        <VStack spacing='15px' pt='10px' pl='0px' ml='-5px'>
+                        <VStack spacing='15px' pt='10px' pl='4px' ml='-5px'>
                             <Text
                                 fontFamily='Inter'
                                 color='#0000003D'
@@ -203,7 +203,7 @@ export function NavMenu() {
                                 Все права защищены, ученический файл,<br></br> ©Клевер Технолоджи,
                                 2025
                             </Text>
-                            <HStack spacing='6px' pl='9px'>
+                            <HStack spacing='6px' pl='16px'>
                                 <Image src={exiticon}></Image>
                                 <Text
                                     fontFamily='Inter'
