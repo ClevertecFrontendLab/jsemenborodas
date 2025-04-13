@@ -1,32 +1,38 @@
 import './App.css';
 
-import { useState } from 'react';
+import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
+import { BrowserRouter } from 'react-router';
 
-import reactLogo from '~/assets/react.svg';
-import { useGetPostsQuery } from '~/query/services/posts.ts';
+import { Footer } from '~/components/footer/Footer';
+import { Header } from '~/components/header/Header';
+import { CursorTracker } from '~/components/theme/CursorTracker';
 
+import { AppRoutes } from '../components/routes/Routes';
+import { theme } from '../components/theme/theme';
 function App() {
-    const [count, setCount] = useState(0);
-    const { data: _data, isLoading: _isLoading } = useGetPostsQuery();
-
     return (
         <>
-            <div>
-                <a href='https://vite.dev' target='_blank'>
-                    <img src='/vite.svg' className='logo' alt='Vite logo' />
-                </a>
-                <a href='https://react.dev' target='_blank'>
-                    <img src={reactLogo} className='logo react' alt='React logo' />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className='card'>
-                <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>
+            <BrowserRouter>
+                <ChakraProvider theme={theme}>
+                    <CursorTracker></CursorTracker>
+                    <Grid
+                        minH='100vh'
+                        templateRows={{ base: 'auto 1fr auto' }}
+                        maxW={{ xl: 'calc(100vw)' }}
+                        overflow='hidden'
+                    >
+                        <GridItem>
+                            <Header></Header>
+                        </GridItem>
+                        <GridItem>
+                            <AppRoutes></AppRoutes>
+                        </GridItem>
+                        <GridItem>
+                            <Footer></Footer>
+                        </GridItem>
+                    </Grid>
+                </ChakraProvider>
+            </BrowserRouter>
         </>
     );
 }
