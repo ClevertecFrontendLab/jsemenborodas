@@ -29,17 +29,12 @@ export function NavMenu() {
     return (
         <>
             <Box position='fixed' zIndex='200'>
-                <VStack
-                    h='calc(100vh - 80px)'
-                    w='256px'
-                    boxShadow='0px 1px 3px 0px #0000001F'
-                    pt={{ xl: '33px' }}
-                    borderLeft=' 1px solid #0000001A'
-                    ml='8px'
-                >
+                <VStack h='calc(100vh - 80px)' w='256px' pt={{ xl: '33px' }} ml='8px'>
                     <Accordion
                         onClick={() => navigate('/VeganKitchen/SecondDelicious')}
                         border='1px solid #0000001A'
+                        boxShadow='none'
+                        borderLeft='none'
                         borderRadius='8px'
                         defaultIndex={(title === 'Второе блюдо' && 6) || undefined}
                         w='258px'
@@ -71,7 +66,7 @@ export function NavMenu() {
                                     py={0}
                                     px={0}
                                     pr={2}
-                                    ml={3}
+                                    ml={4}
                                     w='230px'
                                     _expanded={{ bg: '#EAFFC7' }}
                                 >
@@ -103,7 +98,7 @@ export function NavMenu() {
                                     </Box>
                                     <AccordionIcon w='24px' h='32px'></AccordionIcon>
                                 </AccordionButton>
-                                <AccordionPanel overflowY='auto' pb={0} pt={0}>
+                                <AccordionPanel overflowY='auto' pb={0} pt={0} overflow='hidden'>
                                     <VStack spacing={0}>
                                         {item.childrens.map((child) => (
                                             <Box
@@ -113,6 +108,7 @@ export function NavMenu() {
                                                 textAlign='left'
                                                 pl='50px'
                                                 pt={2}
+                                                position='relative'
                                             >
                                                 <Heading
                                                     as='h5'
@@ -135,12 +131,12 @@ export function NavMenu() {
                                                                       left:
                                                                           child.title ===
                                                                           'Вторые блюда'
-                                                                              ? '48px'
-                                                                              : '55px',
+                                                                              ? '31px'
+                                                                              : '38px',
                                                                       transform:
                                                                           child.title ===
                                                                           'Вторые блюда'
-                                                                              ? 'translateY(-2px)'
+                                                                              ? 'translateY(-4px)'
                                                                               : '',
                                                                       height:
                                                                           child.title ===
@@ -166,7 +162,7 @@ export function NavMenu() {
                             </AccordionItem>
                         ))}
                     </Accordion>
-                    <Box as='footer' position='fixed' bottom='36px'>
+                    <Box as='footer' position='fixed' bottom='37px'>
                         <VStack spacing='15px' pt='10px' pl='0px' ml='-5px'>
                             <Text
                                 fontFamily='Inter'

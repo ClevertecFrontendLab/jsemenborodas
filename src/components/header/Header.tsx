@@ -121,7 +121,11 @@ export function Header() {
                                     <CardHeader p={0} bg='rgba(255, 255, 211, 1)'>
                                         <HStack justifyContent='flex-start' spacing='12px'>
                                             <Avatar
-                                                ml={{ xl: '53px', '2xl': '55px' }}
+                                                ml={
+                                                    pathNames[0] === 'Juciest'
+                                                        ? { xl: '48px', '2xl': '55px' }
+                                                        : { xl: '53px', '2xl': '55px' }
+                                                }
                                                 p={0}
                                                 name='Екатерина Константинопольская'
                                                 src={AvatarImg}

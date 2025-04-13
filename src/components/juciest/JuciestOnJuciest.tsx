@@ -43,7 +43,11 @@ export function JuciestOnJuciest() {
                         '2xl': ' repeat(2, 1fr)',
                     }}
                     rowGap={4}
-                    columnGap={{ md: '15px', '2xl': '24px' }}
+                    columnGap={
+                        title === 'Второе блюдо'
+                            ? { md: '15px', '2xl': '30px' }
+                            : { md: '15px', '2xl': '24px' }
+                    }
                 >
                     {(title === 'Второе блюдо' ? VeganPageData : JuciestData).map((item) => (
                         <Card
@@ -146,7 +150,12 @@ export function JuciestOnJuciest() {
                                         position='relative'
                                         w='100%'
                                         maxW='100%'
-                                        ml={{ xl: '12px' }}
+                                        ml={
+                                            title === 'Второе блюдо'
+                                                ? { base: '18px', md: '16px', xl: '12px' }
+                                                : { xl: '12px' }
+                                        }
+                                        mt={title === 'Второе блюдо' ? { md: '4px' } : {}}
                                     >
                                         <VStack
                                             maxW='100%'
@@ -230,7 +239,11 @@ export function JuciestOnJuciest() {
 
                                             <HStack
                                                 position='absolute'
-                                                right={{ base: '9px', xl: '20px' }}
+                                                right={
+                                                    title === 'Второе блюдо'
+                                                        ? { base: '9px', xl: '20px', '2xl': '18px' }
+                                                        : { base: '9px', xl: '20px' }
+                                                }
                                                 bottom={{ base: '9px', xl: '20px' }}
                                                 spacing={{ base: '12px', xl: '8px' }}
                                                 maxW='100%'

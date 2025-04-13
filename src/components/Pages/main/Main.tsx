@@ -53,13 +53,17 @@ export function Main() {
                                 <Box
                                     w={{ xl: '100%' }}
                                     maxW={{ xl: '1360px' }}
-                                    overflow='hidden'
+                                    overflow={{ base: 'hidden', xl: 'visible' }}
                                     px={{ base: '16px', md: '0', '2xl': '2px' }}
                                 >
-                                    <Box as='section' overflow='hidden'>
+                                    <Box as='section' overflow={{ base: 'hidden', xl: 'visible' }}>
                                         <NewRecipe></NewRecipe>
                                     </Box>
-                                    <Box as='section' overflow='hidden'>
+                                    <Box
+                                        as='section'
+                                        overflow={{ base: 'hidden', xl: 'visible' }}
+                                        mt={{ xl: '75px', '2xl': '108px' }}
+                                    >
                                         <Juciest></Juciest>
                                     </Box>
                                     <Box as='section' overflow='hidden'>

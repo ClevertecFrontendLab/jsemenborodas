@@ -10,7 +10,7 @@ export function AddRecipe() {
                 <Button
                     w='100%'
                     h='100%'
-                    bg='radial-gradient(circle, #C4FF61 0%, #FFFFFF 50%)'
+                    bg='radial-gradient(circle 75px at center, #C4FF61 0%, #FFFFFF 100%)'
                     _hover={{ background: 'normal' }}
                 >
                     <VStack>
