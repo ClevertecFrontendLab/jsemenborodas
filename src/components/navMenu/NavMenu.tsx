@@ -11,24 +11,46 @@ import {
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import exiticon from '../../../public/exitIcon.png';
 import { NavMenuData } from './NavMenuData';
 export function NavMenu() {
     const location = useLocation();
-    const navigate = useNavigate();
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    const secondSegment = pathSegments[1];
     const Name: Record<string, string> = {
         '/': 'Приятного аппетита!',
         Juciest: 'Самое сочное',
         SecondDelicious: 'Второе блюдо',
     };
-    const pathSegments = location.pathname.split('/').filter(Boolean);
-    const secondSegment = pathSegments[1];
     const title = Name[secondSegment];
+
+    const navigate = useNavigate();
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+    const [isDefaultExpanded, setIsDefaultExpanded] = useState(title === 'Второе блюдо');
+
+    const handleToggle = (index: number) => {
+        const isClosing = expandedIndex === index;
+
+        if (isClosing) {
+            setIsDefaultExpanded(false);
+        }
+
+        setExpandedIndex(isClosing ? null : index);
+        navigate('/VeganKitchen/SecondDelicious');
+    };
+
     return (
         <>
-            <Box position='fixed' zIndex='200' boxShadow='none'>
+            <Box
+                position='fixed'
+                zIndex='200'
+                boxShadow='none'
+                borderRight='1px solid #00000024'
+                w='260px'
+            >
                 <VStack
                     h='calc(100vh - 80px)'
                     w='256px'
@@ -38,10 +60,12 @@ export function NavMenu() {
                     boxShadow='none'
                 >
                     <Accordion
-                        onClick={() => navigate('/VeganKitchen/SecondDelicious')}
-                        border='1px solid #0000001A'
+                        borderBottom={
+                            expandedIndex !== null || isDefaultExpanded
+                                ? '1px solid #C4C4C4'
+                                : 'none'
+                        }
                         boxShadow='none'
-                        borderLeft='none'
                         borderRadius='8px'
                         defaultIndex={(title === 'Второе блюдо' && 6) || undefined}
                         w='258px'
@@ -49,7 +73,6 @@ export function NavMenu() {
                         maxH='calc(100vh - 80px - 180px)'
                         overflow='hidden'
                         overflowY='auto'
-                        borderTop='none'
                         sx={{
                             '&::-webkit-scrollbar': {
                                 width: '8px',
@@ -70,6 +93,7 @@ export function NavMenu() {
                         {NavMenuData.map((item) => (
                             <AccordionItem key={item.id} border='none' boxShadow='none'>
                                 <AccordionButton
+                                    onClick={() => handleToggle(item.id)}
                                     py={0}
                                     px={0}
                                     pr={2}
