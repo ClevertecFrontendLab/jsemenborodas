@@ -33,6 +33,7 @@ export function NavMenu() {
                     h='calc(100vh - 80px)'
                     w='256px'
                     pt={{ xl: '33px' }}
+                    pr={{ xl: '10px' }}
                     ml='8px'
                     boxShadow='none'
                 >
@@ -75,6 +76,7 @@ export function NavMenu() {
                                     ml={4}
                                     w='230px'
                                     _expanded={{ bg: '#EAFFC7' }}
+                                    pl='4px'
                                 >
                                     <Box as='span' flex='1' textAlign='left'>
                                         <HStack spacing='12px' align='center' h='48px'>
@@ -90,7 +92,7 @@ export function NavMenu() {
                                                         ? 700
                                                         : 500
                                                 }
-                                                letterSpacing='0.4px'
+                                                letterSpacing='0px'
                                                 data-test-id={
                                                     item.title === 'Веганская кухня'
                                                         ? 'vegan-cuisine'
