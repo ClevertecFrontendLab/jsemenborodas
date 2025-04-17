@@ -18,14 +18,6 @@ import { NavMenuData } from '../../entities/Data/NavMenuData';
 export function NavMenu() {
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    const secondSegment = pathSegments[1];
-    const Name: Record<string, string> = {
-        '/': 'Приятного аппетита!',
-        Juciest: 'Самое сочное',
-        SecondDelicious: 'Второе блюдо',
-        veganKitchen: 'Веганская кухня',
-    };
-    const title = Name[secondSegment];
 
     const navigate = useNavigate();
 
@@ -49,7 +41,6 @@ export function NavMenu() {
                     <Accordion
                         boxShadow='none'
                         borderRadius='8px'
-                        defaultIndex={(title === 'Второе блюдо' && 6) || undefined}
                         w='258px'
                         allowToggle
                         maxH='calc(100vh - 80px - 180px)'
@@ -82,7 +73,10 @@ export function NavMenu() {
                                     w='230px'
                                     _expanded={{ bg: '#EAFFC7' }}
                                     pl='4px'
-                                    onClick={() => navigate(item.link)}
+                                    onClick={() => {
+                                        const path = `/${item.category}/${item.childrens[0].subCategory}`;
+                                        navigate(path);
+                                    }}
                                 >
                                     <Box as='span' flex='1' textAlign='left'>
                                         <HStack spacing='12px' align='center' h='48px'>
@@ -93,17 +87,15 @@ export function NavMenu() {
                                                 fontSize='16px'
                                                 lineHeight='24px'
                                                 fontWeight={
-                                                    title === 'Второе блюдо' &&
-                                                    item.title === 'Веганская кухня'
-                                                        ? 700
-                                                        : 500
+                                                    pathSegments[0] === item.category ? 700 : 500
                                                 }
+                                                // fontWeight={
+                                                //     title === 'Второе блюдо' &&
+                                                //     item.title === 'Веганская кухня'
+                                                //         ? 700
+                                                //         : 500
+                                                // }
                                                 letterSpacing='0px'
-                                                data-test-id={
-                                                    item.title === 'Веганская кухня'
-                                                        ? 'vegan-cuisine'
-                                                        : undefined
-                                                }
                                             >
                                                 {' '}
                                                 {item.title}
@@ -122,6 +114,7 @@ export function NavMenu() {
                                     <VStack spacing={0}>
                                         {item.childrens.map((child) => (
                                             <Box
+                                                _hover={{ cursor: 'pointer' }}
                                                 key={child.id}
                                                 w='230px'
                                                 h='36px'
@@ -129,6 +122,10 @@ export function NavMenu() {
                                                 pl='55px'
                                                 pt='10px'
                                                 position='relative'
+                                                onClick={() => {
+                                                    const path = `/${item.category}/${child.subCategory}`;
+                                                    navigate(path);
+                                                }}
                                             >
                                                 <Heading
                                                     as='h5'
@@ -137,41 +134,67 @@ export function NavMenu() {
                                                     whiteSpace='nowrap'
                                                     letterSpacing='0.1px'
                                                     fontWeight={
-                                                        title === 'Второе блюдо' &&
-                                                        child.title === 'Вторые блюда'
+                                                        pathSegments[1] === child.subCategory
                                                             ? 700
                                                             : 500
                                                     }
                                                     sx={{
                                                         '&::before':
-                                                            title === 'Второе блюдо'
+                                                            pathSegments[1] === child.subCategory
                                                                 ? {
                                                                       content: '""',
                                                                       position: 'absolute',
-                                                                      left:
-                                                                          child.title ===
-                                                                          'Вторые блюда'
-                                                                              ? '35px'
-                                                                              : '43px',
-                                                                      transform:
-                                                                          child.title ===
-                                                                          'Вторые блюда'
-                                                                              ? 'translateY(-4px)'
-                                                                              : '',
-                                                                      height:
-                                                                          child.title ===
-                                                                          'Вторые блюда'
-                                                                              ? '28px'
-                                                                              : '24px',
-                                                                      width:
-                                                                          child.title ===
-                                                                          'Вторые блюда'
-                                                                              ? '8px'
-                                                                              : '1px',
+                                                                      left: '35px',
+                                                                      transform: 'translateY(-4px)',
+                                                                      height: '28px',
+                                                                      width: '8px',
                                                                       backgroundColor: '#C4FF61',
                                                                   }
-                                                                : {},
+                                                                : {
+                                                                      content: '""',
+                                                                      position: 'absolute',
+                                                                      left: '43px',
+                                                                      height: '24px',
+                                                                      width: '1px',
+                                                                      backgroundColor: '#C4FF61',
+                                                                  },
                                                     }}
+                                                    // fontWeight={
+                                                    //     title === 'Второе блюдо' &&
+                                                    //     child.title === 'Вторые блюда'
+                                                    //         ? 700
+                                                    //         : 500
+                                                    // }
+                                                    // sx={{
+                                                    //     '&::before':
+                                                    //         title === 'Второе блюдо'
+                                                    //             ? {
+                                                    //                   content: '""',
+                                                    //                   position: 'absolute',
+                                                    //                   left:
+                                                    //                       child.title ===
+                                                    //                       'Вторые блюда'
+                                                    //                           ? '35px'
+                                                    //                           : '43px',
+                                                    //                   transform:
+                                                    //                       child.title ===
+                                                    //                       'Вторые блюда'
+                                                    //                           ? 'translateY(-4px)'
+                                                    //                           : '',
+                                                    //                   height:
+                                                    //                       child.title ===
+                                                    //                       'Вторые блюда'
+                                                    //                           ? '28px'
+                                                    //                           : '24px',
+                                                    //                   width:
+                                                    //                       child.title ===
+                                                    //                       'Вторые блюда'
+                                                    //                           ? '8px'
+                                                    //                           : '1px',
+                                                    //                   backgroundColor: '#C4FF61',
+                                                    //               }
+                                                    //             : {},
+                                                    // }}
                                                 >
                                                     {Object.values(child.title).join('')}
                                                 </Heading>

@@ -1,8 +1,18 @@
 import { Box, Tab, TabList, Tabs as Tabb } from '@chakra-ui/react';
+import { useLocation, useNavigate } from 'react-router';
 
-import { TabsData } from '../../entities/Data/TabsData';
+import { NavMenuData } from '~/components/entities/Data/NavMenuData';
 
 export function Tabs() {
+    const location = useLocation();
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+
+    const selectedCategory = NavMenuData.find((item) => item.category === pathSegments[0]);
+    const selectedSubCategory = selectedCategory?.childrens.findIndex(
+        (item) => item.subCategory === pathSegments[1],
+    );
+    console.log(selectedSubCategory);
+    const navigate = useNavigate();
     return (
         <>
             <Box
@@ -13,7 +23,7 @@ export function Tabs() {
                 minW={{ xl: '946px' }}
             >
                 <Tabb
-                    defaultIndex={2}
+                    index={selectedSubCategory}
                     borderBottom='1px solid #00000014'
                     h={{ base: '30px', md: '32px', xl: '36px', '2xl': '40px' }}
                     w={{ '2xl': '1006px' }}
@@ -31,30 +41,38 @@ export function Tabs() {
                             '2xl': 'translateX(22px)',
                         }}
                     >
-                        {TabsData.map((item) => (
-                            <Tab
-                                key={item.id}
-                                fontFamily='Inter'
-                                fontWeight={500}
-                                fontSize={{ base: '14px', xl: '16px' }}
-                                color='#134B00'
-                                letterSpacing={{ xl: '0.1px' }}
-                                sx={{
-                                    _selected: {
-                                        color: '#2DB100',
-                                        borderBottomColor: '#2DB100',
-                                        height: {
-                                            base: '30px',
-                                            md: '32px',
-                                            xl: '36px',
-                                            '2xl': '40px',
-                                        },
-                                    },
-                                }}
-                            >
-                                {item.title}
-                            </Tab>
-                        ))}
+                        {NavMenuData.map((item) =>
+                            item.category === pathSegments[0]
+                                ? item.childrens.map((child) => (
+                                      <Tab
+                                          onClick={() => {
+                                              const path = `/${pathSegments[0]}/${child.subCategory}`;
+                                              navigate(path);
+                                          }}
+                                          key={item.id}
+                                          fontFamily='Inter'
+                                          fontWeight={500}
+                                          fontSize={{ base: '14px', xl: '16px' }}
+                                          color='#134B00'
+                                          letterSpacing={{ xl: '0.1px' }}
+                                          sx={{
+                                              _selected: {
+                                                  color: '#2DB100',
+                                                  borderBottomColor: '#2DB100',
+                                                  height: {
+                                                      base: '30px',
+                                                      md: '32px',
+                                                      xl: '36px',
+                                                      '2xl': '40px',
+                                                  },
+                                              },
+                                          }}
+                                      >
+                                          {child.title}
+                                      </Tab>
+                                  ))
+                                : '',
+                        )}
                     </TabList>
                 </Tabb>
             </Box>

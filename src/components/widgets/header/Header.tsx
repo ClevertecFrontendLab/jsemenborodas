@@ -3,10 +3,11 @@ import { useLocation } from 'react-router';
 
 import { UserAvatar } from '~/components/features/Avatar/Avatar';
 import { Breadcrumbs } from '~/components/features/BreadCrumb/BreadCrumbs';
-import { Burger, FavouriteNotes, FullLogo, Likes, Logo, Subscribers } from '~/icons/Icon';
+import { FavouriteNotes, FullLogo, Likes, Logo, Subscribers } from '~/icons/Icon';
 
 import { Metrics } from '../../features/Metrics/Metrics';
 import AvatarImg from '../../shared/images/avatarImages/avatar.jpg';
+import { BurgerMenu } from '../burgerMenu/BurgerMenu';
 
 export function Header() {
     const location = useLocation();
@@ -87,7 +88,7 @@ export function Header() {
                         pr={{ base: '12px', xl: '0px' }}
                     >
                         <Hide above='xl'>
-                            <Icon as={Burger} w={6} h={6} />
+                            <BurgerMenu></BurgerMenu>
                         </Hide>
                         <Show above='xl'>
                             <Card shadow='none' w='432px' bg='transparent'>
