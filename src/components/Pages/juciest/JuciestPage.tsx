@@ -1,12 +1,12 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 
-import { JuciestOnJuciest } from '~/components/juciest/JuciestOnJuciest';
-import { VeganKitchen } from '~/components/veganKitchen/veganKitchen';
+import { JuciestOnJuciest } from '~/components/widgets/juciest/JuciestOnJuciest';
+import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
 
-import { AddRecipe } from '../../addRecipe/AddRecipe';
-import { MetricsDesktop } from '../../metrics/MetricsDesktop';
-import { NavMenu } from '../../navMenu/NavMenu';
-import { SearchForm2 } from '../../searchForm/SearchForm2';
+import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
+import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
+import { NavMenu } from '../../widgets/navMenu/NavMenu';
+import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 
 export function JuciestPage() {
     return (

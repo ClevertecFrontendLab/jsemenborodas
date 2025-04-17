@@ -1,15 +1,15 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 
-import { Juciest } from '~/components/widgets/juciest/Juciest';
+import { JuciestOnJuciest } from '~/components/widgets/juciest/JuciestOnJuciest';
+import { Tabs } from '~/components/widgets/tabs/Tabs';
+import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
 
-import { NewRecipe } from '../../newRecipe/NewRecipe';
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
-import { CookBlog } from '../../widgets/cookBlog/cookBlog';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
 import { NavMenu } from '../../widgets/navMenu/NavMenu';
 import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
-import { VeganKitchen } from '../../widgets/veganKitchen/veganKitchen';
-export function Main() {
+
+export function VeganKitchenPage() {
     return (
         <>
             <Box
@@ -35,7 +35,7 @@ export function Main() {
                     <GridItem minW={{ xl: '880px' }}>
                         {' '}
                         <HStack
-                            px={{ md: '20px', xl: '0' }}
+                            px={{ md: '0px', xl: '0' }}
                             spacing='0px'
                             justifyContent={{ base: 'center', xl: 'flex-start' }}
                             position='relative'
@@ -48,36 +48,44 @@ export function Main() {
                                 }}
                                 minW={{ xl: '880px' }}
                             >
-                                <Box as='section' px={{ base: '0px', md: '0px', xl: '0' }}>
-                                    <SearchForm2></SearchForm2>
-                                </Box>
-                                <Box
-                                    w={{ xl: '100%' }}
-                                    maxW={{ xl: '1360px' }}
-                                    overflow={{ base: 'hidden', xl: 'visible' }}
-                                    px={{ base: '16px', md: '0', '2xl': '2px' }}
-                                >
-                                    <Box as='section' overflow={{ base: 'hidden', xl: 'visible' }}>
-                                        <NewRecipe></NewRecipe>
-                                    </Box>
+                                <Box as='section' maxW='100vw'>
                                     <Box
-                                        as='section'
-                                        overflow={{ base: 'hidden', xl: 'visible' }}
-                                        mt={{ xl: '75px', '2xl': '108px' }}
+                                        px={{ base: '16px', md: '20px', xl: '0px' }}
+                                        pt={{ md: '2px', xl: '0px' }}
                                     >
-                                        <Juciest></Juciest>
+                                        <SearchForm2></SearchForm2>
                                     </Box>
-                                    <Box as='section' overflow='hidden'>
-                                        <CookBlog></CookBlog>
+
+                                    <Box
+                                        w={{ xl: '100%' }}
+                                        maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
+                                        h={{ base: '30px' }}
+                                    >
+                                        <Tabs></Tabs>
                                     </Box>
                                     <Box
                                         as='section'
-                                        overflow='hidden'
-                                        pr={{ base: '32px', xl: '0' }}
+                                        ml={{ base: '16px', md: '18px', xl: 0, '2xl': '1px' }}
+                                        flexDirection='column'
+                                        alignItems='center'
+                                        display='flex'
+                                        mt={{ base: '24px', md: '25px', xl: '30px', '2xl': '24px' }}
+                                        pr={{ base: '16px', md: '18px', xl: 0 }}
+                                    >
+                                        <JuciestOnJuciest></JuciestOnJuciest>
+                                    </Box>
+                                    <Box
+                                        pl={{ base: '16px', xl: 0 }}
+                                        pr={{ base: '16px', xl: '0' }}
                                     >
                                         <VeganKitchen></VeganKitchen>
                                     </Box>
                                 </Box>
+                                <Box
+                                    w={{ xl: '100%' }}
+                                    maxW={{ xl: '1360px' }}
+                                    overflow='hidden'
+                                ></Box>
                             </VStack>
                         </HStack>
                     </GridItem>

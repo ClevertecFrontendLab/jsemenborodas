@@ -3,12 +3,12 @@ import './App.css';
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
 import { BrowserRouter } from 'react-router';
 
-import { Footer } from '~/components/footer/Footer';
-import { Header } from '~/components/header/Header';
-import { CursorTracker } from '~/components/theme/CursorTracker';
+import { Footer } from '~/components/widgets/footer/Footer';
+import { Header } from '~/components/widgets/header/Header';
 
 import { AppRoutes } from '../components/routes/Routes';
-import { theme } from '../components/theme/theme';
+import { CursorTracker } from '../components/widgets/cursorTracker/CursorTracker';
+import { theme } from './theme';
 function App() {
     return (
         <>

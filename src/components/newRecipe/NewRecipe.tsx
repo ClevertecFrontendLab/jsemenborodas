@@ -4,7 +4,7 @@ import { Text } from '@chakra-ui/react';
 
 import { FavouriteNotes, leftArrow, Likes, rightArrow } from '~/icons/Icon';
 
-import { MetricsDefault } from '../metrics/MetricsDefault';
+import { Metrics } from '../features/Metrics/Metrics';
 import { NewRecipeData } from './NewRecipeData';
 
 export function NewRecipe() {
@@ -196,16 +196,16 @@ export function NewRecipe() {
                                             mr={{ xl: '9px', '2xl': '-1px' }}
                                         >
                                             {recipe.follows > 0 && (
-                                                <MetricsDefault
+                                                <Metrics
                                                     w={{ xl: '32px' }}
                                                     icon={FavouriteNotes}
-                                                >{`${recipe.follows}`}</MetricsDefault>
+                                                >{`${recipe.follows}`}</Metrics>
                                             )}
                                             {recipe.likes > 0 && (
-                                                <MetricsDefault
+                                                <Metrics
                                                     w={{ xl: '32px' }}
                                                     icon={Likes}
-                                                >{`${recipe.likes}`}</MetricsDefault>
+                                                >{`${recipe.likes}`}</Metrics>
                                             )}
                                         </HStack>
                                     </HStack>

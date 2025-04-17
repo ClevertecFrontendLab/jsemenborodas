@@ -2,7 +2,7 @@ import { Route, Routes as RouterRoutes } from 'react-router';
 
 import { JuciestPage } from '../Pages/juciest/JuciestPage';
 import { Main } from '../Pages/main/Main';
-import { VeganKitchenPage } from '../Pages/veganKitchen.tsx/VeganKitchenPage';
+import { VeganKitchenPage } from '../Pages/veganKitchen/VeganKitchenPage';
 
 export function AppRoutes() {
     return (
