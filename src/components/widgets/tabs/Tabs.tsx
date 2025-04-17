@@ -11,8 +11,8 @@ export function Tabs() {
     const selectedSubCategory = selectedCategory?.childrens.findIndex(
         (item) => item.subCategory === pathSegments[1],
     );
-    console.log(selectedSubCategory);
     const navigate = useNavigate();
+
     return (
         <>
             <Box
@@ -21,6 +21,7 @@ export function Tabs() {
                 mt={{ base: '32px', md: '30px', xl: '38px', '2xl': '34px' }}
                 overflow={{ md: 'visible', xl: 'hidden', '2xl': 'visible' }}
                 minW={{ xl: '946px' }}
+                bg='transparent'
             >
                 <Tabb
                     index={selectedSubCategory}
@@ -28,6 +29,25 @@ export function Tabs() {
                     h={{ base: '30px', md: '32px', xl: '36px', '2xl': '40px' }}
                     w={{ '2xl': '1006px' }}
                     mx={{ '2xl': 'auto' }}
+                    overflowX='auto'
+                    overflowY='hidden'
+                    sx={{
+                        '&::-webkit-scrollbar': {
+                            width: '1px',
+                            h: '1px',
+                            background: '#0000000A',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            background: 'transparent',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            background: '#00000029',
+                            borderRadius: '8px',
+                        },
+                        '&::-webkit-scrollbar-button': {
+                            display: 'none',
+                        },
+                    }}
                 >
                     <TabList
                         whiteSpace='nowrap'

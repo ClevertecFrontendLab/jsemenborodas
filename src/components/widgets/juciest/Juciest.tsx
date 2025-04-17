@@ -96,6 +96,7 @@ export function Juciest() {
                                 maxW={{ '3xl': '668px' }}
                                 h={{ base: '128px', xl: '244px' }}
                                 className='custom-cursor'
+                                bg='transparent'
                             >
                                 <CardBody p={0} w='100%' h='100%' borderLeftRadius={8}>
                                     <HStack

@@ -52,6 +52,7 @@ export function JuciestOnJuciest() {
                     {(title === 'Второе блюдо' ? VeganPageData : JuciestData).map((item) => (
                         <Card
                             border='1px solid #00000014'
+                            bg='transparent'
                             w='100%'
                             h={{ base: '128px', xl: '244px' }}
                             borderRadius='8px'

@@ -7,7 +7,11 @@ import Avatar from '../../shared/images/avatarImages/avatar.jpg';
 import Notes from '../../shared/images/FooterImages/IconButton.png';
 import Home from '../../shared/images/FooterImages/left-icon.png';
 import Search from '../../shared/images/FooterImages/Vector.png';
-export function Footer() {
+
+interface FooterMenuProps {
+    isBurgerOpen: boolean;
+}
+export function Footer({ isBurgerOpen }: FooterMenuProps) {
     const navigate = useNavigate();
     return (
         <>
@@ -21,6 +25,7 @@ export function Footer() {
                     data-test-id='footer'
                     position='fixed'
                     bottom='0px'
+                    filter={isBurgerOpen ? 'blur(2px)' : ''}
                 >
                     <Button
                         bg='radial-gradient(circle, #C4FF61 0%, #FFFFD3 40%)'

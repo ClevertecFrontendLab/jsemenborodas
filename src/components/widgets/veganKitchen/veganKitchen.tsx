@@ -135,6 +135,7 @@ export function VeganKitchen() {
                                             border='1px solid #00000014'
                                             boxShadow='none'
                                             className='custom-cursor'
+                                            bg='transparent'
                                         >
                                             <CardBody
                                                 p={{ base: '12px' }}
@@ -274,6 +275,7 @@ export function VeganKitchen() {
                                                 maxW='100%'
                                                 boxShadow='none'
                                                 className='custom-cursor'
+                                                bg='transparent'
                                             >
                                                 <CardBody
                                                     p={{ base: '16px 0px 0px 12px' }}

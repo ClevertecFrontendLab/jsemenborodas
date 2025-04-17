@@ -18,7 +18,11 @@ import { Image } from '@chakra-ui/react';
 
 import { CookBlogData } from '../../entities/Data/cookBlogData';
 import rightArrow from '../../shared/images/buttonImages/Vector.png';
-export function CookBlog() {
+
+interface PageMenuProps {
+    isBurgerOpen: boolean;
+}
+export function CookBlog({ isBurgerOpen }: PageMenuProps) {
     return (
         <>
             <Box
@@ -84,7 +88,7 @@ export function CookBlog() {
                                 maxW='98%'
                             >
                                 <Card
-                                    bg='white'
+                                    bg={isBurgerOpen ? 'rgba(0, 0, 0, 0.16)' : 'white'}
                                     h='100%'
                                     borderRadius={8}
                                     maxW='100%'

@@ -1,6 +1,7 @@
 import './App.css';
 
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
+import { useState } from 'react';
 import { BrowserRouter } from 'react-router';
 
 import { Footer } from '~/components/widgets/footer/Footer';
@@ -10,6 +11,7 @@ import { AppRoutes } from '../components/routes/Routes';
 import { CursorTracker } from '../components/widgets/cursorTracker/CursorTracker';
 import { theme } from './theme';
 function App() {
+    const [isBurgerOpen, setIsBurgerOpen] = useState(false);
     return (
         <>
             <BrowserRouter>
@@ -22,13 +24,16 @@ function App() {
                         overflow='hidden'
                     >
                         <GridItem>
-                            <Header></Header>
+                            <Header
+                                isBurgerOpen={isBurgerOpen}
+                                setIsBurgerOpen={setIsBurgerOpen}
+                            ></Header>
                         </GridItem>
                         <GridItem>
-                            <AppRoutes></AppRoutes>
+                            <AppRoutes isBurgerOpen={isBurgerOpen}></AppRoutes>
                         </GridItem>
                         <GridItem>
-                            <Footer></Footer>
+                            <Footer isBurgerOpen={isBurgerOpen}></Footer>
                         </GridItem>
                     </Grid>
                 </ChakraProvider>

@@ -128,7 +128,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ pathNames }) => {
     };
 
     return (
-        <Breadcrumb separator={<Text w='8px'> &gt; </Text>}>
+        <Breadcrumb separator={<Text w='8px'> &gt; </Text>} listProps={{ flexWrap: 'wrap' }}>
             <BreadcrumbItem>
                 <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
             </BreadcrumbItem>

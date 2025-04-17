@@ -1,4 +1,5 @@
 import { Box, Card, CardHeader, Heading, Hide, HStack, Icon, Show } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
 import { UserAvatar } from '~/components/features/Avatar/Avatar';
@@ -9,17 +10,37 @@ import { Metrics } from '../../features/Metrics/Metrics';
 import AvatarImg from '../../shared/images/avatarImages/avatar.jpg';
 import { BurgerMenu } from '../burgerMenu/BurgerMenu';
 
-export function Header() {
+interface HeaderMenuProps {
+    isBurgerOpen: boolean;
+    setIsBurgerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
     const location = useLocation();
     const pathNames = location.pathname.split('/').filter((x) => x);
     const userName = 'Екатерина Константинопольская';
     const userUsername = '@bake_and_pie';
     const marginLeft =
         pathNames[0] === 'Juciest' ? { xl: '48px', '2xl': '55px' } : { xl: '53px', '2xl': '55px' };
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 1280) {
+                setIsBurgerOpen(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [setIsBurgerOpen]);
     return (
         <Box
             as='header'
-            bg='rgba(255, 255, 211, 1)'
+            bg={isBurgerOpen ? 'rgba(255,255,255,1)' : 'rgba(255, 255, 211, 1)'}
             data-test-id='header'
             w='100%'
             position='fixed'
@@ -59,13 +80,13 @@ export function Header() {
                         w='100%'
                     >
                         <Hide above='xl'>
-                            <Box w={14} h={6}>
+                            <Box w={14} h={6} display={isBurgerOpen ? 'none' : 'block'}>
                                 <Metrics icon={FavouriteNotes}>185</Metrics>
                             </Box>
-                            <Box w='58px' h={6}>
+                            <Box w='58px' h={6} display={isBurgerOpen ? 'none' : 'block'}>
                                 <Metrics icon={Subscribers}>589</Metrics>
                             </Box>
-                            <Box w='57px' h={6}>
+                            <Box w='57px' h={6} display={isBurgerOpen ? 'none' : 'block'}>
                                 <Metrics icon={Likes}>587</Metrics>
                             </Box>
                         </Hide>
@@ -88,7 +109,10 @@ export function Header() {
                         pr={{ base: '12px', xl: '0px' }}
                     >
                         <Hide above='xl'>
-                            <BurgerMenu></BurgerMenu>
+                            <BurgerMenu
+                                isOpen={isBurgerOpen}
+                                setIsOpen={setIsBurgerOpen}
+                            ></BurgerMenu>
                         </Hide>
                         <Show above='xl'>
                             <Card shadow='none' w='432px' bg='transparent'>

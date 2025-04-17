@@ -1,4 +1,5 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
 import { Juciest } from '~/components/widgets/juciest/Juciest';
 
@@ -9,7 +10,28 @@ import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
 import { NavMenu } from '../../widgets/navMenu/NavMenu';
 import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 import { VeganKitchen } from '../../widgets/veganKitchen/veganKitchen';
-export function Main() {
+
+interface PageMenuProps {
+    isBurgerOpen: boolean;
+}
+
+const scrollController = {
+    disabledScroll() {
+        document.body.style.overflow = 'hidden';
+    },
+    enabledScroll() {
+        document.body.style.overflow = 'auto';
+    },
+};
+
+export function Main({ isBurgerOpen }: PageMenuProps) {
+    useEffect(() => {
+        if (isBurgerOpen) {
+            scrollController.disabledScroll();
+        } else {
+            scrollController.enabledScroll();
+        }
+    });
     return (
         <>
             <Box
@@ -19,11 +41,14 @@ export function Main() {
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
+                filter={isBurgerOpen ? 'blur(4px)' : ''}
+                bg={isBurgerOpen ? 'rgba(0, 0, 0, 0.16)' : ''}
             >
                 <Grid
                     templateColumns={{ xl: '256px auto 208px' }}
                     maxW='100vw'
                     gap={{ xl: '24px' }}
+                    overflow='hidden'
                 >
                     <GridItem>
                         <Show above='xl'>
@@ -68,7 +93,7 @@ export function Main() {
                                         <Juciest></Juciest>
                                     </Box>
                                     <Box as='section' overflow='hidden'>
-                                        <CookBlog></CookBlog>
+                                        <CookBlog isBurgerOpen={isBurgerOpen}></CookBlog>
                                     </Box>
                                     <Box
                                         as='section'

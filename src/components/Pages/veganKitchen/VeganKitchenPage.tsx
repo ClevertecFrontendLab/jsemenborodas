@@ -1,4 +1,5 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
 import { JuciestOnJuciest } from '~/components/widgets/juciest/JuciestOnJuciest';
 import { Tabs } from '~/components/widgets/tabs/Tabs';
@@ -9,7 +10,27 @@ import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
 import { NavMenu } from '../../widgets/navMenu/NavMenu';
 import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 
-export function VeganKitchenPage() {
+interface PageMenuProps {
+    isBurgerOpen: boolean;
+}
+
+const scrollController = {
+    disabledScroll() {
+        document.body.style.overflow = 'hidden';
+    },
+    enabledScroll() {
+        document.body.style.overflow = 'auto';
+    },
+};
+
+export function VeganKitchenPage({ isBurgerOpen }: PageMenuProps) {
+    useEffect(() => {
+        if (isBurgerOpen) {
+            scrollController.disabledScroll();
+        } else {
+            scrollController.enabledScroll();
+        }
+    });
     return (
         <>
             <Box
@@ -19,6 +40,8 @@ export function VeganKitchenPage() {
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
+                filter={isBurgerOpen ? 'blur(2px)' : ''}
+                bg={isBurgerOpen ? 'rgba(0, 0, 0, 0.16)' : ''}
             >
                 <Grid
                     templateColumns={{ xl: '256px auto 208px' }}
