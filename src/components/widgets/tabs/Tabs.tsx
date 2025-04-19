@@ -31,6 +31,7 @@ export function Tabs() {
                     mx={{ '2xl': 'auto' }}
                     overflowX='auto'
                     overflowY='hidden'
+                    flexWrap='wrap'
                     sx={{
                         '&::-webkit-scrollbar': {
                             width: '1px',

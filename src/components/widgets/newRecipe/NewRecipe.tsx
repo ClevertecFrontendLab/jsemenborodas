@@ -4,8 +4,8 @@ import { Text } from '@chakra-ui/react';
 
 import { FavouriteNotes, leftArrow, Likes, rightArrow } from '~/icons/Icon';
 
-import { Metrics } from '../features/Metrics/Metrics';
-import { NewRecipeData } from './NewRecipeData';
+import { NewRecipeData } from '../../entities/Data/NewRecipeData';
+import { Metrics } from '../../features/Metrics/Metrics';
 
 export function NewRecipe() {
     return (

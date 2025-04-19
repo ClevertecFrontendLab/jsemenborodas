@@ -1,11 +1,11 @@
-import bread from '../../../public/bread.png';
-import Eggplant from '../../../public/Eggplant.png';
-import firstDelicious from '../../../public/firstDelicious.png';
-import fourthDelicious from '../../../public/fourthDelicious.png';
-import leaf from '../../../public/leaf.png';
-import pot from '../../../public/pot.png';
-import secondDelicious from '../../../public/secondDelicious.png';
-import thirdDelicious from '../../../public/thirdDelicious.png';
+import bread from '../../../../public/bread.png';
+import Eggplant from '../../../../public/Eggplant.png';
+import firstDelicious from '../../../../public/firstDelicious.png';
+import fourthDelicious from '../../../../public/fourthDelicious.png';
+import leaf from '../../../../public/leaf.png';
+import pot from '../../../../public/pot.png';
+import secondDelicious from '../../../../public/secondDelicious.png';
+import thirdDelicious from '../../../../public/thirdDelicious.png';
 
 export const NewRecipeData = [
     {

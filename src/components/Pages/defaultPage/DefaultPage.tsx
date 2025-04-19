@@ -1,6 +1,7 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
+import { Slider } from '~/components/widgets/slider/Slider';
 import { Tabs } from '~/components/widgets/tabs/Tabs';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
@@ -68,12 +69,30 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                                 minW={{ xl: '880px' }}
                                 bg='transparent'
                             >
-                                <Box
-                                    w={{ xl: '100%' }}
-                                    maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
-                                    bg='transparent'
-                                >
-                                    <Tabs></Tabs>
+                                <Box as='section' maxW='100vw'>
+                                    <Box
+                                        w={{ xl: '100%' }}
+                                        maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
+                                        h={{ base: '30px' }}
+                                    >
+                                        <Tabs></Tabs>
+                                    </Box>
+                                    <Box
+                                        as='section'
+                                        ml={{ base: '16px', md: '18px', xl: 0, '2xl': '1px' }}
+                                        flexDirection='column'
+                                        alignItems='center'
+                                        display='flex'
+                                        maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
+                                        mt={{ base: '24px', md: '25px', xl: '30px', '2xl': '24px' }}
+                                        pr={{ base: '16px', md: '18px', xl: 0 }}
+                                    >
+                                        <Slider
+                                            item={{
+                                                category: [],
+                                            }}
+                                        ></Slider>
+                                    </Box>
                                 </Box>
                             </VStack>
                         </HStack>

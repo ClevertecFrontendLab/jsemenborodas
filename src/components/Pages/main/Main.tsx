@@ -2,8 +2,8 @@ import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
 import { Juciest } from '~/components/widgets/juciest/Juciest';
+import { Slider } from '~/components/widgets/slider/Slider';
 
-import { NewRecipe } from '../../newRecipe/NewRecipe';
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { CookBlog } from '../../widgets/cookBlog/cookBlog';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
@@ -82,13 +82,25 @@ export function Main({ isBurgerOpen }: PageMenuProps) {
                                     overflow={{ base: 'hidden', xl: 'visible' }}
                                     px={{ base: '16px', md: '0', '2xl': '2px' }}
                                 >
-                                    <Box as='section' overflow={{ base: 'hidden', xl: 'visible' }}>
-                                        <NewRecipe></NewRecipe>
+                                    <Box
+                                        as='section'
+                                        overflow={{
+                                            base: 'hidden',
+                                            xl: 'hidden',
+                                            '2xl': 'visible',
+                                        }}
+                                    >
+                                        {/* <NewRecipe></NewRecipe> */}
+                                        <Slider
+                                            item={{
+                                                category: [],
+                                            }}
+                                        ></Slider>
                                     </Box>
                                     <Box
                                         as='section'
                                         overflow={{ base: 'hidden', xl: 'visible' }}
-                                        mt={{ xl: '75px', '2xl': '108px' }}
+                                        mt={{ xl: '24px', '2xl': '10px' }}
                                     >
                                         <Juciest></Juciest>
                                     </Box>
