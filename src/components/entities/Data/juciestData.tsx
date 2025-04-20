@@ -8,7 +8,7 @@ import Tomyam from '../../shared/images/FoodImages/Tomyam.png';
 import Vetchina from '../../shared/images/FoodImages/Vetchina.png';
 export const JuciestData = [
     {
-        id: 1,
+        id: 12,
         title: 'Кнели со спагетти',
         likes: 152,
         follows: 85,
@@ -21,7 +21,7 @@ export const JuciestData = [
         recomendedInfo: [{ id: 1, name: 'None', profileImage: 'none' }],
     },
     {
-        id: 2,
+        id: 13,
         title: 'Пряная ветчина по итальянски',
         likes: 257,
         follows: 159,
@@ -34,7 +34,7 @@ export const JuciestData = [
         recomendedInfo: [{ id: 1, name: 'Елена Высоцкая', profileImage: ElenaVisotskaya }],
     },
     {
-        id: 3,
+        id: 7,
         title: 'Лапша с курицей и шафраном',
         likes: 342,
         follows: 258,
@@ -47,7 +47,7 @@ export const JuciestData = [
         recomendedInfo: [{ id: 1, name: 'Alex Cook', profileImage: AlexCook }],
     },
     {
-        id: 4,
+        id: 15,
         title: 'Том-ям с капустой кимчи',
         likes: 324,
         follows: 124,

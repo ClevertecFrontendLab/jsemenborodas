@@ -2,11 +2,11 @@ import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
 import { Slider } from '~/components/widgets/slider/Slider';
-import { Tabs } from '~/components/widgets/tabs/Tabs';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
 import { NavMenu } from '../../widgets/navMenu/NavMenu';
+import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 
 interface PageMenuProps {
     isBurgerOpen: boolean;
@@ -38,11 +38,14 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
+                filter={isBurgerOpen ? 'blur(4px)' : ''}
+                bg={isBurgerOpen ? 'rgba(0, 0, 0, 0.16)' : ''}
             >
                 <Grid
                     templateColumns={{ xl: '256px auto 208px' }}
                     maxW='100vw'
                     gap={{ xl: '24px' }}
+                    overflow='hidden'
                 >
                     <GridItem>
                         <Show above='xl'>
@@ -51,15 +54,14 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                             </Box>
                         </Show>
                     </GridItem>
-                    <GridItem minW={{ xl: '880px' }} bg='transparent'>
+                    <GridItem minW={{ xl: '880px' }}>
                         {' '}
                         <HStack
-                            px={{ md: '0px', xl: '0' }}
+                            px={{ md: '20px', xl: '0' }}
                             spacing='0px'
                             justifyContent={{ base: 'center', xl: 'flex-start' }}
                             position='relative'
                             maxW={{ xl: 'calc(1920px - 256px - 24px)' }}
-                            bg='transparent'
                         >
                             <VStack
                                 as='main'
@@ -67,31 +69,26 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                                     xl: 'calc(880px + (1360 - 880) * ((100vw - 1440px) / (1920 - 1440)))',
                                 }}
                                 minW={{ xl: '880px' }}
-                                bg='transparent'
                             >
-                                <Box as='section' maxW='100vw'>
-                                    <Box
-                                        w={{ xl: '100%' }}
-                                        maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
-                                        h={{ base: '30px' }}
-                                    >
-                                        <Tabs></Tabs>
-                                    </Box>
+                                <Box as='section' px={{ base: '0px', md: '0px', xl: '0' }}>
+                                    <SearchForm2></SearchForm2>
+                                </Box>
+                                <Box
+                                    w={{ xl: '100%' }}
+                                    maxW={{ xl: '1360px' }}
+                                    overflow={{ base: 'hidden', xl: 'visible' }}
+                                    px={{ base: '16px', md: '0', '2xl': '2px' }}
+                                >
                                     <Box
                                         as='section'
-                                        ml={{ base: '16px', md: '18px', xl: 0, '2xl': '1px' }}
-                                        flexDirection='column'
-                                        alignItems='center'
-                                        display='flex'
-                                        maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
-                                        mt={{ base: '24px', md: '25px', xl: '30px', '2xl': '24px' }}
-                                        pr={{ base: '16px', md: '18px', xl: 0 }}
+                                        overflow={{
+                                            base: 'hidden',
+                                            xl: 'hidden',
+                                            '2xl': 'visible',
+                                        }}
                                     >
-                                        <Slider
-                                            item={{
-                                                category: [],
-                                            }}
-                                        ></Slider>
+                                        {/* <NewRecipe></NewRecipe> */}
+                                        <Slider></Slider>
                                     </Box>
                                 </Box>
                             </VStack>

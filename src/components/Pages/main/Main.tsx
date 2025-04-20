@@ -91,11 +91,7 @@ export function Main({ isBurgerOpen }: PageMenuProps) {
                                         }}
                                     >
                                         {/* <NewRecipe></NewRecipe> */}
-                                        <Slider
-                                            item={{
-                                                category: [],
-                                            }}
-                                        ></Slider>
+                                        <Slider></Slider>
                                     </Box>
                                     <Box
                                         as='section'

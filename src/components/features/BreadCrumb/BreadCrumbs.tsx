@@ -1,7 +1,10 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Text } from '@chakra-ui/react';
 
+import { RecipeData } from '~/components/entities/Data/RecipeData';
+
 interface BreadcrumbsProps {
     pathNames: string[];
+    recipeId?: string;
 }
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ pathNames }) => {
@@ -125,14 +128,27 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ pathNames }) => {
         '/vegetablesSalad': 'Овощные салаты',
         '/hotSalad': 'Теплые салаты',
         '/juicesFresh': 'Соки и фреши',
+        '/vegan': 'Веганские блюда',
+        '/hot-snacks': 'Теплые закуски',
+        '/hot-soups': 'Первые блюда',
+        '/cold-salads': 'Холодные салаты',
+        '/second-dish': 'Вторые блюда',
+        '/poultry-dish': 'Из курицы',
+        '/side-dishes': 'Гарниры',
+        '/salads': 'Салаты',
+        '/warm-salads': 'Теплые салаты',
     };
+    const recipeId = pathNames[pathNames.length - 1];
+    const hasRecipeId = !isNaN(Number(recipeId));
+
+    const displayPaths = hasRecipeId ? pathNames.slice(0, -1) : pathNames;
 
     return (
         <Breadcrumb separator={<Text w='8px'> &gt; </Text>} listProps={{ flexWrap: 'wrap' }}>
             <BreadcrumbItem>
                 <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
             </BreadcrumbItem>
-            {pathNames.map((_, index) => {
+            {displayPaths.map((_, index) => {
                 const route = `/${pathNames[index]}`;
                 const displayName = breadCrumbNames[route];
                 return (
@@ -141,6 +157,13 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ pathNames }) => {
                     </BreadcrumbItem>
                 );
             })}
+            {hasRecipeId && (
+                <BreadcrumbItem isCurrentPage>
+                    <BreadcrumbLink href='#'>
+                        {RecipeData.find((recipe) => recipe.id === recipeId)?.title || ''}
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+            )}
         </Breadcrumb>
     );
 };

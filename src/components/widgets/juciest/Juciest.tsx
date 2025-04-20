@@ -394,6 +394,11 @@ export function Juciest() {
                                                                     xl: '14px',
                                                                 }}
                                                                 lineHeight={{ base: '16px' }}
+                                                                onClick={() =>
+                                                                    navigate(
+                                                                        `/Juciest/${recipe.id}`,
+                                                                    )
+                                                                }
                                                             >
                                                                 Готовить
                                                             </Text>

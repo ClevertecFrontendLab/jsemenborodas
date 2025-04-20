@@ -4,6 +4,7 @@ import { Box, Heading, Hide, HStack, Show, VStack } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { useRef } from 'react';
+import { useNavigate } from 'react-router';
 import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -47,6 +48,8 @@ export function Slider() {
     const lastRecipes = sortedRecipes.slice(0, 10);
 
     const swiperRef = useRef(null);
+
+    const navigate = useNavigate();
     return (
         <>
             <Box
@@ -131,6 +134,11 @@ export function Slider() {
                                     border='1px solid #00000014'
                                     borderRadius='8px'
                                     className='custom-cursor'
+                                    onClick={() =>
+                                        navigate(
+                                            `/${item.category[0]}/${item.subcategory[0]}/${item.id}`,
+                                        )
+                                    }
                                 >
                                     <Box
                                         w={{ base: '158px', xl: '277px', '2xl': '322px' }}

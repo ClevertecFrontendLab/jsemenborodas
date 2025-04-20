@@ -50,7 +50,7 @@ export const NavMenuData = [
             { id: 4, title: 'Холодные супы', subCategory: 'coldSoups' },
             { id: 5, title: 'Диетические супы', subCategory: 'dietSoups' },
         ],
-        category: 'firstDelicious',
+        category: 'hot-soup',
     },
     {
         id: 4,
@@ -70,7 +70,7 @@ export const NavMenuData = [
             { id: 11, title: 'Пицца', subCategory: 'pizza' },
             { id: 12, title: 'Суши', subCategory: 'sushi' },
         ],
-        category: 'secondDelicious',
+        category: 'second-dish',
     },
     {
         id: 5,
@@ -113,7 +113,7 @@ export const NavMenuData = [
         icon: leaf,
         childrens: [
             { id: 1, title: 'Закуски', subCategory: 'snacks' },
-            { id: 2, title: 'Первые блюда', subCategory: 'firstDelicious' },
+            { id: 2, title: 'Первые блюда', subCategory: 'hot-soups' },
             { id: 3, title: 'Вторые блюда', subCategory: 'secondDelicious' },
             { id: 4, title: 'Гарниры', subCategory: 'garnishes' },
             { id: 5, title: 'Десерты', subCategory: 'desserts' },
@@ -121,7 +121,7 @@ export const NavMenuData = [
             { id: 7, title: 'Сыроедческие блюда', subCategory: 'rawDishes' },
             { id: 8, title: 'Напитки', subCategory: 'drinks' },
         ],
-        category: 'veganKitchen',
+        category: 'vegan',
     },
     {
         id: 8,
@@ -137,7 +137,7 @@ export const NavMenuData = [
             { id: 7, title: 'Без аллергенов', subCategory: 'allergenFree' },
             { id: 8, title: 'Блюда для прикорма', subCategory: 'complementaryFoods' },
         ],
-        category: 'childishDelicious',
+        category: 'child-food',
     },
     {
         id: 9,

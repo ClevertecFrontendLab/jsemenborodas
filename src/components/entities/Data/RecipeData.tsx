@@ -2,7 +2,6 @@ import Kneli from '../../shared/images/FoodImages/Kneli.png';
 import Lapsha from '../../shared/images/FoodImages/Lapsha.png';
 import TomYam from '../../shared/images/FoodImages/Tomyam.png';
 import Vetchina from '../../shared/images/FoodImages/Vetchina.png';
-
 export const RecipeData = [
     {
         id: '0',
@@ -284,37 +283,77 @@ export const RecipeData = [
     {
         id: '7',
         title: 'Лапша c курицей и шафраном',
-        description: 'Ароматная лапша c курицей и шафраном, идеальное сочетание для сытного обеда.',
-        category: ['second-dish'],
+        description:
+            'Как раз после праздников, когда мясные продукты еще остались, но никто их уже не хочет, время варить солянку.',
+        category: ['second-dish', 'national', 'child-food'],
         subcategory: ['poultry-dish'],
-        image: Vetchina,
+        image: Lapsha,
         bookmarks: 258,
-        likes: 1342,
+        likes: 342,
         date: '2024-03-08T00:00:00Z',
-        time: '40 минут',
+        time: '20 минут',
         portions: 4,
-        nutritionValue: { calories: 400, proteins: 30, fats: 15, carbohydrates: 50 },
+        nutritionValue: { calories: 358, proteins: 23, fats: 31, carbohydrates: 54 },
         ingredients: [
-            { title: 'лапша', count: '200', measureUnit: 'г' },
-            { title: 'курица', count: '300', measureUnit: 'г' },
-            { title: 'шафран', count: '1', measureUnit: 'ч. л.' },
-            { title: 'лук', count: '1', measureUnit: 'шт.' },
+            { title: 'зелёного лука', count: '1', measureUnit: 'пучок' },
+            { title: 'репчатого лука', count: '1', measureUnit: 'шт' },
+            { title: 'чеснока', count: '1', measureUnit: 'зубчик' },
+            { title: 'куриного филе', count: '500', measureUnit: 'г' },
+            { title: 'масло или жира', count: '40', measureUnit: 'г' },
+            { title: 'спагетти', count: '250', measureUnit: 'г' },
+            { title: 'молотого шафрана', count: '1', measureUnit: 'щепотка' },
+            { title: 'молотой корицы', count: '1', measureUnit: 'щепотка' },
+            { title: 'мука', count: '1', measureUnit: 'ст л' },
+            { title: 'сливок', count: '250', measureUnit: 'мл' },
+            { title: 'куриного бульона из кубика', count: '200', measureUnit: 'мл' },
+            { title: 'нарезанной петрушки', count: '2', measureUnit: 'ст л' },
         ],
         steps: [
             {
                 stepNumber: 1,
-                description: 'Отварить лапшу.',
-                image: 'url',
+                description:
+                    'Зелёный лук нарезать на 1 см. кружочки. Лук и чеснок на мелкие кубики.  ',
+                image: '/src/components/shared/LapshaImages/image-1.png',
             },
             {
                 stepNumber: 2,
-                description: 'Обжарить курицу c луком и шафраном.',
-                image: 'url',
+                description:
+                    'Мясо помыть, высушить, нарезать на полосочки и обжарить на масле.  Посолить, поперчить и вынуть со сковороды.',
+                image: '/src/components/shared/LapshaImages/image-2.png',
             },
             {
                 stepNumber: 3,
-                description: 'Смешать лапшу c курицей и подавать.',
-                image: 'url',
+                description: 'Спагетти отварить в течение  10 минут в подсоленной воде.',
+                image: '/src/components/shared/LapshaImages/image-3.png',
+            },
+            {
+                stepNumber: 4,
+                description:
+                    'В сковороде, на оставшемся жире поджарить лук до золотистого цвета, добавить чеснок и прожарить ещё около 1 минуты.',
+                image: '/src/components/shared/LapshaImages/image-4.png',
+            },
+            {
+                stepNumber: 5,
+                description: 'Всыпать шафран, корицу и муки, перемешать и коротко прожарить.',
+                image: '',
+            },
+            {
+                stepNumber: 6,
+                description:
+                    'В сковороде, на оставшемся жире поджарить лук до золотистого цвета, добавить чеснок и прожарить ещё около 1 минуты.',
+                image: '/src/components/shared/LapshaImages/image-5.png',
+            },
+            {
+                stepNumber: 7,
+                description:
+                    'Сливки смешать с бульоном, влить к луку и протушить на среднем огне около 10 минут.',
+                image: '',
+            },
+            {
+                stepNumber: 8,
+                description:
+                    'Соус посолить, поперчить, вложить мясо, зелёный лук. Прогреть и осторожно смешать со спагетти. При подаче посыпать нарезанной петрушкой.',
+                image: '/src/components/shared/LapshaImages/image-6.png',
             },
         ],
     },
@@ -466,6 +505,112 @@ export const RecipeData = [
             {
                 stepNumber: 3,
                 description: 'Пробить блендером до однородной массы и добавить базилик.',
+                image: 'url',
+            },
+        ],
+    },
+    {
+        id: '12',
+        title: 'Кнели со спагетти',
+        description:
+            'Как раз после праздников, когда мясные продукты еще остались, но никто их уже не хочет, время варить солянку.',
+        category: ['second-dish'],
+        subcategory: ['poultry-dish'],
+        image: Kneli,
+        bookmarks: 85,
+        likes: 152,
+        date: '2025-01-01T00:00:00Z',
+        time: '50 минут',
+        portions: 2,
+        nutritionValue: { calories: 300, proteins: 15, fats: 10, carbohydrates: 40 },
+        ingredients: [
+            { title: 'спагетти', count: '200', measureUnit: 'г' },
+            { title: 'мясо', count: '300', measureUnit: 'г' },
+            { title: 'специи', count: '0', measureUnit: 'по вкусу' },
+        ],
+        steps: [
+            {
+                stepNumber: 1,
+                description: 'Отварить спагетти.',
+                image: 'url',
+            },
+            {
+                stepNumber: 2,
+                description: 'Приготовить кнели.',
+                image: 'url',
+            },
+            {
+                stepNumber: 3,
+                description: 'Смешать спагетти с кнелями и подавать.',
+                image: 'url',
+            },
+        ],
+    },
+    {
+        id: '13',
+        title: 'Пряная ветчина по итальянски',
+        description:
+            'Как раз после праздников, когда мясные продукты еще остались, но никто их уже не хочет, время варить солянку.',
+        category: ['second-dish'],
+        subcategory: ['national'],
+        image: Vetchina,
+        bookmarks: 124,
+        likes: 257,
+        date: '2024-01-15T00:00:00Z',
+        time: '1 час',
+        portions: 4,
+        nutritionValue: { calories: 350, proteins: 25, fats: 20, carbohydrates: 15 },
+        ingredients: [
+            { title: 'ветчина', count: '300', measureUnit: 'г' },
+            { title: 'специи', count: '0', measureUnit: 'по вкусу' },
+            { title: 'зелень', count: 'по вкусу', measureUnit: 'по вкусу' },
+        ],
+        steps: [
+            {
+                stepNumber: 1,
+                description: 'Приготовить ветчину с пряностями.',
+                image: 'url',
+            },
+            {
+                stepNumber: 2,
+                description: 'Подавать с зеленью.',
+                image: 'url',
+            },
+        ],
+    },
+    {
+        id: '15',
+        title: 'Том-ям с капустой кимчи',
+        description:
+            'Как раз после праздников, когда мясные продукты еще остались, но никто их уже не хочет, время варить солянку.',
+        category: ['national'],
+        subcategory: ['soups'],
+        image: TomYam,
+        bookmarks: 124,
+        likes: 324,
+        date: '2024-03-10T00:00:00Z',
+        time: '30 минут',
+        portions: 2,
+        nutritionValue: { calories: 150, proteins: 5, fats: 7, carbohydrates: 20 },
+        ingredients: [
+            { title: 'бульон', count: '500', measureUnit: 'мл' },
+            { title: 'капуста кимчи', count: '200', measureUnit: 'г' },
+            { title: 'специи', count: '0', measureUnit: 'по вкусу' },
+        ],
+        steps: [
+            {
+                stepNumber: 1,
+                description: 'Вскипятить бульон.',
+                image: 'url',
+            },
+            {
+                stepNumber: 2,
+                description: 'Добавить капусту кимчи и специи.',
+                image: 'url',
+            },
+            {
+                stepNumber: 3,
+                description: 'Варить 15 минут и подавать горячим.',
                 image: 'url',
             },
         ],

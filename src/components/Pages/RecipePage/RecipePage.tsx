@@ -1,13 +1,12 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
-import { JuciestOnJuciest } from '~/components/widgets/juciest/JuciestOnJuciest';
-import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
+import { CurrentRecipe } from '~/components/widgets/currentRecipe/currentRecipe';
+import { Slider } from '~/components/widgets/slider/Slider';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
 import { NavMenu } from '../../widgets/navMenu/NavMenu';
-import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 
 interface PageMenuProps {
     isBurgerOpen: boolean;
@@ -22,7 +21,7 @@ const scrollController = {
     },
 };
 
-export function JuciestPage({ isBurgerOpen }: PageMenuProps) {
+export function RecipePage({ isBurgerOpen }: PageMenuProps) {
     useEffect(() => {
         if (isBurgerOpen) {
             scrollController.disabledScroll();
@@ -46,6 +45,7 @@ export function JuciestPage({ isBurgerOpen }: PageMenuProps) {
                     templateColumns={{ xl: '256px auto 208px' }}
                     maxW='100vw'
                     gap={{ xl: '24px' }}
+                    overflow='hidden'
                 >
                     <GridItem>
                         <Show above='xl'>
@@ -71,27 +71,26 @@ export function JuciestPage({ isBurgerOpen }: PageMenuProps) {
                                 minW={{ xl: '880px' }}
                             >
                                 <Box
-                                    as='section'
-                                    px={{ base: '16px', md: '0px', xl: '0' }}
-                                    pl={{ '3xl': '0px' }}
-                                    w={{ '3xl': '100%' }}
-                                    flexDirection='column'
-                                    alignItems='center'
-                                    display='flex'
-                                >
-                                    <SearchForm2></SearchForm2>
-                                    <Box mt={{ base: '34px' }} pr={{ base: '32px', xl: '0' }}>
-                                        <JuciestOnJuciest></JuciestOnJuciest>
-                                    </Box>
-                                    <Box pr={{ base: '32px', xl: '0' }}>
-                                        <VeganKitchen></VeganKitchen>
-                                    </Box>
-                                </Box>
-                                <Box
                                     w={{ xl: '100%' }}
                                     maxW={{ xl: '1360px' }}
-                                    overflow='hidden'
-                                ></Box>
+                                    overflow={{ base: 'hidden', xl: 'visible' }}
+                                    px={{ base: '16px', md: '0', '2xl': '2px' }}
+                                >
+                                    <Box as='section' overflow='hidden'>
+                                        <CurrentRecipe isBurgerOpen={isBurgerOpen}></CurrentRecipe>
+                                    </Box>
+                                    <Box
+                                        as='section'
+                                        overflow={{
+                                            base: 'hidden',
+                                            xl: 'hidden',
+                                            '2xl': 'visible',
+                                        }}
+                                    >
+                                        {/* <NewRecipe></NewRecipe> */}
+                                        <Slider></Slider>
+                                    </Box>
+                                </Box>
                             </VStack>
                         </HStack>
                     </GridItem>
