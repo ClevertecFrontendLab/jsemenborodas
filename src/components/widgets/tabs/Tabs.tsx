@@ -16,8 +16,7 @@ export function Tabs() {
     return (
         <>
             <Box
-                w={{ base: '1043px', xl: '100%' }}
-                h={{ base: '30px', xl: '36', '2xl': '40px' }}
+                w={{ base: '100%', xl: '100%' }}
                 mt={{ base: '32px', md: '30px', xl: '38px', '2xl': '34px' }}
                 overflow={{ md: 'visible', xl: 'hidden', '2xl': 'visible' }}
                 minW={{ xl: '946px' }}
@@ -26,13 +25,13 @@ export function Tabs() {
                 <Tabb
                     index={selectedSubCategory}
                     borderBottom='1px solid #00000014'
-                    h={{ base: '30px', md: '32px', xl: '36px', '2xl': '40px' }}
-                    w={{ '2xl': '1006px' }}
+                    w={{ '2xl': '100%' }}
                     mx={{ '2xl': 'auto' }}
                     overflowX='auto'
                     overflowY='hidden'
                     flexWrap='wrap'
                     sx={{
+                        '-webkit-overflow-scrolling': 'touch',
                         '&::-webkit-scrollbar': {
                             width: '1px',
                             h: '1px',
@@ -49,18 +48,21 @@ export function Tabs() {
                             display: 'none',
                         },
                     }}
+                    overflow='visible'
                 >
                     <TabList
                         whiteSpace='nowrap'
                         display='flex'
+                        flexWrap='wrap'
                         borderBottom='none'
-                        h={{ base: '30px', '2xl': '40px' }}
-                        transform={{
-                            base: 'translateX(-140px)',
-                            md: 'translateX(-136px)',
-                            xl: 'translateX(-56px) ',
-                            '2xl': 'translateX(22px)',
-                        }}
+                        justifyContent='center'
+
+                        // transform={{
+                        //     base: 'translateX(-140px)',
+                        //     md: 'translateX(-136px)',
+                        //     xl: 'translateX(-56px) ',
+                        //     '2xl': 'translateX(22px)',
+                        // }}
                     >
                         {NavMenuData.map((item) =>
                             item.category === pathSegments[0]

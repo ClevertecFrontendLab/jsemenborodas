@@ -133,7 +133,8 @@ export function Slider() {
                                     position='relative'
                                     border='1px solid #00000014'
                                     borderRadius='8px'
-                                    className='custom-cursor'
+                                    // className='custom-cursor'
+                                    cursor='pointer'
                                     onClick={() =>
                                         navigate(
                                             `/${item.category[0]}/${item.subcategory[0]}/${item.id}`,

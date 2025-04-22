@@ -2,6 +2,7 @@ import Kneli from '../../shared/images/FoodImages/Kneli.png';
 import Lapsha from '../../shared/images/FoodImages/Lapsha.png';
 import TomYam from '../../shared/images/FoodImages/Tomyam.png';
 import Vetchina from '../../shared/images/FoodImages/Vetchina.png';
+
 export const RecipeData = [
     {
         id: '0',

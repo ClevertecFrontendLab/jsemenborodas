@@ -55,8 +55,8 @@ export function Juciest() {
                             borderRadius='6px'
                             data-test-id='juiciest-link'
                             onClick={() => navigate('/Juciest')}
-                            className='custom-cursor'
-                            cursor='none'
+                            // className='custom-cursor'
+                            cursor='pointer'
                         >
                             <HStack spacing='10px'>
                                 <Text
@@ -95,7 +95,8 @@ export function Juciest() {
                                 w={{ base: '100%', md: '100%', xl: '100%', '3xl': '100%' }}
                                 maxW={{ '3xl': '668px' }}
                                 h={{ base: '128px', xl: '244px' }}
-                                className='custom-cursor'
+                                // className='custom-cursor'
+
                                 bg='transparent'
                             >
                                 <CardBody p={0} w='100%' h='100%' borderLeftRadius={8}>
@@ -357,13 +358,11 @@ export function Juciest() {
                                                         border='1px solid #0000007A'
                                                         borderRadius='6px'
                                                         bg='transparent'
-                                                        cursor='none'
                                                     >
                                                         <HStack>
                                                             <Icon
                                                                 as={FavouriteNotes}
                                                                 w='12px'
-                                                                cursor='none'
                                                             ></Icon>
                                                             <Show above='xl'>
                                                                 <Text
@@ -382,7 +381,9 @@ export function Juciest() {
                                                         h={{ base: '24px', xl: '32px' }}
                                                         bg='#000000EB'
                                                         borderRadius='6px'
-                                                        cursor='none'
+                                                        onClick={() =>
+                                                            navigate(`/Juciest/${recipe.id}`)
+                                                        }
                                                     >
                                                         <HStack spacing='7.5px'>
                                                             <Text
@@ -394,11 +395,6 @@ export function Juciest() {
                                                                     xl: '14px',
                                                                 }}
                                                                 lineHeight={{ base: '16px' }}
-                                                                onClick={() =>
-                                                                    navigate(
-                                                                        `/Juciest/${recipe.id}`,
-                                                                    )
-                                                                }
                                                             >
                                                                 Готовить
                                                             </Text>

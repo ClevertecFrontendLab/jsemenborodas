@@ -86,6 +86,7 @@ export function RecipePage({ isBurgerOpen }: PageMenuProps) {
                                             xl: 'hidden',
                                             '2xl': 'visible',
                                         }}
+                                        mb={{ base: '118px' }}
                                     >
                                         {/* <NewRecipe></NewRecipe> */}
                                         <Slider></Slider>

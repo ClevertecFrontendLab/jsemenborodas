@@ -83,6 +83,7 @@ export function VeganKitchenPage({ isBurgerOpen }: PageMenuProps) {
                                         w={{ xl: '100%' }}
                                         maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
                                         h={{ base: '30px' }}
+                                        mb='64px'
                                     >
                                         <Tabs></Tabs>
                                     </Box>

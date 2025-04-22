@@ -2,6 +2,7 @@ import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
 import { Slider } from '~/components/widgets/slider/Slider';
+import { Tabs } from '~/components/widgets/tabs/Tabs';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
@@ -80,6 +81,13 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                                     px={{ base: '16px', md: '0', '2xl': '2px' }}
                                 >
                                     <Box
+                                        w={{ xl: '100%' }}
+                                        maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
+                                        h={{ base: 'auto' }}
+                                    >
+                                        <Tabs></Tabs>
+                                    </Box>
+                                    <Box
                                         as='section'
                                         overflow={{
                                             base: 'hidden',
@@ -87,7 +95,6 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                                             '2xl': 'visible',
                                         }}
                                     >
-                                        {/* <NewRecipe></NewRecipe> */}
                                         <Slider></Slider>
                                     </Box>
                                 </Box>

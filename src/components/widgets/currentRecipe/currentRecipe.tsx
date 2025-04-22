@@ -1,15 +1,18 @@
 import {
     Box,
+    Button,
     Flex,
     Grid,
     GridItem,
     Heading,
+    Hide,
     HStack,
     NumberDecrementStepper,
     NumberIncrementStepper,
     NumberInput,
     NumberInputField,
     NumberInputStepper,
+    Show,
     Table,
     TableContainer,
     Tbody,
@@ -22,6 +25,9 @@ import {
 import { Image, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 
+import healthyFood from '/public/healthyEating.png';
+// eslint-disable-next-line import/order
+import leaf from '/public/leaf.png';
 import { RecipeData } from '~/components/entities/Data/RecipeData';
 import { Metrics } from '~/components/features/Metrics/Metrics';
 import { FavouriteNotes, Likes } from '~/icons/Icon';
@@ -46,11 +52,15 @@ export function CurrentRecipe() {
         'second-dish': 'Вторые блюда',
         national: 'Национальные',
         'child-food': 'Детские блюда',
+        vegan: 'Веганская кухня',
+        snacks: 'Закуски',
     };
     const categoriesTagDecrypt: { [key: string]: string } = {
         'second-dish': pan,
         national: internationalFood,
         'child-food': childTasty,
+        vegan: leaf,
+        snacks: healthyFood,
     };
 
     const [inputValue, setInputValue] = useState(1);
@@ -64,7 +74,6 @@ export function CurrentRecipe() {
         <>
             {recipe && (
                 <Box
-                    h={{ base: '2796px', md: '2292px', xl: '3462px', '3xl': '3442px' }}
                     w={{ base: 'calc( 100% - 32px )', md: '100%' }}
                     mt={{ base: '16px', md: '18px', xl: '56px' }}
                     borderRadius='8px'
@@ -168,6 +177,7 @@ export function CurrentRecipe() {
                                         }}
                                         textAlign='left'
                                         w={{ xl: '437px' }}
+                                        noOfLines={2}
                                     >
                                         {recipe.title}
                                     </Heading>
@@ -183,6 +193,8 @@ export function CurrentRecipe() {
                                         lineHeight='20px'
                                         textAlign='left'
                                         letterSpacing='0.02px'
+                                        maxH={{ md: '40px', xl: '60px' }}
+                                        overflow='hidden'
                                     >
                                         {recipe.description}
                                     </Text>
@@ -190,9 +202,12 @@ export function CurrentRecipe() {
                             </VStack>
                             <Flex
                                 flexWrap='wrap'
-                                mt={{ base: '24px', xl: '128px', '3xl': '138px' }}
+                                mt={{ base: '24px', md: '0' }}
                                 alignItems='flex-start'
                                 justifyContent={{ md: 'space-between' }}
+                                position={{ md: 'absolute' }}
+                                top={{ md: '218px', xl: '434px', '2xl': '418px' }}
+                                minW={{ xl: '529px', '2xl': '675px' }}
                             >
                                 <HStack
                                     bg='#0000000F'
@@ -200,7 +215,7 @@ export function CurrentRecipe() {
                                     p='2px 8px'
                                     h={{ base: '24px' }}
                                     mb={{ base: '12px' }}
-                                    mr={{ base: '13px', md: '0px' }}
+                                    mr={{ base: '13px', md: '66px', xl: '26px', '2xl': '172px' }}
                                     ml={{ md: '16px', xl: '24px', '3xl': '22px' }}
                                     mt={{ xl: '8px', '3xl': '24px' }}
                                 >
@@ -267,7 +282,7 @@ export function CurrentRecipe() {
                         </Box>
                     </Grid>
                     <Box
-                        mt={{ base: '24px', md: '12px', xl: '28px' }}
+                        mt={{ base: '24px', md: '24px', xl: '40px' }}
                         w={{ base: '100%', xl: '578px', '3xl': '668px' }}
                         mx={{ xl: 'auto' }}
                     >
@@ -613,7 +628,7 @@ export function CurrentRecipe() {
                     </Box>
                     <VStack
                         alignItems='flex-start'
-                        mt={{ base: '23.5px', xl: '39px' }}
+                        mt={{ base: '23.5px', xl: '40px' }}
                         w={{ base: '100%', md: '604px', xl: '578px', '2xl': '668px' }}
                         mx={{ md: 'auto' }}
                     >
@@ -630,22 +645,46 @@ export function CurrentRecipe() {
                             <HStack
                                 mt={{ base: '12px' }}
                                 w={{ base: '100%' }}
-                                h={step.image !== '' ? { base: '128px' } : { base: '88px' }}
+                                h={
+                                    step.image !== ''
+                                        ? { base: '128px', xl: '244px' }
+                                        : { base: '88px', md: 'auto', xl: 'auto' }
+                                }
+                                maxH={step.image === '' ? { base: '88px', xl: '120px' } : ''}
                                 border='1px solid #00000014'
                                 borderRadius='8px'
                                 overflow='hidden'
+                                spacing={{ base: '0' }}
                             >
                                 {step.image !== '' && (
-                                    <Box minW='48.2%'>
+                                    <Box
+                                        minW={{
+                                            base: '48.2%',
+                                            md: '26%',
+                                            xl: '59.8%',
+                                            '2xl': '51.8%',
+                                        }}
+                                    >
                                         <Image
                                             src={step.image}
                                             borderLeftRadius='8px'
-                                            w='100%'
-                                            h='128px'
+                                            w={{ base: '100%' }}
+                                            h={{ base: '128px', xl: '244px' }}
                                         ></Image>
                                     </Box>
                                 )}
-                                <VStack alignItems='flex-start' overflow='hidden'>
+                                <VStack
+                                    alignItems='flex-start'
+                                    overflow='hidden'
+                                    p={{ base: '4px 0px 0px 7px', xl: '16px 0px 0px 24px' }}
+                                    pt={
+                                        step.image !== ''
+                                            ? { base: '4px' }
+                                            : { base: '4px', md: '8px' }
+                                    }
+                                    spacing={{ md: '12px' }}
+                                    h={{ base: '100%' }}
+                                >
                                     <Text
                                         textAlign='left'
                                         fontFamily='Inter'
@@ -654,17 +693,25 @@ export function CurrentRecipe() {
                                         fontWeight={400}
                                         w='100%'
                                         h='24px'
+                                        p={{ base: '5px 0px 0px 8px', md: '5px 0px 0px 8px' }}
+                                        pt={step.image !== '' ? '' : { md: '1px', xl: '5px' }}
+                                        letterSpacing='0.4px'
                                     >
                                         Шаг {step.stepNumber}
                                     </Text>
                                     <Text
                                         w='100%'
-                                        h={step.image !== '' ? '80px' : '40px'}
+                                        h={step.image !== '' ? '80px' : 'auto'}
                                         textAlign='left'
                                         fontFamily='Inter'
                                         fontSize='14px'
                                         lineHeight='20px'
                                         fontWeight={400}
+                                        mt={{ base: '16px', md: '4px', xl: '8px' }}
+                                        m={step.image !== '' ? '' : { md: '0px' }}
+                                        pl={{ base: '1px', xl: 0 }}
+                                        pr={{ base: '6px', md: '12px', xl: '24px' }}
+                                        pb={{ base: '2px', xl: '19px', '2xl': '17.5px' }}
                                     >
                                         {step.description}
                                     </Text>
@@ -672,6 +719,146 @@ export function CurrentRecipe() {
                             </HStack>
                         ))}
                     </VStack>
+                    <Box
+                        w={{ base: '100%', md: '604px', xl: '578px', '2xl': '668px' }}
+                        bg='#C4FF61'
+                        h={{ base: '120px', md: '144px' }}
+                        mt={{ base: '24px', xl: '40px' }}
+                        borderRadius='8px'
+                        mx={{ base: 'auto' }}
+                    >
+                        <HStack position='relative' spacing={0} h='100%'>
+                            <Box ml={{ base: '12px', md: '24px' }} w='auto'>
+                                <Image
+                                    minW='96px'
+                                    minH='96px'
+                                    maxW='96px'
+                                    maxH='96px'
+                                    borderRadius='50%'
+                                    src='/src/components/shared/images/avatarImages/LeonardoKano.jpg'
+                                    objectFit='cover'
+                                    objectPosition='center center'
+                                ></Image>
+                            </Box>
+                            <VStack
+                                w='100%'
+                                spacing={0}
+                                align='start'
+                                pl={{ base: '8px' }}
+                                h='100%'
+                            >
+                                <Box w='100%' pr={{ base: '8px' }} pt={{ base: '9px' }}>
+                                    <Hide above='md'>
+                                        <Text
+                                            w='100%'
+                                            textAlign='right'
+                                            fontFamily='Inter'
+                                            fontWeight={400}
+                                            fontSize={{ base: '12px', md: '14px' }}
+                                            lineHeight={{ base: '12px', md: '20px' }}
+                                        >
+                                            Автор рецепта
+                                        </Text>
+                                    </Hide>
+                                </Box>
+                                <VStack
+                                    w='100%'
+                                    spacing={0}
+                                    alignItems='flex-start'
+                                    position={{ md: 'relative' }}
+                                    mt={{ md: '16px' }}
+                                    ml={{ md: '8px' }}
+                                >
+                                    <Text
+                                        fontFamily='Inter'
+                                        fontWeight={600}
+                                        fontSize={{ base: '18px', md: '24px' }}
+                                        lineHeight={{ base: '28px', md: '32px' }}
+                                        textAlign='left'
+                                        w='100%'
+                                        letterSpacing={{ md: '0.5px' }}
+                                    >
+                                        Сергей Разумов
+                                    </Text>
+                                    <Text
+                                        fontFamily='Inter'
+                                        fontWeight={400}
+                                        fontSize='14px'
+                                        color='#000000A3'
+                                        lineHeight='20px'
+                                        mt={{ md: '4px' }}
+                                    >
+                                        @serge25
+                                    </Text>
+                                    <Show above='md'>
+                                        <Text
+                                            w='100%'
+                                            textAlign='right'
+                                            fontFamily='Inter'
+                                            fontWeight={400}
+                                            fontSize={{ base: '12px', md: '14px' }}
+                                            lineHeight={{ base: '12px', md: '20px' }}
+                                            position='absolute'
+                                            top='0px'
+                                            right='34px'
+                                        >
+                                            Автор рецепта
+                                        </Text>
+                                    </Show>
+                                </VStack>
+
+                                <Box w='100%' mt='12px'>
+                                    <HStack justifyContent='space-between' px={{ md: '8px' }}>
+                                        <Box>
+                                            <Button
+                                                w={{ base: '114px' }}
+                                                h={{ base: '24px' }}
+                                                bg='#000000EB'
+                                                p={0}
+                                            >
+                                                <HStack spacing='6px'>
+                                                    <Image
+                                                        w='12px'
+                                                        h='12px'
+                                                        src='/src/components/shared/images/icons/subscribeTo.png'
+                                                    ></Image>
+                                                    <Text
+                                                        fontFamily='Inter'
+                                                        fontWeight={400}
+                                                        fontSize='12px'
+                                                        color='#FFFFFF'
+                                                    >
+                                                        Подписаться
+                                                    </Text>
+                                                </HStack>
+                                            </Button>
+                                        </Box>
+                                        <Box pr={{ base: '8px', md: '12px' }} pt='3px'>
+                                            <HStack
+                                                w={{ base: '47px' }}
+                                                h={{ base: '24px' }}
+                                                spacing='6px'
+                                            >
+                                                <Image
+                                                    w='12px'
+                                                    h='12px'
+                                                    src='/src/components/shared/images/icons/followers.png'
+                                                ></Image>
+                                                <Text
+                                                    fontFamily='Inter'
+                                                    fontWeight={600}
+                                                    fontSize='12px'
+                                                    color='#2DB100'
+                                                >
+                                                    125
+                                                </Text>
+                                            </HStack>
+                                        </Box>
+                                    </HStack>
+                                </Box>
+                            </VStack>
+                        </HStack>
+                    </Box>
                 </Box>
             )}
         </>

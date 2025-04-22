@@ -21,7 +21,7 @@ export function SearchForm2() {
     const Name: Record<string, string> = {
         '/': 'Приятного аппетита!',
         Juciest: 'Самое сочное',
-        VeganKitchen: 'Веганская кухня',
+        vegan: 'Веганская кухня',
     };
 
     const pathSegments = location.pathname.split('/').filter(Boolean);

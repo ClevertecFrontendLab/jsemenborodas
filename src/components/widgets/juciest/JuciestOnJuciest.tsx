@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 
@@ -30,6 +30,7 @@ export function JuciestOnJuciest() {
     const secondSegment = pathSegments[1];
     const title = Name[secondSegment];
     console.log(title);
+    const navigate = useNavigate();
     return (
         <>
             <Box w='100%' rowGap={{ base: '0px' }} pl={{ xl: '4px' }}>
@@ -269,11 +270,13 @@ export function JuciestOnJuciest() {
                                                         </Show>
                                                     </HStack>
                                                 </Button>
+
                                                 <Button
                                                     w={{ base: '70px', xl: '88px' }}
                                                     h={{ base: '24px', xl: '32px' }}
                                                     bg='#000000EB'
                                                     borderRadius='6px'
+                                                    onClick={() => navigate(`/Juciest/${item.id}`)}
                                                 >
                                                     <HStack spacing='7.5px'>
                                                         <Text
