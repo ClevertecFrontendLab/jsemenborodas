@@ -87,7 +87,7 @@ export function Juciest() {
                     columnGap={{ md: '13.9px', '3xl': '12px' }}
                     rowGap={{ md: '16px', '3xl': '24px' }}
                 >
-                    {JuciestData.map((recipe) => (
+                    {JuciestData.map((recipe, index) => (
                         <GridItem>
                             <Card
                                 border='1px solid #00000014'
@@ -384,6 +384,7 @@ export function Juciest() {
                                                         onClick={() =>
                                                             navigate(`/Juciest/${recipe.id}`)
                                                         }
+                                                        data-test-id={`card-link-${index}`}
                                                     >
                                                         <HStack spacing='7.5px'>
                                                             <Text

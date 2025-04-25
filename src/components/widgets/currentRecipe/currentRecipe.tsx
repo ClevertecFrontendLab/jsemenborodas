@@ -561,8 +561,8 @@ export function CurrentRecipe() {
                                                 >
                                                     <NumberInputField />
                                                     <NumberInputStepper>
-                                                        <NumberIncrementStepper />
-                                                        <NumberDecrementStepper />
+                                                        <NumberIncrementStepper data-test-id='increment-stepper' />
+                                                        <NumberDecrementStepper data-test-id='decrement-stepper' />
                                                     </NumberInputStepper>
                                                 </NumberInput>
                                             </HStack>
@@ -570,7 +570,7 @@ export function CurrentRecipe() {
                                     </Tr>
                                 </Thead>
                                 <Tbody p={0} minW={0}>
-                                    {recipe.ingredients.map((ingridient) => (
+                                    {recipe.ingredients.map((ingridient, index) => (
                                         <Tr
                                             h={{ base: '40px', xl: '52px' }}
                                             w='100%'
@@ -610,6 +610,7 @@ export function CurrentRecipe() {
                                                         fontWeight={500}
                                                         fontSize='14px'
                                                         lineHeight='20px'
+                                                        data-test-id={`ingredient-quantity-${index}`}
                                                     >
                                                         {Number(ingridient.count) * inputValue}
                                                     </Text>

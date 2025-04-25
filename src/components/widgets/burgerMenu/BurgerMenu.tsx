@@ -34,9 +34,15 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
     return (
         <>
             <Box onClick={toggleMenu} zIndex='9999'>
-                <Icon as={isOpen ? OpenBurger : Burger} w={isOpen ? 3 : 6} h={isOpen ? 3 : 6} />
+                <Icon
+                    as={isOpen ? OpenBurger : Burger}
+                    w={isOpen ? 3 : 6}
+                    h={isOpen ? 3 : 6}
+                    data-test-id={isOpen ? 'close-icon' : 'hamburger-icon'}
+                />
             </Box>
             <Box
+                data-test-id='nav'
                 position='absolute'
                 top='60px'
                 right={{ base: '8px' }}

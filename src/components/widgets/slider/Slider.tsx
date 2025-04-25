@@ -89,6 +89,7 @@ export function Slider() {
                     modules={[Navigation, Pagination, Scrollbar, A11y]}
                     style={{ width: '100%', overflow: 'hidden', minWidth: '0px' }}
                     loop={true}
+                    data-test-id='carousel'
                     allowTouchMove={window.innerWidth < 1280}
                     breakpoints={{
                         240: {
@@ -123,9 +124,9 @@ export function Slider() {
                         1880: { slidesPerView: 4, spaceBetween: 22 },
                     }}
                 >
-                    {lastRecipes.map((item) => (
+                    {lastRecipes.map((item, index) => (
                         <HStack overflow='hidden' bg='red' w='20px' minW='0'>
-                            <SwiperSlide>
+                            <SwiperSlide data-test-id={`carousel-card-${index}`}>
                                 <VStack
                                     w={{ base: '158px', xl: '277px', '2xl': '322px' }}
                                     h={{ base: '220px', xl: '402px', '2xl': '414px' }}

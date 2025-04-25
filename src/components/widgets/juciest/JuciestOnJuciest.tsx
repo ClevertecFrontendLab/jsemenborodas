@@ -50,7 +50,7 @@ export function JuciestOnJuciest() {
                             : { md: '15px', '2xl': '24px' }
                     }
                 >
-                    {(title === 'Второе блюдо' ? VeganPageData : JuciestData).map((item) => (
+                    {(title === 'Второе блюдо' ? VeganPageData : JuciestData).map((item, index) => (
                         <Card
                             border='1px solid #00000014'
                             bg='transparent'
@@ -277,6 +277,7 @@ export function JuciestOnJuciest() {
                                                     bg='#000000EB'
                                                     borderRadius='6px'
                                                     onClick={() => navigate(`/Juciest/${item.id}`)}
+                                                    data-test-id={`card-link-${index}`}
                                                 >
                                                     <HStack spacing='7.5px'>
                                                         <Text

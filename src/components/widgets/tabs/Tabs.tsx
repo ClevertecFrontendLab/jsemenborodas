@@ -64,10 +64,11 @@ export function Tabs() {
                         //     '2xl': 'translateX(22px)',
                         // }}
                     >
-                        {NavMenuData.map((item) =>
+                        {NavMenuData.map((item, index) =>
                             item.category === pathSegments[0]
                                 ? item.childrens.map((child) => (
                                       <Tab
+                                          data-test-id={`tab-${item.title}-${index} `}
                                           onClick={() => {
                                               const path = `/${pathSegments[0]}/${child.subCategory}`;
                                               navigate(path);

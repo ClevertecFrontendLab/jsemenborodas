@@ -48,7 +48,7 @@ export const RecipeData = [
                 image: 'url',
             },
         ],
-        meat: 'chicken',
+        meat: '',
         side: 'potatoes',
     },
     {
@@ -127,7 +127,6 @@ export const RecipeData = [
                 image: 'url',
             },
         ],
-        side: 'pasta',
     },
     {
         id: '3',

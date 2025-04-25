@@ -18,6 +18,7 @@ import { NavMenuData } from '../../entities/Data/NavMenuData';
 export function NavMenu() {
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
+    const selectedCategory = NavMenuData.find((item) => item.category === pathSegments[0]);
 
     const navigate = useNavigate();
 
@@ -96,6 +97,11 @@ export function NavMenu() {
                                                 //         : 500
                                                 // }
                                                 letterSpacing='0px'
+                                                data-test-id={
+                                                    selectedCategory?.title === item.title
+                                                        ? selectedCategory?.category
+                                                        : '""'
+                                                }
                                             >
                                                 {' '}
                                                 {item.title}
@@ -133,6 +139,11 @@ export function NavMenu() {
                                                     fontFamily='Inter'
                                                     whiteSpace='nowrap'
                                                     letterSpacing='0.1px'
+                                                    data-test-id={
+                                                        pathSegments[1] === child.subCategory
+                                                            ? `${pathSegments[1]}-active`
+                                                            : '""'
+                                                    }
                                                     fontWeight={
                                                         pathSegments[1] === child.subCategory
                                                             ? 700

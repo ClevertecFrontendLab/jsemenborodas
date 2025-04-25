@@ -16,7 +16,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { FilterAuthorsData } from '~/components/entities/Data/FilterData/FilterAuthorsData';
@@ -132,6 +132,24 @@ export function Filter({
 
     const navigate = useNavigate();
 
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const handleAddAllergen = () => {
+        const value = inputRef.current?.value.trim();
+        if (value) {
+            setDefaultAllergen((prev) => {
+                if (prev.includes(value)) {
+                    return prev.filter((item) => item !== value); // Удаляем, если уже есть
+                } else {
+                    return [...prev, value]; // Добавляем, если нет
+                }
+            });
+            if (inputRef.current) {
+                inputRef.current.value = ''; // Очищаем поле ввода
+            }
+        }
+    };
+
     return (
         <Box
             display={isFilterHidden ? 'none' : ''}
@@ -167,7 +185,12 @@ export function Filter({
                             Фильтр
                         </Heading>
                     </Box>
-                    <Box pt='4px' pr={{ xl: '4px' }} onClick={handleFilterChange}>
+                    <Box
+                        pt='4px'
+                        pr={{ xl: '4px' }}
+                        onClick={handleFilterChange}
+                        data-test-id='close-filter-drawer'
+                    >
                         <Icon as={ExitFilter} w='24px' h='24px' />
                     </Box>
                 </HStack>
@@ -187,6 +210,7 @@ export function Filter({
                             w='100%'
                             border='1px solid #00000014'
                             borderRadius='6px'
+                            data-test-id='filter-menu-button-категория'
                         >
                             <HStack p='8px 12px 7px 16px' justifyContent='space-between'>
                                 <Text
@@ -241,7 +265,15 @@ export function Filter({
                                         )}
                                         onChange={() => handleCatygoryCheckboxChange(item)}
                                     >
-                                        {item.title}
+                                        <Text
+                                            data-test-id={
+                                                item.name === 'vegan'
+                                                    ? 'checkbox-веганская кухня'
+                                                    : ''
+                                            }
+                                        >
+                                            {item.title}
+                                        </Text>
                                     </Checkbox>
                                 </MenuItem>
                             ))}
@@ -374,7 +406,13 @@ export function Filter({
                                     onChange={() => toggleSideDish(item)}
                                     value={item.title}
                                 >
-                                    {item.title}
+                                    <Text
+                                        data-test-id={
+                                            item.name === 'potatoes' ? 'checkbox-картошка' : ''
+                                        }
+                                    >
+                                        {item.title}
+                                    </Text>
                                 </Checkbox>
                             ))}
                         </VStack>
@@ -386,7 +424,10 @@ export function Filter({
                         <Text fontSize='16px' fontFamily='Inter' lineHeight='24px' fontWeight='500'>
                             Исключить аллергены
                         </Text>
-                        <Switch onChange={() => setIsOpen(!isOpen)} />
+                        <Switch
+                            onChange={() => setIsOpen(!isOpen)}
+                            data-test-id='allergens-switcher-filter'
+                        />
                     </HStack>
                     <Menu
                         closeOnSelect={false}
@@ -401,6 +442,7 @@ export function Filter({
                             borderRadius='6px'
                             mt='14px'
                             disabled={isOpen}
+                            data-test-id='allergens-menu-button-filter'
                         >
                             <HStack justifyContent='space-between'>
                                 {defaultAllergen.length > 0 && !isOpen ? (
@@ -423,7 +465,10 @@ export function Filter({
                                                 borderRadius='6px'
                                                 px={2}
                                             >
-                                                {item}
+                                                <HStack>
+                                                    <Text data-test-id='filter-tag'>{item}</Text>
+                                                    <Icon as={ExitButtonIcon} w='10px' h='10px' />
+                                                </HStack>
                                             </Box>
                                         ))}
                                     </HStack>
@@ -449,27 +494,41 @@ export function Filter({
                             </HStack>
                         </MenuButton>
                         <MenuList borderRadius={0} p={0} w='269px'>
-                            {searchFormFiltersData.map((item) => (
+                            {searchFormFiltersData.map((item, index) => (
                                 <MenuItem
                                     key={item.id}
                                     bg={item.id % 2 === 0 ? '#0000000F' : '#FFFFFF'}
                                 >
                                     <Checkbox
                                         isChecked={defaultAllergen.includes(item.title)}
-                                        onChange={() => handleDefaultAllergenChange(item.title)}
+                                        onChange={() =>
+                                            handleDefaultAllergenChange(item.displayTitle)
+                                        }
                                     >
-                                        {item.title}
+                                        <Text data-test-id={`allergen-${index}`}>{item.title}</Text>
                                     </Checkbox>
                                 </MenuItem>
                             ))}
                             <HStack ml='24px' spacing='8px'>
-                                <Input my='8px' w='205px' />
+                                <Input
+                                    my='8px'
+                                    w='205px'
+                                    data-test-id='add-other-allergen'
+                                    ref={inputRef}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleAddAllergen();
+                                        }
+                                    }}
+                                />
                                 <Button
                                     bg='transparent'
                                     border='none'
                                     shadow='none'
                                     _hover={{ bg: 'transparent' }}
                                     p={0}
+                                    onClick={handleAddAllergen}
+                                    data-test-id='add-allergen-button'
                                 >
                                     <Icon as={Plus} />
                                 </Button>
@@ -529,6 +588,7 @@ export function Filter({
                                 setSelectedMeatTypes([]);
                                 setSelectedSideDishTypes([]);
                             }}
+                            data-test-id='clear-filter-button'
                         >
                             <Text
                                 color='#000000CC'
@@ -556,6 +616,7 @@ export function Filter({
                                 selectedMeatTypes.length === 0 &&
                                 selectedSideDishTypes.length === 0
                             }
+                            data-test-id='find-recipe-button'
                             onClick={() =>
                                 navigate(`/filtered`, {
                                     state: {

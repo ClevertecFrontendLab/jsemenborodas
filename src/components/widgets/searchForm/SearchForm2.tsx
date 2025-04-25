@@ -172,6 +172,7 @@ export function SearchForm2({
                                 h={{ base: '32px', xl: '48px' }}
                                 w={{ base: '32px', xl: '48px' }}
                                 onClick={handleFilterChange}
+                                data-test-id='filter-drawer'
                             >
                                 <Icon
                                     as={Filter}
@@ -200,8 +201,10 @@ export function SearchForm2({
                                     fontWeight='400'
                                     letterSpacing={{ xl: '0.15px' }}
                                     pl={{ base: '12px', xl: '16px' }}
+                                    data-test-id='search-input'
                                 ></Input>
                                 <InputRightElement
+                                    data-test-id='search-button'
                                     onClick={handleSearch}
                                     w={{ base: '32px', xl: '48px' }}
                                     h={{ base: '32px', xl: '48px' }}
@@ -231,7 +234,11 @@ export function SearchForm2({
                                                 ? 'Исключить мои аллергены'
                                                 : 'Исключить аллергены'}
                                         </Text>
-                                        <Switch pt={{ xl: '6px' }} onChange={handleSelect}></Switch>
+                                        <Switch
+                                            pt={{ xl: '6px' }}
+                                            onChange={handleSelect}
+                                            data-test-id='allergens-switcher'
+                                        ></Switch>
                                     </HStack>
                                 </Box>
                                 <Box>
@@ -259,6 +266,7 @@ export function SearchForm2({
                                             fontSize='16px'
                                             lineHeight='24px'
                                             disabled={isDisabled}
+                                            data-test-id='allergens-menu-button'
                                         >
                                             <HStack
                                                 p={2}
@@ -340,8 +348,13 @@ export function SearchForm2({
                                             </HStack>
                                         </MenuButton>
                                         <Portal>
-                                            <MenuList borderRadius={0} p={0} w='269px'>
-                                                {searchFormFiltersData.map((item) => (
+                                            <MenuList
+                                                borderRadius={0}
+                                                p={0}
+                                                w='269px'
+                                                data-test-id='allergens-menu'
+                                            >
+                                                {searchFormFiltersData.map((item, index) => (
                                                     <MenuItem
                                                         value={item.id.toString()}
                                                         bg={
@@ -354,7 +367,11 @@ export function SearchForm2({
                                                         }
                                                     >
                                                         <Checkbox w='100%' iconColor='black'>
-                                                            {item.title}
+                                                            <Text
+                                                                data-test-id={`allergen-${index}`}
+                                                            >
+                                                                {item.title}
+                                                            </Text>
                                                         </Checkbox>
                                                     </MenuItem>
                                                 ))}
@@ -368,6 +385,7 @@ export function SearchForm2({
                                                                 handleAddAllergen();
                                                             }
                                                         }}
+                                                        data-test-id='add-other-allergen'
                                                     ></Input>
                                                     <Button
                                                         bg='transparent'
@@ -376,6 +394,7 @@ export function SearchForm2({
                                                         _hover={{ bg: 'transparent' }}
                                                         p={0}
                                                         onClick={handleAddAllergen}
+                                                        data-test-id='add-allergen-button'
                                                     >
                                                         {' '}
                                                         {/* <Image

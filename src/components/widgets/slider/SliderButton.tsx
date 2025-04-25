@@ -25,6 +25,7 @@ export const SliderButton = ({ swiperRef }) => {
                 h={{ xl: '40px', '2xl': '48px' }}
             >
                 <Button
+                    data-test-id='carousel-back'
                     bg='#000000'
                     w={{ xl: '40px', '2xl': '48px' }}
                     h={{ xl: '40px', '2xl': '48px' }}
@@ -49,6 +50,7 @@ export const SliderButton = ({ swiperRef }) => {
             >
                 {' '}
                 <Button
+                    data-test-id='carousel-forward'
                     bg='#000000'
                     w={{ xl: '40px', '2xl': '48px' }}
                     h={{ xl: '40px', '2xl': '48px' }}

@@ -105,7 +105,7 @@ export function ContentRecipeDefault({
                             : { md: '15px', '2xl': '24px' }
                     }
                 >
-                    {filteredRecipesFull.slice(0, 8).map((item) => (
+                    {filteredRecipesFull.slice(0, 8).map((item, index) => (
                         <Card
                             border='1px solid #00000014'
                             bg='transparent'
@@ -114,6 +114,7 @@ export function ContentRecipeDefault({
                             borderRadius='8px'
                             overflow='hidden'
                             minW={{ xl: '880px', '2xl': '0' }}
+                            data-test-id={`food-card-${index}`}
                         >
                             <CardBody p={0} maxH={{ xl: '244px' }} w='100%' maxW='100%'>
                                 <HStack h='100%' maxW='100%'>

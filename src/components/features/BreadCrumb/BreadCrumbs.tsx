@@ -146,7 +146,11 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ pathNames }) => {
     const displayPaths = hasRecipeId ? pathNames.slice(0, -1) : pathNames;
 
     return (
-        <Breadcrumb separator={<Text w='8px'> &gt; </Text>} listProps={{ flexWrap: 'wrap' }}>
+        <Breadcrumb
+            separator={<Text w='8px'> &gt; </Text>}
+            listProps={{ flexWrap: 'wrap' }}
+            data-test-id='breadcrumbs'
+        >
             <BreadcrumbItem>
                 <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
             </BreadcrumbItem>

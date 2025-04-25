@@ -12,7 +12,7 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import childTasty from '/public/childTasty.png';
 import healthyFood from '/public/healthyEating.png';
@@ -38,18 +38,15 @@ interface ContentRecipeProps {
 
 export function FilterContentRecipeSearch({
     searchValue,
-    // selectedItems,
-    // customAllergen,
+    selectedItems,
+    customAllergen,
     isDisabled,
     meatTypes,
     sideDishes,
     categories,
     // authors,
 }: ContentRecipeProps) {
-    const location = useLocation();
     const navigate = useNavigate();
-
-    const _pathSegments = location.pathname.split('/').filter(Boolean);
 
     const filteredRecipes = RecipeData.filter((item) => {
         if (!item?.title) return false;
@@ -87,6 +84,10 @@ export function FilterContentRecipeSearch({
         salads: leaf,
         soups: pan,
     };
+
+    const allAllergens = [...selectedItems, ...customAllergen].map((allergen) =>
+        allergen.toLowerCase(),
+    );
 
     const finalFilteredRecipes = filteredRecipes
         .filter((item) => {
