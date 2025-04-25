@@ -3,7 +3,25 @@ import { extendTheme } from '@chakra-ui/react';
 import { switchTheme } from './CustomSwitchTheme';
 
 export const theme = extendTheme({
-    components: { Switch: switchTheme },
+    components: {
+        Switch: switchTheme,
+        Checkbox: {
+            baseStyle: {
+                control: {
+                    borderColor: '#D7FF94',
+                    bg: 'transparent',
+                    _checked: {
+                        bg: '#B1FF2E',
+                        borderColor: 'none',
+                        _hover: { bg: '#B1FF2E', borderColor: 'none' },
+                    },
+                },
+                label: {
+                    color: 'rgb(0, 0, 0)',
+                },
+            },
+        },
+    },
     styles: {
         global: {
             '.custom-cursor': {

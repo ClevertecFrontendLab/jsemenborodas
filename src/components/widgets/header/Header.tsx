@@ -13,9 +13,10 @@ import { BurgerMenu } from '../burgerMenu/BurgerMenu';
 interface HeaderMenuProps {
     isBurgerOpen: boolean;
     setIsBurgerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    isFilterHidden: boolean;
 }
 
-export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
+export function Header({ isBurgerOpen, setIsBurgerOpen, isFilterHidden }: HeaderMenuProps) {
     const location = useLocation();
     const pathNames = location.pathname.split('/').filter((x) => x);
     const userName = 'Екатерина Константинопольская';
@@ -40,7 +41,11 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
     return (
         <Box
             as='header'
-            bg={isBurgerOpen ? 'rgba(255,255,255,1)' : 'rgba(255, 255, 211, 1)'}
+            bg={
+                isBurgerOpen || isFilterHidden === false
+                    ? 'rgba(255,255,255,1)'
+                    : 'rgba(255, 255, 211, 1)'
+            }
             data-test-id='header'
             w='100%'
             position='fixed'
@@ -80,13 +85,31 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
                         w='100%'
                     >
                         <Hide above='xl'>
-                            <Box w={14} h={6} display={isBurgerOpen ? 'none' : 'block'}>
+                            <Box
+                                w={14}
+                                h={6}
+                                display={
+                                    isBurgerOpen || isFilterHidden === false ? 'none' : 'block'
+                                }
+                            >
                                 <Metrics icon={FavouriteNotes}>185</Metrics>
                             </Box>
-                            <Box w='58px' h={6} display={isBurgerOpen ? 'none' : 'block'}>
+                            <Box
+                                w='58px'
+                                h={6}
+                                display={
+                                    isBurgerOpen || isFilterHidden === false ? 'none' : 'block'
+                                }
+                            >
                                 <Metrics icon={Subscribers}>589</Metrics>
                             </Box>
-                            <Box w='57px' h={6} display={isBurgerOpen ? 'none' : 'block'}>
+                            <Box
+                                w='57px'
+                                h={6}
+                                display={
+                                    isBurgerOpen || isFilterHidden === false ? 'none' : 'block'
+                                }
+                            >
                                 <Metrics icon={Likes}>587</Metrics>
                             </Box>
                         </Hide>
@@ -116,7 +139,7 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
                         </Hide>
                         <Show above='xl'>
                             <Card shadow='none' w='432px' bg='transparent'>
-                                <CardHeader p={0} bg='rgba(255, 255, 211, 1)'>
+                                <CardHeader p={0} bg='transparent'>
                                     <HStack
                                         justifyContent='flex-start'
                                         spacing='12px'

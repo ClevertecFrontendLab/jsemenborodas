@@ -10,8 +10,9 @@ import Search from '../../shared/images/FooterImages/Vector.png';
 
 interface FooterMenuProps {
     isBurgerOpen: boolean;
+    isFilterHidden: boolean;
 }
-export function Footer({ isBurgerOpen }: FooterMenuProps) {
+export function Footer({ isBurgerOpen, isFilterHidden }: FooterMenuProps) {
     const navigate = useNavigate();
     return (
         <>
@@ -25,7 +26,7 @@ export function Footer({ isBurgerOpen }: FooterMenuProps) {
                     data-test-id='footer'
                     position='fixed'
                     bottom='0px'
-                    filter={isBurgerOpen ? 'blur(2px)' : ''}
+                    filter={isBurgerOpen || isFilterHidden === false ? 'blur(2px)' : ''}
                 >
                     <Button
                         bg='radial-gradient(circle, #C4FF61 0%, #FFFFD3 40%)'

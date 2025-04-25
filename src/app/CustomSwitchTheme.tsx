@@ -15,7 +15,7 @@ const baseStyle = definePartsStyle({
     },
     track: {
         _checked: {
-            bg: 'red',
+            bg: '#B1FF2E',
         },
     },
 });

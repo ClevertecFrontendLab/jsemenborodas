@@ -24,6 +24,7 @@ import {
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useLocation } from 'react-router';
 
 import healthyFood from '/public/healthyEating.png';
 // eslint-disable-next-line import/order
@@ -43,6 +44,7 @@ import BsAlarm from '../../shared/images/icons/BsAlarm.png';
 import LoveSmile from '../../shared/images/icons/loveSmile.png';
 export function CurrentRecipe() {
     // { isBurgerOpen }: PageMenuProps
+    const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const recipeId = pathSegments[pathSegments.length - 1];
     const recipe = RecipeData.find((recipe) => recipe.id === recipeId);
@@ -70,6 +72,7 @@ export function CurrentRecipe() {
         setInputValue(valueNumber);
         console.log(valueNumber);
     };
+
     return (
         <>
             {recipe && (

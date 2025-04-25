@@ -1,22 +1,56 @@
 import {
     Box,
     Button,
+    Checkbox,
     Heading,
     HStack,
     Icon,
     Input,
     InputGroup,
     InputRightElement,
-    Select,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
+    Portal,
     Show,
     Switch,
     VStack,
 } from '@chakra-ui/react';
-import { Text } from '@chakra-ui/react';
+import { Image, Text } from '@chakra-ui/react';
+import { useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 
+import { searchFormFiltersData } from '~/components/entities/Data/searchFormFiltersData';
+import { Plus } from '~/icons/Icon';
 import { Filter, Search } from '~/icons/SearchInputIcon';
-export function SearchForm2() {
+
+interface searchFormPropsInterface {
+    setIsSearchStarted: (value: boolean) => void;
+    searchValue: string;
+    setSearchValue: (value: string) => void;
+    selectedItems: string[];
+    setSelectedItems: (items: string[]) => void;
+    customAllergen: string[];
+    setCustomAllergen: (allergens: string[]) => void;
+    isDisabled: boolean;
+    setIsDisabled: (value: boolean) => void;
+    isFilterHidden: boolean;
+    setIsFilterHidden: (value: boolean) => void;
+}
+export function SearchForm2({
+    setIsSearchStarted,
+    searchValue,
+    setSearchValue,
+    selectedItems,
+    setSelectedItems,
+    customAllergen,
+    setCustomAllergen,
+    isDisabled,
+    setIsDisabled,
+    isFilterHidden,
+    setIsFilterHidden,
+}: searchFormPropsInterface) {
     const location = useLocation();
     const Name: Record<string, string> = {
         '/': 'Приятного аппетита!',
@@ -27,6 +61,54 @@ export function SearchForm2() {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const firstSegment = pathSegments[0];
     const title = Name[firstSegment] || 'Приятного аппетита!';
+    const [inputValue, setInputValue] = useState(searchValue);
+    const handleSearch = () => {
+        if (inputValue.length >= 3) {
+            setIsSearchStarted(true);
+            setSearchValue(inputValue);
+        } else {
+            setIsSearchStarted(false);
+            setSearchValue('');
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const handleAddAllergen = () => {
+        const value = inputRef.current?.value.trim();
+        if (value) {
+            if (!customAllergen.includes(value)) {
+                setCustomAllergen([...customAllergen, value]);
+                if (inputRef.current) {
+                    inputRef.current.value = '';
+                }
+            }
+        }
+    };
+
+    const handleSelect = () => {
+        setIsDisabled(!isDisabled);
+    };
+
+    const handleCheckboxChange = (id: string) => {
+        setSelectedItems((prev) => {
+            if (prev.includes(id)) {
+                return prev.filter((item) => item !== id);
+            } else {
+                return [...prev, id];
+            }
+        });
+    };
+
+    const handleFilterChange = () => {
+        setIsFilterHidden(!isFilterHidden);
+    };
+
     return (
         <>
             <Box
@@ -89,6 +171,7 @@ export function SearchForm2() {
                                 size={{ base: 'sm' }}
                                 h={{ base: '32px', xl: '48px' }}
                                 w={{ base: '32px', xl: '48px' }}
+                                onClick={handleFilterChange}
                             >
                                 <Icon
                                     as={Filter}
@@ -105,6 +188,9 @@ export function SearchForm2() {
                                 h={{ base: '32px', xl: '48px' }}
                             >
                                 <Input
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    onKeyDown={handleKeyDown}
                                     borderColor='#0000007A'
                                     placeholder='Название или ингредиент...'
                                     h={{ base: '32px', xl: '48px' }}
@@ -116,6 +202,7 @@ export function SearchForm2() {
                                     pl={{ base: '12px', xl: '16px' }}
                                 ></Input>
                                 <InputRightElement
+                                    onClick={handleSearch}
                                     w={{ base: '32px', xl: '48px' }}
                                     h={{ base: '32px', xl: '48px' }}
                                 >
@@ -131,7 +218,7 @@ export function SearchForm2() {
                     <Show above='xl'>
                         <Box mt={{ xl: '8px' }} ml={{ xl: '8px' }}>
                             <HStack>
-                                <Box w='268px' h='36px'>
+                                <Box w={isDisabled === true ? '268px' : '233px'} h='36px'>
                                     <HStack spacing='14px'>
                                         <Text
                                             fontSize='16px'
@@ -140,23 +227,168 @@ export function SearchForm2() {
                                             fontWeight='500'
                                             pt={{ xl: '6px' }}
                                         >
-                                            Исключить мои аллергены
+                                            {isDisabled === true
+                                                ? 'Исключить мои аллергены'
+                                                : 'Исключить аллергены'}
                                         </Text>
-                                        <Switch pt={{ xl: '6px' }}></Switch>
+                                        <Switch pt={{ xl: '6px' }} onChange={handleSelect}></Switch>
                                     </HStack>
                                 </Box>
                                 <Box>
-                                    <Select
-                                        placeholder='Выберите из списка...'
-                                        color='#000000A3'
-                                        w='234px'
-                                        h='40px'
-                                        borderRadius='6px'
-                                        border='1px solid #00000014'
-                                        fontFamily='Inter'
-                                        fontSize='16px'
-                                        lineHeight='24px'
-                                    ></Select>
+                                    <Menu
+                                        // disabled={isDisabled}
+                                        // placeholder='Выберите из списка...'
+                                        // color='#000000A3'
+                                        // w='234px'
+                                        // h='40px'
+                                        // borderRadius='6px'
+                                        // border='1px solid #00000014'
+                                        // fontFamily='Inter'
+                                        // fontSize='16px'
+                                        // lineHeight='24px'
+
+                                        closeOnSelect={false}
+                                    >
+                                        <MenuButton
+                                            color='#000000A3'
+                                            w={isDisabled === true ? '234px' : '269px'}
+                                            h={isDisabled === true ? '40px' : 'auto'}
+                                            borderRadius='6px'
+                                            border='1px solid #00000014'
+                                            fontFamily='Inter'
+                                            fontSize='16px'
+                                            lineHeight='24px'
+                                            disabled={isDisabled}
+                                        >
+                                            <HStack
+                                                p={2}
+                                                overflow='hidden'
+                                                flexWrap='wrap'
+                                                position='relative'
+                                                pr={isDisabled === true ? '0px' : '64px'}
+                                                h={isDisabled === true ? '40px' : 'auto'}
+                                            >
+                                                {(selectedItems.length > 0 &&
+                                                    isDisabled === false) ||
+                                                (customAllergen.length > 0 &&
+                                                    isDisabled === false) ? (
+                                                    selectedItems.map((id) => {
+                                                        const item = searchFormFiltersData.find(
+                                                            (item) => item.id.toString() === id,
+                                                        );
+                                                        return item ? (
+                                                            <Box
+                                                                key={id}
+                                                                lineHeight='16px'
+                                                                fontSize='12px'
+                                                                fontWeight={500}
+                                                                fontFamily='Inter'
+                                                                color='#2DB100'
+                                                                border='1px solid #B1FF2E'
+                                                                borderRadius='6px'
+                                                                px={2}
+                                                            >
+                                                                {item.displayTitle}
+                                                            </Box>
+                                                        ) : null;
+                                                    })
+                                                ) : (
+                                                    <Text flexWrap='nowrap'>
+                                                        Выберите из списка...
+                                                    </Text>
+                                                )}
+                                                {customAllergen.length > 0 && isDisabled === false
+                                                    ? customAllergen.map((item) => (
+                                                          <Box
+                                                              key={item}
+                                                              lineHeight='16px'
+                                                              fontSize='12px'
+                                                              fontWeight={500}
+                                                              fontFamily='Inter'
+                                                              color='#2DB100'
+                                                              border='1px solid #B1FF2E'
+                                                              borderRadius='6px'
+                                                              px={2}
+                                                          >
+                                                              {item}
+                                                          </Box>
+                                                      ))
+                                                    : ''}
+
+                                                <Image
+                                                    src='/src/components/shared/images/icons/arrowDown.png'
+                                                    display={
+                                                        selectedItems.length > 0 ||
+                                                        customAllergen.length > 0
+                                                            ? 'none'
+                                                            : ''
+                                                    }
+                                                    position='absolute'
+                                                    right='10px'
+                                                ></Image>
+                                                <Image
+                                                    src='/src/components/shared/images/icons/arrowUp.png'
+                                                    display={
+                                                        selectedItems.length > 0 ||
+                                                        customAllergen.length > 0
+                                                            ? ''
+                                                            : 'none'
+                                                    }
+                                                    position='absolute'
+                                                    right='8px'
+                                                ></Image>
+                                            </HStack>
+                                        </MenuButton>
+                                        <Portal>
+                                            <MenuList borderRadius={0} p={0} w='269px'>
+                                                {searchFormFiltersData.map((item) => (
+                                                    <MenuItem
+                                                        value={item.id.toString()}
+                                                        bg={
+                                                            item.id % 2 === 0
+                                                                ? '#0000000F'
+                                                                : '#FFFFFF'
+                                                        }
+                                                        onChange={() =>
+                                                            handleCheckboxChange(item.id.toString())
+                                                        }
+                                                    >
+                                                        <Checkbox w='100%' iconColor='black'>
+                                                            {item.title}
+                                                        </Checkbox>
+                                                    </MenuItem>
+                                                ))}
+                                                <HStack ml='24px' spacing='8px'>
+                                                    <Input
+                                                        my='8px'
+                                                        w='205px'
+                                                        ref={inputRef}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                handleAddAllergen();
+                                                            }
+                                                        }}
+                                                    ></Input>
+                                                    <Button
+                                                        bg='transparent'
+                                                        border='none'
+                                                        shadow='none'
+                                                        _hover={{ bg: 'transparent' }}
+                                                        p={0}
+                                                        onClick={handleAddAllergen}
+                                                    >
+                                                        {' '}
+                                                        {/* <Image
+                                                            src='src/components/shared/images/icons/plus.png'
+                                                            w='24px'
+                                                            h='24px'
+                                                        ></Image> */}
+                                                        <Icon as={Plus}></Icon>
+                                                    </Button>
+                                                </HStack>
+                                            </MenuList>
+                                        </Portal>
+                                    </Menu>
                                 </Box>
                             </HStack>
                         </Box>

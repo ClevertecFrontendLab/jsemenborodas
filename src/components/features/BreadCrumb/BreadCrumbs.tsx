@@ -137,6 +137,8 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ pathNames }) => {
         '/side-dishes': 'Гарниры',
         '/salads': 'Салаты',
         '/warm-salads': 'Теплые салаты',
+        '/national': 'Интернациональные',
+        '/soups': 'Супы',
     };
     const recipeId = pathNames[pathNames.length - 1];
     const hasRecipeId = !isNaN(Number(recipeId));

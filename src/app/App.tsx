@@ -12,6 +12,7 @@ import { CursorTracker } from '../components/widgets/cursorTracker/CursorTracker
 import { theme } from './theme';
 function App() {
     const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+    const [isfilterHidden, setIsFilterHidden] = useState(true);
     return (
         <>
             <BrowserRouter>
@@ -26,14 +27,22 @@ function App() {
                         <GridItem>
                             <Header
                                 isBurgerOpen={isBurgerOpen}
+                                isFilterHidden={isfilterHidden}
                                 setIsBurgerOpen={setIsBurgerOpen}
                             ></Header>
                         </GridItem>
                         <GridItem>
-                            <AppRoutes isBurgerOpen={isBurgerOpen}></AppRoutes>
+                            <AppRoutes
+                                isBurgerOpen={isBurgerOpen}
+                                isFilterHidden={isfilterHidden}
+                                setIsFilterHidden={setIsFilterHidden}
+                            ></AppRoutes>
                         </GridItem>
                         <GridItem>
-                            <Footer isBurgerOpen={isBurgerOpen}></Footer>
+                            <Footer
+                                isBurgerOpen={isBurgerOpen}
+                                isFilterHidden={isfilterHidden}
+                            ></Footer>
                         </GridItem>
                     </Grid>
                 </ChakraProvider>

@@ -137,7 +137,7 @@ export function Slider() {
                                     cursor='pointer'
                                     onClick={() =>
                                         navigate(
-                                            `/${item.category[0]}/${item.subcategory[0]}/${item.id}`,
+                                            `/${item.category[0]}/${item.subcategory[0]}/${item.id}/`,
                                         )
                                     }
                                 >

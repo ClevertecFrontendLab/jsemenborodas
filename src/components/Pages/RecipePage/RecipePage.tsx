@@ -77,7 +77,7 @@ export function RecipePage({ isBurgerOpen }: PageMenuProps) {
                                     px={{ base: '16px', md: '0', '2xl': '2px' }}
                                 >
                                     <Box as='section' overflow='hidden'>
-                                        <CurrentRecipe isBurgerOpen={isBurgerOpen}></CurrentRecipe>
+                                        <CurrentRecipe></CurrentRecipe>
                                     </Box>
                                     <Box
                                         as='section'

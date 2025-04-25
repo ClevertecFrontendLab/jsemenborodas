@@ -1,6 +1,8 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import { ContentRecipe } from '~/components/widgets/contentRecipe/contentRecipe';
+import { Filter } from '~/components/widgets/Filter/Filter';
 import { Juciest } from '~/components/widgets/juciest/Juciest';
 import { Slider } from '~/components/widgets/slider/Slider';
 
@@ -13,6 +15,8 @@ import { VeganKitchen } from '../../widgets/veganKitchen/veganKitchen';
 
 interface PageMenuProps {
     isBurgerOpen: boolean;
+    isFilterHidden: boolean;
+    setIsFilterHidden: (value: boolean) => void;
 }
 
 const scrollController = {
@@ -24,16 +28,45 @@ const scrollController = {
     },
 };
 
-export function Main({ isBurgerOpen }: PageMenuProps) {
+export function Main({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: PageMenuProps) {
     useEffect(() => {
-        if (isBurgerOpen) {
+        if (isBurgerOpen || isFilterHidden === false) {
             scrollController.disabledScroll();
         } else {
             scrollController.enabledScroll();
         }
     });
+    const [isSearchStarted, setIsSearchStarted] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
+    const [customAllergen, setCustomAllergen] = useState<string[]>([]);
+    const [selectedItems, setSelectedItems] = useState<string[]>([]);
+    const [isDisabled, setIsDisabled] = useState(true);
+    const [selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
+    const [selectedSideDishTypes, setSelectedSideDishTypes] = useState<string[]>([]);
+    const [selectedFilterCategory, setSelectedFilterCategory] = useState<string[]>([]);
+    const [selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
+    const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
+    const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
     return (
         <>
+            <Box as='section'>
+                <Filter
+                    isFilterHidden={isFilterHidden}
+                    selectedMeatTypes={selectedMeatTypes}
+                    selectedSideDishTypes={selectedSideDishTypes}
+                    selectedFilterCategory={selectedFilterCategory}
+                    selectedFilterAuthor={selectedFilterAuthor}
+                    isCategoryMenuOpen={isCategoryMenuOpen}
+                    isAuthorMenuOpen={isAuthorMenuOpen}
+                    setIsFilterHidden={setIsFilterHidden}
+                    setSelectedMeatTypes={setSelectedMeatTypes}
+                    setSelectedSideDishTypes={setSelectedSideDishTypes}
+                    setSelectedFilterCategory={setSelectedFilterCategory}
+                    setSelectedFilterAuthor={setSelectedFilterAuthor}
+                    setIsCategoryMenuOpen={setIsCategoryMenuOpen}
+                    setIsAuthorMenuOpen={setIsAuthorMenuOpen}
+                ></Filter>
+            </Box>
             <Box
                 as='article'
                 w='100%'
@@ -41,8 +74,8 @@ export function Main({ isBurgerOpen }: PageMenuProps) {
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
-                filter={isBurgerOpen ? 'blur(4px)' : ''}
-                bg={isBurgerOpen ? 'rgba(0, 0, 0, 0.16)' : ''}
+                filter={isBurgerOpen || isFilterHidden === false ? 'blur(4px)' : ''}
+                bg={isBurgerOpen || isFilterHidden === false ? 'rgba(0, 0, 0, 0.16)' : ''}
             >
                 <Grid
                     templateColumns={{ xl: '256px auto 208px' }}
@@ -74,13 +107,26 @@ export function Main({ isBurgerOpen }: PageMenuProps) {
                                 minW={{ xl: '880px' }}
                             >
                                 <Box as='section' px={{ base: '0px', md: '0px', xl: '0' }}>
-                                    <SearchForm2></SearchForm2>
+                                    <SearchForm2
+                                        setIsSearchStarted={setIsSearchStarted}
+                                        searchValue={searchValue}
+                                        setSearchValue={setSearchValue}
+                                        selectedItems={selectedItems}
+                                        setSelectedItems={setSelectedItems}
+                                        customAllergen={customAllergen}
+                                        setCustomAllergen={setCustomAllergen}
+                                        isDisabled={isDisabled}
+                                        setIsDisabled={setIsDisabled}
+                                        isFilterHidden={isFilterHidden}
+                                        setIsFilterHidden={setIsFilterHidden}
+                                    ></SearchForm2>
                                 </Box>
                                 <Box
                                     w={{ xl: '100%' }}
                                     maxW={{ xl: '1360px' }}
                                     overflow={{ base: 'hidden', xl: 'visible' }}
                                     px={{ base: '16px', md: '0', '2xl': '2px' }}
+                                    display={isSearchStarted === true ? { base: 'none' } : '""'}
                                 >
                                     <Box
                                         as='section'
@@ -110,6 +156,21 @@ export function Main({ isBurgerOpen }: PageMenuProps) {
                                     >
                                         <VeganKitchen></VeganKitchen>
                                     </Box>
+                                </Box>
+                                <Box
+                                    w={{ xl: '100%' }}
+                                    maxW={{ xl: '1360px' }}
+                                    overflow={{ base: 'hidden', xl: 'visible' }}
+                                    px={{ base: '16px', md: '0', '2xl': '2px' }}
+                                    display={isSearchStarted === true ? { base: '""' } : 'none'}
+                                    mt={{ base: '24px', xl: '48px' }}
+                                >
+                                    <ContentRecipe
+                                        searchValue={searchValue}
+                                        selectedItems={selectedItems}
+                                        customAllergen={customAllergen}
+                                        isDisabled={isDisabled}
+                                    ></ContentRecipe>
                                 </Box>
                             </VStack>
                         </HStack>
