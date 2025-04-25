@@ -102,6 +102,11 @@ export function NavMenu() {
                                                         ? selectedCategory?.category
                                                         : '""'
                                                 }
+                                                date-test-id={
+                                                    item.title === 'Веганская кухня'
+                                                        ? 'vegan-cuisine'
+                                                        : ''
+                                                }
                                             >
                                                 {' '}
                                                 {item.title}
@@ -217,7 +222,7 @@ export function NavMenu() {
                         ))}
                     </Accordion>
                     <Box as='footer' position='fixed' bottom='37px'>
-                        <VStack spacing='15px' pt='10px' pl='4px' ml='-5px'>
+                        <VStack spacing='15px' pt='10px' pl='4px' ml='-5px' data-test-id='footer'>
                             <Text
                                 fontFamily='Inter'
                                 color='#0000003D'

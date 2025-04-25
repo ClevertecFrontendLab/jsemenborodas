@@ -70,9 +70,10 @@ export function Slider() {
                 mt={{ base: '24px', xl: '54px', '2xl': '50px' }}
                 overflow='visible'
             >
-                <Show above='xl'>
+                <Box display={{ base: 'none', xl: 'block' }}>
                     <SliderButton swiperRef={swiperRef} />
-                </Show>
+                </Box>
+
                 <Heading
                     fontFamily='Inter'
                     fontWeight='500'
