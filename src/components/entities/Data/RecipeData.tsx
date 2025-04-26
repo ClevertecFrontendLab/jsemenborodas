@@ -23,6 +23,7 @@ export const RecipeData = [
             { title: 'болгарский перец', count: '2', measureUnit: 'шт.' },
             { title: 'фасоль', count: '200', measureUnit: 'г' },
             { title: 'томатный соус', count: '200', measureUnit: 'мл' },
+            { title: 'Томат (помидор)', count: '1', measureUnit: 'мл' },
             { title: 'лук', count: '1', measureUnit: 'шт.' },
             { title: 'специи', count: '0', measureUnit: 'по вкусу' },
         ],
@@ -67,7 +68,7 @@ export const RecipeData = [
         nutritionValue: { calories: 180, proteins: 4, fats: 6, carbohydrates: 28 },
         ingredients: [
             { title: 'картошка', count: '3', measureUnit: 'шт.' },
-            { title: 'грибы', count: '200', measureUnit: 'г' },
+            { title: 'гриб', count: '200', measureUnit: 'г' },
             { title: 'мука', count: '100', measureUnit: 'г' },
             { title: 'специи', count: '0', measureUnit: 'по вкусу' },
         ],
@@ -391,33 +392,79 @@ export const RecipeData = [
     },
 
     {
-        id: '9',
-        title: 'Гриль-салат c овощами',
-        description: 'Салат c обжаренными на гриле овощами и легкой заправкой.',
-        category: ['salads'],
-        subcategory: ['warm-salads'],
+        id: '12',
+        title: 'Лапша c курицей и шафраном',
+        description:
+            'Как раз после праздников, когда мясные продукты еще остались, но никто их уже не хочет, время варить солянку.',
+        category: ['second-dish', 'national', 'child-food'],
+        subcategory: ['poultry-dish'],
         image: Lapsha,
-        bookmarks: 10,
-        likes: 80,
-        date: '2023-03-20T00:00:00Z',
-        time: '25 минут',
-        nutritionValue: { calories: 150, proteins: 4, fats: 6, carbohydrates: 20 },
+        bookmarks: 258,
+        likes: 342,
+        date: '2024-03-08T00:00:00Z',
+        time: '20 минут',
+        portions: 4,
+        nutritionValue: { calories: 358, proteins: 23, fats: 31, carbohydrates: 54 },
         ingredients: [
-            { title: 'цуккини', count: '1', measureUnit: 'шт.' },
-            { title: 'болгарский перец', count: '1', measureUnit: 'шт.' },
-            { title: 'баклажан', count: '1', measureUnit: 'шт.' },
-            { title: 'оливковое масло', count: '0', measureUnit: 'по вкусу' },
+            { title: 'зелёного лука', count: '50', measureUnit: 'пучок' },
+            { title: 'репчатого лука', count: '75', measureUnit: 'шт' },
+            { title: 'чеснока', count: '1', measureUnit: 'зубчик' },
+            { title: 'куриного филе', count: '500', measureUnit: 'г' },
+            { title: 'масло или жира', count: '40', measureUnit: 'г' },
+            { title: 'спагетти', count: '250', measureUnit: 'г' },
+            { title: 'молотого шафрана', count: '1', measureUnit: 'щепотка' },
+            { title: 'молотой корицы', count: '1', measureUnit: 'щепотка' },
+            { title: 'мука', count: '1', measureUnit: 'ст л' },
+            { title: 'сливок', count: '250', measureUnit: 'мл' },
+            { title: 'куриного бульона из кубика', count: '200', measureUnit: 'мл' },
+            { title: 'нарезанной петрушки', count: '2', measureUnit: 'ст л' },
         ],
         steps: [
             {
                 stepNumber: 1,
-                description: 'Обжарить овощи на гриле.',
-                image: 'url',
+                description:
+                    'Зелёный лук нарезать на 1 см. кружочки. Лук и чеснок на мелкие кубики.  ',
+                image: '/src/components/shared/LapshaImages/image-1.png',
             },
             {
                 stepNumber: 2,
-                description: 'Смешать с заправкой и подавать.',
-                image: 'url',
+                description:
+                    'Мясо помыть, высушить, нарезать на полосочки и обжарить на масле.  Посолить, поперчить и вынуть со сковороды.',
+                image: '/src/components/shared/LapshaImages/image-2.png',
+            },
+            {
+                stepNumber: 3,
+                description: 'Спагетти отварить в течение  10 минут в подсоленной воде.',
+                image: '/src/components/shared/LapshaImages/image-3.png',
+            },
+            {
+                stepNumber: 4,
+                description:
+                    'В сковороде, на оставшемся жире поджарить лук до золотистого цвета, добавить чеснок и прожарить ещё около 1 минуты.',
+                image: '/src/components/shared/LapshaImages/image-4.png',
+            },
+            {
+                stepNumber: 5,
+                description: 'Всыпать шафран, корицу и муки, перемешать и коротко прожарить.',
+                image: '',
+            },
+            {
+                stepNumber: 6,
+                description:
+                    'В сковороде, на оставшемся жире поджарить лук до золотистого цвета, добавить чеснок и прожарить ещё около 1 минуты.',
+                image: '/src/components/shared/LapshaImages/image-5.png',
+            },
+            {
+                stepNumber: 7,
+                description:
+                    'Сливки смешать с бульоном, влить к луку и протушить на среднем огне около 10 минут.',
+                image: '',
+            },
+            {
+                stepNumber: 8,
+                description:
+                    'Соус посолить, поперчить, вложить мясо, зелёный лук. Прогреть и осторожно смешать со спагетти. При подаче посыпать нарезанной петрушкой.',
+                image: '/src/components/shared/LapshaImages/image-6.png',
             },
         ],
     },
