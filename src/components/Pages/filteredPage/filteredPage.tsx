@@ -15,6 +15,7 @@ interface PageMenuProps {
     isBurgerOpen: boolean;
     isFilterHidden: boolean;
     setIsFilterHidden: (value: boolean) => void;
+    selectedFilterCategory: { id: number; title: string; name: string }[];
 }
 
 const scrollController = {
@@ -26,19 +27,25 @@ const scrollController = {
     },
 };
 
-export function FilteredPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: PageMenuProps) {
+export function FilteredPage({
+    isBurgerOpen,
+    isFilterHidden,
+    setIsFilterHidden,
+    selectedFilterCategory,
+}: PageMenuProps) {
     const location = useLocation();
     const {
         selectedMeatTypes = [],
         selectedSideDishTypes = [],
-        selectedFilterCategory = [],
         selectedFilterAuthor = [],
         defaultAllergen = [],
+        inputValue = [],
     } = location.state || {};
-
+    console.log(inputValue);
     const [meatTypes, setMeatTypes] = useState<string[]>(selectedMeatTypes);
     const [sideDishes, setSideDishes] = useState<string[]>(selectedSideDishTypes);
-    const [categories, setCategories] = useState<string[]>(selectedFilterCategory);
+    const [categories, setCategories] =
+        useState<{ id: number; title: string; name: string }[]>(selectedFilterCategory);
     const [authors, setAuthors] = useState<string[]>(selectedFilterAuthor);
     const [customAllergen, setCustomAllergen] = useState<string[]>(defaultAllergen);
     const [isSearchStarted, setIsSearchStarted] = useState(false);
@@ -122,7 +129,9 @@ export function FilteredPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }
                                     >
                                         <SearchForm2
                                             setIsSearchStarted={setIsSearchStarted}
-                                            searchValue={searchValue}
+                                            searchValue={
+                                                inputValue.length > 3 ? inputValue : searchValue
+                                            }
                                             setSearchValue={setSearchValue}
                                             selectedItems={selectedItems}
                                             setSelectedItems={setSelectedItems}
@@ -132,16 +141,19 @@ export function FilteredPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }
                                             setIsDisabled={setIsDisabled}
                                             isFilterHidden={isFilterHidden}
                                             setIsFilterHidden={setIsFilterHidden}
+                                            selectedFilterCategory={selectedFilterCategory}
                                         ></SearchForm2>
                                     </Box>
                                     <Box as='section' display={isSearchStarted ? 'none' : '""'}>
                                         <FilterContentRecipe
+                                            selectedItems={selectedItems}
                                             meatTypes={meatTypes}
                                             sideDishes={sideDishes}
                                             isDisabled={isDisabled}
                                             categories={categories}
                                             authors={authors}
                                             customAllergen={customAllergen}
+                                            isSearchStarted={isSearchStarted}
                                         ></FilterContentRecipe>
                                     </Box>
                                     <Box as='section' display={isSearchStarted ? '""' : 'none'}>
@@ -154,6 +166,7 @@ export function FilteredPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }
                                             sideDishes={sideDishes}
                                             categories={categories}
                                             authors={authors}
+                                            isSearchStarted={isSearchStarted}
                                         ></FilterContentRecipeSearch>
                                     </Box>
                                 </Box>

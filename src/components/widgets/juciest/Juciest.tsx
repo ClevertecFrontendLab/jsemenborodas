@@ -54,7 +54,7 @@ export function Juciest() {
                             mt={{ md: '-2px' }}
                             borderRadius='6px'
                             data-test-id='juiciest-link'
-                            onClick={() => navigate('/Juciest')}
+                            onClick={() => navigate('/the-juiciest')}
                             // className='custom-cursor'
                             cursor='pointer'
                         >
@@ -382,7 +382,7 @@ export function Juciest() {
                                                         bg='#000000EB'
                                                         borderRadius='6px'
                                                         onClick={() =>
-                                                            navigate(`/Juciest/${recipe.id}`)
+                                                            navigate(`/the-juiciest/${recipe.id}`)
                                                         }
                                                         data-test-id={`card-link-${index}`}
                                                     >
@@ -426,7 +426,7 @@ export function Juciest() {
                             pl={{ base: '15px' }}
                             bg='#B1FF2E'
                             mt={{ md: '-3px' }}
-                            onClick={() => navigate('/Juciest')}
+                            onClick={() => navigate('/the-juiciest')}
                         >
                             <HStack spacing='10px' height={{ xl: '0' }}>
                                 <Text

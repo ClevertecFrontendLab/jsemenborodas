@@ -7,6 +7,7 @@ import {
     Box,
     HStack,
     Icon,
+    useBreakpointValue,
     VStack,
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
@@ -30,7 +31,12 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
     const location = useLocation();
     const pathNames = location.pathname.split('/').filter((x) => x);
 
+    const isDesktop = useBreakpointValue({ base: false, xl: true });
     const navigate = useNavigate();
+    const dataId = useBreakpointValue({
+        base: 'vegan-cuisine',
+        xl: '',
+    });
     return (
         <>
             <Box onClick={toggleMenu} zIndex='9999'>
@@ -42,10 +48,10 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                 />
             </Box>
             <Box
-                data-test-id='nav'
                 position='absolute'
                 top='60px'
                 right={{ base: '8px' }}
+                data-test-id={isDesktop ? 'nav' : isOpen ? 'nav' : undefined}
                 display={isOpen ? 'block' : 'none'}
                 w='344px'
                 h={{ base: '82vh', sm: '85vh' }}
@@ -132,6 +138,9 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                                                 fontSize='16px'
                                                 lineHeight='24px'
                                                 letterSpacing={0}
+                                                data-test-id={
+                                                    item.title === 'Веганская кухня' ? dataId : ''
+                                                }
                                             >
                                                 {item.title}
                                             </Text>

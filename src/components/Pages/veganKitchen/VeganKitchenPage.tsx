@@ -16,6 +16,8 @@ interface PageMenuProps {
     isBurgerOpen: boolean;
     isFilterHidden: boolean;
     setIsFilterHidden: (value: boolean) => void;
+    selectedFilterCategory: { id: number; title: string; name: string }[];
+    setSelectedFilterCategory: (value: { id: number; title: string; name: string }[]) => void;
 }
 
 const scrollController = {
@@ -31,6 +33,8 @@ export function VeganKitchenPage({
     isBurgerOpen,
     isFilterHidden,
     setIsFilterHidden,
+    selectedFilterCategory,
+    setSelectedFilterCategory,
 }: PageMenuProps) {
     useEffect(() => {
         if (isBurgerOpen || isFilterHidden === false) {
@@ -46,7 +50,6 @@ export function VeganKitchenPage({
     const [isDisabled, setIsDisabled] = useState(true);
     const [selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
     const [selectedSideDishTypes, setSelectedSideDishTypes] = useState<string[]>([]);
-    const [selectedFilterCategory, setSelectedFilterCategory] = useState<string[]>([]);
     const [selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
@@ -125,6 +128,7 @@ export function VeganKitchenPage({
                                             setIsDisabled={setIsDisabled}
                                             isFilterHidden={isFilterHidden}
                                             setIsFilterHidden={setIsFilterHidden}
+                                            selectedFilterCategory={selectedFilterCategory}
                                         ></SearchForm2>
                                     </Box>
 
@@ -152,6 +156,7 @@ export function VeganKitchenPage({
                                             selectedItems={selectedItems}
                                             customAllergen={customAllergen}
                                             isDisabled={isDisabled}
+                                            isSearchStarted={isSearchStarted}
                                         ></ContentRecipeDefault>
                                     </Box>
                                     <Box
@@ -174,6 +179,7 @@ export function VeganKitchenPage({
                                             selectedItems={selectedItems}
                                             customAllergen={customAllergen}
                                             isDisabled={isDisabled}
+                                            isSearchStarted={isSearchStarted}
                                         ></ContentRecipe>
                                     </Box>
                                 </Box>

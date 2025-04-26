@@ -16,6 +16,8 @@ interface PageMenuProps {
     isBurgerOpen: boolean;
     isFilterHidden: boolean;
     setIsFilterHidden: (value: boolean) => void;
+    selectedFilterCategory: { id: number; title: string; name: string }[];
+    setSelectedFilterCategory: (value: { id: number; title: string; name: string }[]) => void;
 }
 
 const scrollController = {
@@ -27,7 +29,13 @@ const scrollController = {
     },
 };
 
-export function DefaultPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: PageMenuProps) {
+export function DefaultPage({
+    isBurgerOpen,
+    isFilterHidden,
+    setIsFilterHidden,
+    selectedFilterCategory,
+    setSelectedFilterCategory,
+}: PageMenuProps) {
     useEffect(() => {
         if (isBurgerOpen || isFilterHidden === false) {
             scrollController.disabledScroll();
@@ -42,7 +50,7 @@ export function DefaultPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
     const [isDisabled, setIsDisabled] = useState(true);
     const [selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
     const [selectedSideDishTypes, setSelectedSideDishTypes] = useState<string[]>([]);
-    const [selectedFilterCategory, setSelectedFilterCategory] = useState<string[]>([]);
+
     const [selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
@@ -118,6 +126,7 @@ export function DefaultPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
                                         setIsDisabled={setIsDisabled}
                                         isFilterHidden={isFilterHidden}
                                         setIsFilterHidden={setIsFilterHidden}
+                                        selectedFilterCategory={selectedFilterCategory}
                                     ></SearchForm2>
                                 </Box>
                                 <Box
@@ -146,6 +155,7 @@ export function DefaultPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
                                             selectedItems={selectedItems}
                                             customAllergen={customAllergen}
                                             isDisabled={isDisabled}
+                                            isSearchStarted={isSearchStarted}
                                         ></ContentRecipeDefault>
                                     </Box>
                                     <Box
@@ -157,6 +167,7 @@ export function DefaultPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
                                         mt={{ base: '24px', xl: '48px' }}
                                     >
                                         <ContentRecipe
+                                            isSearchStarted={isSearchStarted}
                                             searchValue={searchValue}
                                             selectedItems={selectedItems}
                                             customAllergen={customAllergen}

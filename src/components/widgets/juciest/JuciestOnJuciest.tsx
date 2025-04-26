@@ -276,7 +276,9 @@ export function JuciestOnJuciest() {
                                                     h={{ base: '24px', xl: '32px' }}
                                                     bg='#000000EB'
                                                     borderRadius='6px'
-                                                    onClick={() => navigate(`/Juciest/${item.id}`)}
+                                                    onClick={() =>
+                                                        navigate(`/the-juiciest/${item.id}`)
+                                                    }
                                                     data-test-id={`card-link-${index}`}
                                                 >
                                                     <HStack spacing='7.5px'>

@@ -18,8 +18,8 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
-import { useLocation } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
 import { searchFormFiltersData } from '~/components/entities/Data/searchFormFiltersData';
 import { Plus } from '~/icons/Icon';
@@ -37,6 +37,7 @@ interface searchFormPropsInterface {
     setIsDisabled: (value: boolean) => void;
     isFilterHidden: boolean;
     setIsFilterHidden: (value: boolean) => void;
+    selectedFilterCategory: { id: number; title: string; name: string }[];
 }
 export function SearchForm2({
     setIsSearchStarted,
@@ -50,6 +51,7 @@ export function SearchForm2({
     setIsDisabled,
     isFilterHidden,
     setIsFilterHidden,
+    selectedFilterCategory,
 }: searchFormPropsInterface) {
     const location = useLocation();
     const Name: Record<string, string> = {
@@ -57,7 +59,7 @@ export function SearchForm2({
         Juciest: 'Самое сочное',
         vegan: 'Веганская кухня',
     };
-
+    const navigate = useNavigate();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const firstSegment = pathSegments[0];
     const title = Name[firstSegment] || 'Приятного аппетита!';
@@ -108,6 +110,12 @@ export function SearchForm2({
     const handleFilterChange = () => {
         setIsFilterHidden(!isFilterHidden);
     };
+
+    useEffect(() => {
+        if (searchValue && searchValue.length > 3) {
+            handleSearch();
+        }
+    }, [searchValue, handleSearch]);
 
     return (
         <>
@@ -172,7 +180,7 @@ export function SearchForm2({
                                 h={{ base: '32px', xl: '48px' }}
                                 w={{ base: '32px', xl: '48px' }}
                                 onClick={handleFilterChange}
-                                data-test-id='filter-drawer'
+                                data-test-id={isFilterHidden ? 'filter-button' : ''}
                             >
                                 <Icon
                                     as={Filter}
@@ -205,9 +213,28 @@ export function SearchForm2({
                                 ></Input>
                                 <InputRightElement
                                     data-test-id='search-button'
-                                    onClick={handleSearch}
+                                    onClick={
+                                        selectedFilterCategory.length > 0
+                                            ? (e) => {
+                                                  e.preventDefault();
+                                                  console.log('searchValue', inputValue);
+                                                  navigate(`/filtered/`, {
+                                                      state: {
+                                                          selectedFilterCategory:
+                                                              selectedFilterCategory.map(
+                                                                  (category) => category,
+                                                              ),
+                                                          selectedItems,
+                                                          inputValue,
+                                                      },
+                                                  });
+                                              }
+                                            : handleSearch
+                                        // Костыль
+                                    }
                                     w={{ base: '32px', xl: '48px' }}
                                     h={{ base: '32px', xl: '48px' }}
+                                    pointerEvents={inputValue.length >= 3 ? '' : 'none'}
                                 >
                                     <Icon
                                         as={Search}
@@ -362,9 +389,14 @@ export function SearchForm2({
                                                                 ? '#0000000F'
                                                                 : '#FFFFFF'
                                                         }
-                                                        onChange={() =>
-                                                            handleCheckboxChange(item.id.toString())
-                                                        }
+                                                        onChange={() => {
+                                                            handleCheckboxChange(
+                                                                item.id.toString(),
+                                                            );
+                                                            setTimeout(() => {
+                                                                inputRef.current?.focus();
+                                                            }, 300);
+                                                        }}
                                                     >
                                                         <Checkbox w='100%' iconColor='black'>
                                                             <Text
@@ -378,15 +410,20 @@ export function SearchForm2({
                                                 <HStack ml='24px' spacing='8px'>
                                                     <Input
                                                         my='8px'
+                                                        autoFocus={true}
                                                         w='205px'
+                                                        data-test-id={
+                                                            isFilterHidden
+                                                                ? 'add-other-allergen'
+                                                                : ''
+                                                        }
                                                         ref={inputRef}
                                                         onKeyDown={(e) => {
                                                             if (e.key === 'Enter') {
                                                                 handleAddAllergen();
                                                             }
                                                         }}
-                                                        data-test-id='add-other-allergen'
-                                                    ></Input>
+                                                    />
                                                     <Button
                                                         bg='transparent'
                                                         border='none'
@@ -394,14 +431,12 @@ export function SearchForm2({
                                                         _hover={{ bg: 'transparent' }}
                                                         p={0}
                                                         onClick={handleAddAllergen}
-                                                        data-test-id='add-allergen-button'
+                                                        data-test-id={
+                                                            isFilterHidden
+                                                                ? 'add-allergen-button'
+                                                                : ''
+                                                        }
                                                     >
-                                                        {' '}
-                                                        {/* <Image
-                                                            src='src/components/shared/images/icons/plus.png'
-                                                            w='24px'
-                                                            h='24px'
-                                                        ></Image> */}
                                                         <Icon as={Plus}></Icon>
                                                     </Button>
                                                 </HStack>

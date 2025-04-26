@@ -131,12 +131,12 @@ export function Header({ isBurgerOpen, setIsBurgerOpen, isFilterHidden }: Header
                         pt={{ base: '9px', xl: '0px' }}
                         pr={{ base: '12px', xl: '0px' }}
                     >
-                        <Hide above='xl'>
+                        <Box display={{ base: 'block', xl: 'none' }}>
                             <BurgerMenu
                                 isOpen={isBurgerOpen}
                                 setIsOpen={setIsBurgerOpen}
                             ></BurgerMenu>
-                        </Hide>
+                        </Box>
                         <Show above='xl'>
                             <Card shadow='none' w='432px' bg='transparent'>
                                 <CardHeader p={0} bg='transparent'>

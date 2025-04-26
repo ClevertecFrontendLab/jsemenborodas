@@ -124,6 +124,7 @@ export function JuciestPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
                                         setCustomAllergen={setCustomAllergen}
                                         isFilterHidden={isFilterHidden}
                                         setIsFilterHidden={setIsFilterHidden}
+                                        selectedFilterCategory={selectedFilterCategory}
                                     ></SearchForm2>
                                     <Box
                                         mt={{ base: '34px' }}
@@ -151,6 +152,7 @@ export function JuciestPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
                                             selectedItems={selectedItems}
                                             customAllergen={customAllergen}
                                             isDisabled={isDisabled}
+                                            isSearchStarted={isSearchStarted}
                                         ></ContentRecipe>
                                     </Box>
                                 </Box>

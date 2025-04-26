@@ -1,6 +1,6 @@
 import 'swiper/swiper-bundle.css';
 
-import { Box, Heading, Hide, HStack, Show, VStack } from '@chakra-ui/react';
+import { Box, Heading, Hide, HStack, Show, useBreakpointValue, VStack } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { useRef } from 'react';
@@ -48,6 +48,16 @@ export function Slider() {
     const lastRecipes = sortedRecipes.slice(0, 10);
 
     const swiperRef = useRef(null);
+    const width = useBreakpointValue({
+        base: '158px',
+        xl: '279px',
+        '2xl': '322px',
+    });
+
+    const spaceBetween = useBreakpointValue({
+        base: '12px',
+        xl: '24px',
+    });
 
     const navigate = useNavigate();
     return (
@@ -68,7 +78,6 @@ export function Slider() {
                 my={{ base: '25px', xl: '14px', '2xl': '0px' }}
                 mb={{ xl: '0px', '2xl': '58px' }}
                 mt={{ base: '24px', xl: '54px', '2xl': '50px' }}
-                overflow='visible'
             >
                 <Box display={{ base: 'none', xl: 'block' }}>
                     <SliderButton swiperRef={swiperRef} />
@@ -86,50 +95,56 @@ export function Slider() {
                     Новые рецепты
                 </Heading>
                 <Swiper
+                    threshold={1}
                     ref={swiperRef}
+                    slidesPerView='auto'
                     modules={[Navigation, Pagination, Scrollbar, A11y]}
-                    style={{ width: '100%', overflow: 'hidden', minWidth: '0px' }}
+                    style={{ width: '100%', minWidth: '0px' }}
                     loop={true}
+                    spaceBetween={spaceBetween}
                     data-test-id='carousel'
-                    allowTouchMove={window.innerWidth < 1280}
-                    breakpoints={{
-                        240: {
-                            slidesPerView: 2,
-                            spaceBetween: 100,
-                        },
-                        300: {
-                            slidesPerView: 2,
-                            spaceBetween: 70,
-                        },
-                        360: {
-                            slidesPerView: 3,
-                            spaceBetween: 150,
-                        },
-                        520: {
-                            slidesPerView: 4,
-                            spaceBetween: 160,
-                        },
-                        730: {
-                            slidesPerView: 5,
-                            spaceBetween: 122,
-                        },
-                        1000: {
-                            slidesPerView: 5,
-                            spaceBetween: 60,
-                        },
-                        1280: {
-                            slidesPerView: 4,
-                            spaceBetween: 278,
-                        },
-                        1800: { slidesPerView: 4, spaceBetween: 80 },
-                        1880: { slidesPerView: 4, spaceBetween: 22 },
-                    }}
+
+                    // allowTouchMove={window.innerWidth < 1280}
+                    // breakpoints={{
+                    //     240: {
+                    //         slidesPerView: 2,
+                    //         spaceBetween: 100,
+                    //     },
+                    //     300: {
+                    //         slidesPerView: 2,
+                    //         spaceBetween: 70,
+                    //     },
+                    //     360: {
+                    //         slidesPerView: 3,
+                    //         spaceBetween: 150,
+                    //     },
+                    //     520: {
+                    //         slidesPerView: 4,
+                    //         spaceBetween: 160,
+                    //     },
+                    //     730: {
+                    //         slidesPerView: 5,
+                    //         spaceBetween: 122,
+                    //     },
+                    //     1000: {
+                    //         slidesPerView: 5,
+                    //         spaceBetween: 60,
+                    //     },
+                    //     1280: {
+                    //         slidesPerView: 4,
+                    //         spaceBetween: 278,
+                    //     },
+                    //     1800: { slidesPerView: 4, spaceBetween: 80 },
+                    //     1880: { slidesPerView: 4, spaceBetween: 22 },
+                    // }}
                 >
                     {lastRecipes.map((item, index) => (
-                        <HStack overflow='hidden' bg='red' w='20px' minW='0'>
-                            <SwiperSlide data-test-id={`carousel-card-${index}`}>
+                        <HStack bg='red' w='20px' minW='0'>
+                            <SwiperSlide
+                                data-test-id={`carousel-card-${index}`}
+                                style={{ width: width, minWidth: width, maxWidth: width }}
+                            >
                                 <VStack
-                                    w={{ base: '158px', xl: '277px', '2xl': '322px' }}
                                     h={{ base: '220px', xl: '402px', '2xl': '414px' }}
                                     flexShrink={0}
                                     position='relative'
@@ -147,7 +162,6 @@ export function Slider() {
                                         w={{ base: '158px', xl: '277px', '2xl': '322px' }}
                                         minH={{ base: '128px', xl: '230px' }}
                                         maxH={{ xl: '230px' }}
-                                        overflow='hidden'
                                     >
                                         <Image
                                             src={item.image}
@@ -230,7 +244,6 @@ export function Slider() {
                                             <HStack
                                                 spacing='17px'
                                                 w='100%'
-                                                overflow='hidden'
                                                 justifyContent='space-between'
                                             >
                                                 <Show above='xl'>

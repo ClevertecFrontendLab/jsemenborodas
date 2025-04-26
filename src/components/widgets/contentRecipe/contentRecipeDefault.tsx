@@ -30,11 +30,13 @@ interface ContentRecipeProps {
     selectedItems: string[];
     customAllergen: string[];
     isDisabled: boolean;
+    isSearchStarted: boolean;
 }
 export function ContentRecipeDefault({
     selectedItems,
     customAllergen,
     isDisabled,
+    isSearchStarted,
 }: ContentRecipeProps) {
     const location = useLocation();
     const Name: Record<string, string> = {
@@ -52,6 +54,13 @@ export function ContentRecipeDefault({
     let filteredRecipesFull = filteredRecipes.filter((item) =>
         item.subcategory.includes(currentSubCategory),
     );
+    filteredRecipesFull = filteredRecipesFull
+        .filter((item) => item.date)
+        .sort((a, b) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateB - dateA;
+        });
     const selectedItemsTitles: string[] = searchFormFiltersData
         .filter((item) => selectedItems.includes(item.id.toString()))
         .map((item) => item.title);
@@ -105,7 +114,10 @@ export function ContentRecipeDefault({
                             : { md: '15px', '2xl': '24px' }
                     }
                 >
-                    {filteredRecipesFull.slice(0, 8).map((item, index) => (
+                    {(pathSegments[1] === 'second-dish'
+                        ? filteredRecipesFull.slice(0, 8).reverse()
+                        : filteredRecipesFull.slice(0, 8)
+                    ).map((item, index) => (
                         <Card
                             border='1px solid #00000014'
                             bg='transparent'
@@ -114,7 +126,7 @@ export function ContentRecipeDefault({
                             borderRadius='8px'
                             overflow='hidden'
                             minW={{ xl: '880px', '2xl': '0' }}
-                            data-test-id={`food-card-${index}`}
+                            data-test-id={isSearchStarted ? '' : `food-card-${index}`}
                         >
                             <CardBody p={0} maxH={{ xl: '244px' }} w='100%' maxW='100%'>
                                 <HStack h='100%' maxW='100%'>
@@ -330,7 +342,9 @@ export function ContentRecipeDefault({
                                                     h={{ base: '24px', xl: '32px' }}
                                                     bg='#000000EB'
                                                     borderRadius='6px'
-                                                    onClick={() => navigate(`/Juciest/${item.id}`)}
+                                                    onClick={() =>
+                                                        navigate(`/the-juiciest/${item.id}`)
+                                                    }
                                                 >
                                                     <HStack spacing='7.5px'>
                                                         <Text

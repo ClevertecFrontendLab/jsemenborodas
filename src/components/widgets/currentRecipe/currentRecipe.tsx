@@ -65,7 +65,7 @@ export function CurrentRecipe() {
         snacks: healthyFood,
     };
 
-    const [inputValue, setInputValue] = useState(1);
+    const [inputValue, setInputValue] = useState(4);
 
     const handleChange = (valueString: string) => {
         const valueNumber = parseInt(valueString, 10);
@@ -555,7 +555,6 @@ export function CurrentRecipe() {
                                                     onChange={handleChange}
                                                     w={{ base: '73px', md: '90px' }}
                                                     step={1}
-                                                    defaultValue={1}
                                                     min={1}
                                                     max={100}
                                                 >

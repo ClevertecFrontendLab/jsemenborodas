@@ -34,6 +34,7 @@ interface ContentRecipeProps {
     sideDishes: { title: string; name: string }[];
     categories: { id: number; title: string; name: string }[];
     authors: string[];
+    isSearchStarted: boolean;
 }
 
 export function FilterContentRecipeSearch({
@@ -45,6 +46,7 @@ export function FilterContentRecipeSearch({
     sideDishes,
     categories,
     // authors,
+    isSearchStarted,
 }: ContentRecipeProps) {
     const navigate = useNavigate();
 
@@ -123,6 +125,7 @@ export function FilterContentRecipeSearch({
                         h={{ base: '128px', xl: '244px' }}
                         borderRadius='8px'
                         overflow='hidden'
+                        data-test-id={isSearchStarted ? 'food-card' : ''}
                     >
                         <CardBody p={0}>
                             <HStack h='100%' maxW='100%'>
@@ -322,7 +325,7 @@ export function FilterContentRecipeSearch({
                                                 h={{ base: '24px', xl: '32px' }}
                                                 bg='#000000EB'
                                                 borderRadius='6px'
-                                                onClick={() => navigate(`/Juciest/${item.id}`)}
+                                                onClick={() => navigate(`/the-juiciest/${item.id}`)}
                                             >
                                                 <HStack spacing='7.5px'>
                                                     <Text

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Route, Routes as RouterRoutes } from 'react-router';
 
 import { DefaultPage } from '../Pages/defaultPage/DefaultPage';
@@ -14,6 +15,9 @@ interface RoutesMenuProps {
 }
 
 export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: RoutesMenuProps) {
+    const [selectedFilterCategory, setSelectedFilterCategory] = useState<
+        { id: number; title: string; name: string }[]
+    >([]);
     return (
         <>
             <RouterRoutes>
@@ -24,11 +28,13 @@ export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: R
                             isBurgerOpen={isBurgerOpen}
                             isFilterHidden={isFilterHidden}
                             setIsFilterHidden={setIsFilterHidden}
+                            selectedFilterCategory={selectedFilterCategory}
+                            setSelectedFilterCategory={setSelectedFilterCategory}
                         />
                     }
                 />
                 <Route
-                    path='/Juciest'
+                    path='/the-juiciest'
                     element={
                         <JuciestPage
                             isBurgerOpen={isBurgerOpen}
@@ -38,7 +44,7 @@ export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: R
                     }
                 />
                 <Route
-                    path='/Juciest/:t'
+                    path='/the-juiciest/:t'
                     element={
                         <RecipePage
                             isBurgerOpen={isBurgerOpen}
@@ -54,6 +60,8 @@ export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: R
                             isBurgerOpen={isBurgerOpen}
                             isFilterHidden={isFilterHidden}
                             setIsFilterHidden={setIsFilterHidden}
+                            selectedFilterCategory={selectedFilterCategory}
+                            setSelectedFilterCategory={setSelectedFilterCategory}
                         />
                     }
                 />
@@ -65,6 +73,8 @@ export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: R
                             isBurgerOpen={isBurgerOpen}
                             isFilterHidden={isFilterHidden}
                             setIsFilterHidden={setIsFilterHidden}
+                            selectedFilterCategory={selectedFilterCategory}
+                            setSelectedFilterCategory={setSelectedFilterCategory}
                         />
                     }
                 />
@@ -76,6 +86,8 @@ export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: R
                             isBurgerOpen={isBurgerOpen}
                             isFilterHidden={isFilterHidden}
                             setIsFilterHidden={setIsFilterHidden}
+                            selectedFilterCategory={selectedFilterCategory}
+                            setSelectedFilterCategory={setSelectedFilterCategory}
                         />
                     }
                 />

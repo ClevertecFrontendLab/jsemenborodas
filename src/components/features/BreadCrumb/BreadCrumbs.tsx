@@ -9,7 +9,7 @@ interface BreadcrumbsProps {
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ pathNames }) => {
     const breadCrumbNames: Record<string, string> = {
-        '/Juciest': 'Самое сочное',
+        '/the-juiciest': 'Самое сочное',
         '/SecondDelicious': 'Вторые блюда',
         '/veganKitchen': 'Веганская кухня',
         '/salad': 'Салаты',
@@ -128,7 +128,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ pathNames }) => {
         '/vegetablesSalad': 'Овощные салаты',
         '/hotSalad': 'Теплые салаты',
         '/juicesFresh': 'Соки и фреши',
-        '/vegan': 'Веганские блюда',
+        '/vegan': 'Веганская кухня',
         '/hot-snacks': 'Теплые закуски',
         '/hot-soups': 'Первые блюда',
         '/cold-salads': 'Холодные салаты',

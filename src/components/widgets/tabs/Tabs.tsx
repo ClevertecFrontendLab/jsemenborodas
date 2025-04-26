@@ -23,7 +23,7 @@ export function Tabs() {
                 bg='transparent'
             >
                 <Tabb
-                    index={selectedSubCategory}
+                    index={!pathSegments[1] ? 0 : selectedSubCategory}
                     borderBottom='1px solid #00000014'
                     w={{ '2xl': '100%' }}
                     mx={{ '2xl': 'auto' }}
@@ -64,11 +64,11 @@ export function Tabs() {
                         //     '2xl': 'translateX(22px)',
                         // }}
                     >
-                        {NavMenuData.map((item, index) =>
+                        {NavMenuData.map((item) =>
                             item.category === pathSegments[0]
-                                ? item.childrens.map((child) => (
+                                ? item.childrens.map((child, index) => (
                                       <Tab
-                                          data-test-id={`tab-${item.title}-${index} `}
+                                          data-test-id={`tab-${pathSegments[0] === 'snacks' ? pathSegments[0] : child.subCategory}-${index}`}
                                           onClick={() => {
                                               const path = `/${pathSegments[0]}/${child.subCategory}`;
                                               navigate(path);

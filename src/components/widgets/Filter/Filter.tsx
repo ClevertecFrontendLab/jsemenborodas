@@ -108,6 +108,16 @@ export function Filter({
 
     const [allFilterFilters, setAllFilterFilters] = useState<string[]>([]);
 
+    const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+    const toggleItemSelection = (title: string) => {
+        setSelectedItems((prevSelected) =>
+            prevSelected.includes(title)
+                ? prevSelected.filter((item) => item !== title)
+                : [...prevSelected, title],
+        );
+    };
+
     // const handleFilterFiltersChange = (filter: string) =>
     //     setAllFilterFilters((prev) => {
     //         if (prev.includes(filter)) {
@@ -139,13 +149,20 @@ export function Filter({
         if (value) {
             setDefaultAllergen((prev) => {
                 if (prev.includes(value)) {
-                    return prev.filter((item) => item !== value); // Удаляем, если уже есть
+                    return prev.filter((item) => item !== value);
                 } else {
-                    return [...prev, value]; // Добавляем, если нет
+                    return [...prev, value];
+                }
+            });
+            setSelectedItems((prev) => {
+                if (prev.includes(value)) {
+                    return prev.filter((item) => item !== value);
+                } else {
+                    return [...prev, value];
                 }
             });
             if (inputRef.current) {
-                inputRef.current.value = ''; // Очищаем поле ввода
+                inputRef.current.value = '';
             }
         }
     };
@@ -162,6 +179,7 @@ export function Filter({
             overflow='hidden'
             w={{ base: '344px', xl: '463px' }}
             minW={0}
+            data-test-id={isFilterHidden ? '' : 'filter-drawer'}
         >
             <Box
                 maxH='calc(100% - 100px)'
@@ -263,7 +281,10 @@ export function Filter({
                                         isChecked={selectedFilterCategory.some(
                                             (c) => c.id === item.id,
                                         )}
-                                        onChange={() => handleCatygoryCheckboxChange(item)}
+                                        onChange={() => {
+                                            handleCatygoryCheckboxChange(item);
+                                            toggleItemSelection(item.title);
+                                        }}
                                     >
                                         <Text
                                             data-test-id={
@@ -347,7 +368,10 @@ export function Filter({
                                     <Checkbox
                                         isChecked={selectedFilterAuthor.includes(item.authorName)}
                                         value={item.authorName}
-                                        onChange={() => handleAuthorCheckboxChange(item.authorName)}
+                                        onChange={() => {
+                                            handleAuthorCheckboxChange(item.authorName);
+                                            toggleItemSelection(item.authorName);
+                                        }}
                                     >
                                         {item.authorName}
                                     </Checkbox>
@@ -375,7 +399,10 @@ export function Filter({
                             {TypeOfMeatData.map((item) => (
                                 <Checkbox
                                     key={item.name}
-                                    onChange={() => toggleMeat(item)}
+                                    onChange={() => {
+                                        toggleMeat(item);
+                                        toggleItemSelection(item.title);
+                                    }}
                                     value={item.title}
                                 >
                                     {item.title}
@@ -403,7 +430,10 @@ export function Filter({
                             {TypeOfSideDishData.map((item) => (
                                 <Checkbox
                                     key={item.name}
-                                    onChange={() => toggleSideDish(item)}
+                                    onChange={() => {
+                                        toggleSideDish(item);
+                                        toggleItemSelection(item.title);
+                                    }}
                                     value={item.title}
                                 >
                                     <Text
@@ -445,7 +475,7 @@ export function Filter({
                             data-test-id='allergens-menu-button-filter'
                         >
                             <HStack justifyContent='space-between'>
-                                {defaultAllergen.length > 0 && !isOpen ? (
+                                {selectedItems.length > 0 ? (
                                     <HStack
                                         p={2}
                                         overflow='hidden'
@@ -453,7 +483,8 @@ export function Filter({
                                         position='relative'
                                         pr='64px'
                                     >
-                                        {defaultAllergen.map((item) => (
+                                        {/* Здесь */}
+                                        {selectedItems.map((item) => (
                                             <Box
                                                 key={item}
                                                 lineHeight='16px'
@@ -501,11 +532,16 @@ export function Filter({
                                 >
                                     <Checkbox
                                         isChecked={defaultAllergen.includes(item.title)}
-                                        onChange={() =>
-                                            handleDefaultAllergenChange(item.displayTitle)
-                                        }
+                                        onChange={() => {
+                                            handleDefaultAllergenChange(item.displayTitle);
+                                            toggleItemSelection(item.displayTitle);
+                                        }}
                                     >
-                                        <Text data-test-id={`allergen-${index}`}>{item.title}</Text>
+                                        <Text
+                                            data-test-id={isFilterHidden ? '' : `allergen-${index}`}
+                                        >
+                                            {item.title}
+                                        </Text>
                                     </Checkbox>
                                 </MenuItem>
                             ))}
@@ -513,7 +549,7 @@ export function Filter({
                                 <Input
                                     my='8px'
                                     w='205px'
-                                    data-test-id='add-other-allergen'
+                                    data-test-id={isFilterHidden ? '' : 'add-other-allergen'}
                                     ref={inputRef}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') {
@@ -528,7 +564,7 @@ export function Filter({
                                     _hover={{ bg: 'transparent' }}
                                     p={0}
                                     onClick={handleAddAllergen}
-                                    data-test-id='add-allergen-button'
+                                    data-test-id={isFilterHidden ? '' : 'add-allergen-button'}
                                 >
                                     <Icon as={Plus} />
                                 </Button>
@@ -587,8 +623,9 @@ export function Filter({
                                 setAllFilterFilters([]);
                                 setSelectedMeatTypes([]);
                                 setSelectedSideDishTypes([]);
+                                setSelectedItems([]);
                             }}
-                            data-test-id='clear-filter-button'
+                            data-test-id={isFilterHidden ? '' : 'clear-filter-button'}
                         >
                             <Text
                                 color='#000000CC'
@@ -617,8 +654,8 @@ export function Filter({
                                 selectedSideDishTypes.length === 0
                             }
                             data-test-id='find-recipe-button'
-                            onClick={() =>
-                                navigate(`/filtered`, {
+                            onClick={() => {
+                                navigate(`/filtered/`, {
                                     state: {
                                         selectedMeatTypes: selectedMeatTypes.map((meat) => meat),
                                         selectedSideDishTypes: selectedSideDishTypes.map(
@@ -629,14 +666,17 @@ export function Filter({
                                         ),
                                         selectedFilterAuthor,
                                         defaultAllergen,
+                                        selectedItems,
                                     },
-                                })
-                            }
+                                });
+                                setIsFilterHidden(true);
+                            }}
                             sx={{
                                 _disabled: {
                                     bg: '#0000003D',
                                     color: '#FFFFFFA3',
                                     cursor: 'default',
+                                    pointerEvents: 'none',
                                 },
                             }}
                         >
@@ -659,7 +699,6 @@ export function Filter({
                 bottom='0'
                 left='0'
                 right={{ base: '344px', xl: '463px' }}
-                zIndex='100000'
                 bg='rgba(0, 0, 0, 0.16)'
                 onClick={handleFilterChange}
             ></Box>

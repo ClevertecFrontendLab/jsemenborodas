@@ -32,6 +32,7 @@ interface ContentRecipeProps {
     categories: { id: number; title: string; name: string }[];
     authors: string[];
     customAllergen: string[];
+    isSearchStarted: boolean;
 }
 
 export function FilterContentRecipe({
@@ -40,7 +41,8 @@ export function FilterContentRecipe({
     sideDishes,
     categories,
     // authors,
-    // customAllergen,
+    customAllergen,
+    isSearchStarted,
 }: ContentRecipeProps) {
     const navigate = useNavigate();
     const filteredRecipes = RecipeData.filter((item) => {
@@ -60,7 +62,15 @@ export function FilterContentRecipe({
                 categories.some((category) => category.name === itemCategory),
             );
 
-        return matchesMeatType && matchesSideDish && matchesCategory;
+        const matchesAllergens =
+            customAllergen.length === 0 ||
+            !item.ingredients?.some((ingredient) =>
+                customAllergen.some((allergen) =>
+                    ingredient.title.toLowerCase().includes(allergen.toLowerCase()),
+                ),
+            );
+
+        return matchesMeatType && matchesSideDish && matchesCategory && matchesAllergens;
     });
 
     const categoriesDecrypt: Record<string, string> = {
@@ -106,6 +116,7 @@ export function FilterContentRecipe({
                         h={{ base: '128px', xl: '244px' }}
                         borderRadius='8px'
                         overflow='hidden'
+                        data-test-id={isSearchStarted ? '' : 'food-card'}
                     >
                         <CardBody p={0}>
                             <HStack h='100%' maxW='100%'>
@@ -271,7 +282,7 @@ export function FilterContentRecipe({
                                                 h={{ base: '24px', xl: '32px' }}
                                                 bg='#000000EB'
                                                 borderRadius='6px'
-                                                onClick={() => navigate(`/Juciest/${item.id}`)}
+                                                onClick={() => navigate(`/the-juiciest/${item.id}`)}
                                             >
                                                 <HStack spacing='7.5px'>
                                                     <Text

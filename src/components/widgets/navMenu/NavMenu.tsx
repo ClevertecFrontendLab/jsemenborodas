@@ -100,12 +100,9 @@ export function NavMenu() {
                                                 data-test-id={
                                                     selectedCategory?.title === item.title
                                                         ? selectedCategory?.category
-                                                        : '""'
-                                                }
-                                                date-test-id={
-                                                    item.title === 'Веганская кухня'
-                                                        ? 'vegan-cuisine'
-                                                        : ''
+                                                        : item.title === 'Веганская кухня'
+                                                          ? 'vegan-cuisine'
+                                                          : '""'
                                                 }
                                             >
                                                 {' '}
