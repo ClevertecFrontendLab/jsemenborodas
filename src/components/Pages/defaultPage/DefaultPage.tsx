@@ -17,6 +17,7 @@ interface PageMenuProps {
     isFilterHidden: boolean;
     setIsFilterHidden: (value: boolean) => void;
     selectedFilterCategory: { id: number; title: string; name: string }[];
+    setSelectedFilterCategory: (value: { id: number; title: string; name: string }[]) => void;
 }
 
 const scrollController = {
@@ -33,6 +34,7 @@ export function DefaultPage({
     isFilterHidden,
     setIsFilterHidden,
     selectedFilterCategory,
+    setSelectedFilterCategory,
 }: PageMenuProps) {
     useEffect(() => {
         if (isBurgerOpen || isFilterHidden === false) {
@@ -49,6 +51,10 @@ export function DefaultPage({
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
     const [isSuccessful, setIsSuccessful] = useState(false);
+    const [_selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
+    const [_selectedSideDishTypes, setSelectedSideDishTypes] = useState<string[]>([]);
+
+    const [_selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
     return (
         <>
             <Box as='section'>
@@ -57,10 +63,10 @@ export function DefaultPage({
                     isCategoryMenuOpen={isCategoryMenuOpen}
                     isAuthorMenuOpen={isAuthorMenuOpen}
                     setIsFilterHidden={setIsFilterHidden}
-                    setSelectedMeatTypes={setMeatTypes}
-                    setSelectedSideDishTypes={setSideDishes}
-                    setSelectedFilterCategory={setCategories}
-                    setSelectedFilterAuthor={setAuthors}
+                    setSelectedMeatTypes={setSelectedMeatTypes}
+                    setSelectedSideDishTypes={setSelectedSideDishTypes}
+                    setSelectedFilterCategory={setSelectedFilterCategory}
+                    setSelectedFilterAuthor={setSelectedFilterAuthor}
                     setIsCategoryMenuOpen={setIsCategoryMenuOpen}
                     setIsAuthorMenuOpen={setIsAuthorMenuOpen}
                 ></Filter>
