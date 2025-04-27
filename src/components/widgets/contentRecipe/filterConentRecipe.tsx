@@ -251,7 +251,7 @@ export function FilterContentRecipe({
                                         <HStack
                                             position='absolute'
                                             right={{ base: '9px', xl: '20px' }}
-                                            bottom={{ base: '9px', xl: '20px' }}
+                                            bottom={{ base: '14px', xl: '4px' }}
                                             spacing={{ base: '12px', xl: '8px' }}
                                             maxW='100%'
                                         >
@@ -316,6 +316,7 @@ export function FilterContentRecipe({
                 fontSize={16}
                 mt={4}
                 _hover={{ bg: '#A0EB2D' }}
+                display={filteredRecipes.length > 0 ? '' : 'none'}
             >
                 Загрузить ещё
             </Button>

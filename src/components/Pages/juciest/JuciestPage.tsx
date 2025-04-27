@@ -45,6 +45,7 @@ export function JuciestPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
     const [selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
+    const [isSuccessful, setIsSuccessful] = useState(false);
     return (
         <>
             <Box as='section'>
@@ -124,6 +125,7 @@ export function JuciestPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
                                         setCustomAllergen={setCustomAllergen}
                                         isFilterHidden={isFilterHidden}
                                         setIsFilterHidden={setIsFilterHidden}
+                                        isSuccessful={isSuccessful}
                                         selectedFilterCategory={selectedFilterCategory}
                                     ></SearchForm2>
                                     <Box
@@ -153,6 +155,7 @@ export function JuciestPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
                                             customAllergen={customAllergen}
                                             isDisabled={isDisabled}
                                             isSearchStarted={isSearchStarted}
+                                            setIsSuccessful={setIsSuccessful}
                                         ></ContentRecipe>
                                     </Box>
                                 </Box>

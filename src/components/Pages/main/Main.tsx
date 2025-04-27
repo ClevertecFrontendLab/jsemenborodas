@@ -55,6 +55,7 @@ export function Main({
     const [selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
+    const [isSuccessful, setIsSuccessful] = useState(false);
     return (
         <>
             <Box as='section'>
@@ -114,7 +115,11 @@ export function Main({
                                 }}
                                 minW={{ xl: '880px' }}
                             >
-                                <Box as='section' px={{ base: '0px', md: '0px', xl: '0' }}>
+                                <Box
+                                    as='section'
+                                    px={{ base: '0px', md: '0px', xl: '0' }}
+                                    pl={isSearchStarted ? { base: '16px' } : { base: '0px' }}
+                                >
                                     <SearchForm2
                                         setIsSearchStarted={setIsSearchStarted}
                                         searchValue={searchValue}
@@ -128,6 +133,7 @@ export function Main({
                                         isFilterHidden={isFilterHidden}
                                         setIsFilterHidden={setIsFilterHidden}
                                         selectedFilterCategory={selectedFilterCategory}
+                                        isSuccessful={isSuccessful}
                                     ></SearchForm2>
                                 </Box>
                                 <Box
@@ -171,8 +177,10 @@ export function Main({
                                     maxW={{ xl: '1360px' }}
                                     overflow={{ base: 'hidden', xl: 'visible' }}
                                     px={{ base: '16px', md: '0', '2xl': '2px' }}
+                                    pr={{ base: '32px', md: '0', '2xl': '2px' }}
                                     display={isSearchStarted === true ? { base: '""' } : 'none'}
                                     mt={{ base: '24px', xl: '48px' }}
+                                    mb={{ base: '100px' }}
                                 >
                                     <ContentRecipe
                                         searchValue={searchValue}
@@ -180,6 +188,7 @@ export function Main({
                                         customAllergen={customAllergen}
                                         isDisabled={isDisabled}
                                         isSearchStarted={isSearchStarted}
+                                        setIsSuccessful={setIsSuccessful}
                                     ></ContentRecipe>
                                 </Box>
                             </VStack>

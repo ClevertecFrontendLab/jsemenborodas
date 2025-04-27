@@ -35,6 +35,7 @@ interface ContentRecipeProps {
     categories: { id: number; title: string; name: string }[];
     authors: string[];
     isSearchStarted: boolean;
+    setIsSuccessful: (value: boolean) => void;
 }
 
 export function FilterContentRecipeSearch({
@@ -359,6 +360,7 @@ export function FilterContentRecipeSearch({
                 fontSize={16}
                 mt={4}
                 _hover={{ bg: '#A0EB2D' }}
+                display={filteredRecipes.length > 0 ? '' : 'none'}
             >
                 Загрузить ещё
             </Button>

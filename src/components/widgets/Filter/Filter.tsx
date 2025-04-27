@@ -388,6 +388,7 @@ export function Filter({
                         fontSize='16px'
                         lineHeight='24px'
                         textAlign='left'
+                        mb='8px'
                     >
                         Тип мяса:
                     </Text>
@@ -419,6 +420,7 @@ export function Filter({
                         fontSize='16px'
                         lineHeight='24px'
                         textAlign='left'
+                        mb='8px'
                     >
                         Тип гарнира:
                     </Text>

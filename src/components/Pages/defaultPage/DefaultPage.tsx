@@ -54,6 +54,8 @@ export function DefaultPage({
     const [selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
+    const [isSuccessful, setIsSuccessful] = useState(false);
+
     return (
         <>
             <Box as='section'>
@@ -127,6 +129,7 @@ export function DefaultPage({
                                         isFilterHidden={isFilterHidden}
                                         setIsFilterHidden={setIsFilterHidden}
                                         selectedFilterCategory={selectedFilterCategory}
+                                        isSuccessful={isSuccessful}
                                     ></SearchForm2>
                                 </Box>
                                 <Box
@@ -172,6 +175,7 @@ export function DefaultPage({
                                             selectedItems={selectedItems}
                                             customAllergen={customAllergen}
                                             isDisabled={isDisabled}
+                                            setIsSuccessful={setIsSuccessful}
                                         ></ContentRecipe>
                                     </Box>
                                     <Box

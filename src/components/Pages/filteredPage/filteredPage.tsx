@@ -55,6 +55,7 @@ export function FilteredPage({
     const [isDisabled, setIsDisabled] = useState(true);
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
+    const [isSuccessful, setIsSuccessful] = useState(false);
 
     useEffect(() => {
         if (isBurgerOpen || !isFilterHidden) {
@@ -142,9 +143,14 @@ export function FilteredPage({
                                             isFilterHidden={isFilterHidden}
                                             setIsFilterHidden={setIsFilterHidden}
                                             selectedFilterCategory={selectedFilterCategory}
+                                            isSuccessful={isSuccessful}
                                         ></SearchForm2>
                                     </Box>
-                                    <Box as='section' display={isSearchStarted ? 'none' : '""'}>
+                                    <Box
+                                        as='section'
+                                        display={isSearchStarted ? 'none' : '""'}
+                                        px={{ base: '16px' }}
+                                    >
                                         <FilterContentRecipe
                                             selectedItems={selectedItems}
                                             meatTypes={meatTypes}
@@ -167,6 +173,7 @@ export function FilteredPage({
                                             categories={categories}
                                             authors={authors}
                                             isSearchStarted={isSearchStarted}
+                                            setIsSuccessful={setIsSuccessful}
                                         ></FilterContentRecipeSearch>
                                     </Box>
                                 </Box>

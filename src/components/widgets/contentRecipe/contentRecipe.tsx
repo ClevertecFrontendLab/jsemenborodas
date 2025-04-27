@@ -32,6 +32,7 @@ interface contentPropsInterface {
     customAllergen: string[];
     isDisabled: boolean;
     isSearchStarted: boolean;
+    setIsSuccessful: (value: boolean) => void;
 }
 export function ContentRecipe({
     searchValue,
@@ -39,6 +40,7 @@ export function ContentRecipe({
     customAllergen,
     isDisabled,
     isSearchStarted,
+    setIsSuccessful,
 }: contentPropsInterface) {
     const location = useLocation();
     const Name: Record<string, string> = {
@@ -104,6 +106,9 @@ export function ContentRecipe({
                 ),
         );
     }
+    isSearchStarted && filteredRecipesFull.length > 0
+        ? setIsSuccessful(true)
+        : setIsSuccessful(false);
     return (
         <>
             <Box w='100%' rowGap={{ base: '0px' }} pl={{ xl: '4px' }}>
@@ -377,7 +382,9 @@ export function ContentRecipe({
                                                     h={{ base: '24px', xl: '32px' }}
                                                     bg='#000000EB'
                                                     borderRadius='6px'
-                                                    onClick={() => navigate(`/${item.id}`)}
+                                                    onClick={() =>
+                                                        navigate(`/the-juiciest/${item.id}`)
+                                                    }
                                                 >
                                                     <HStack spacing='7.5px'>
                                                         <Text
@@ -413,6 +420,7 @@ export function ContentRecipe({
                     pl={3}
                     fontSize={16}
                     mt={4}
+                    display={filteredRecipesFull.length > 0 ? '' : 'none'}
                 >
                     Загрузить ещё
                 </Button>

@@ -380,6 +380,7 @@ export function ContentRecipeDefault({
                     pl={3}
                     fontSize={16}
                     mt={4}
+                    display={filteredRecipesFull.length > 0 ? '' : 'none'}
                 >
                     Загрузить ещё
                 </Button>

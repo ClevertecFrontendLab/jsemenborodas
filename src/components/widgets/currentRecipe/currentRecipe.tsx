@@ -521,9 +521,9 @@ export function CurrentRecipe() {
                         mx={{ md: 'auto' }}
                     >
                         <TableContainer minW={0} maxW='100%' overflowX='auto'>
-                            <Table variant='striped' colorScheme='gray' layout='fixed'>
-                                <Thead h='56px'>
-                                    <Tr>
+                            <Table variant='striped' layout='fixed' colorScheme='transparent'>
+                                <Thead h='56px' border='none'>
+                                    <Tr border='none'>
                                         <Th
                                             fontFamily='Inter'
                                             fontWeight={700}
@@ -533,6 +533,7 @@ export function CurrentRecipe() {
                                             textAlign='left'
                                             p={0}
                                             pl={{ base: '7px', md: '23px' }}
+                                            border='none'
                                         >
                                             ИНГРЕДИЕНТЫ
                                         </Th>
@@ -544,6 +545,7 @@ export function CurrentRecipe() {
                                             lineHeight={{ base: '16px' }}
                                             textAlign='left'
                                             p={0}
+                                            border='none'
                                         >
                                             <HStack
                                                 justifyContent='flex-end'
@@ -575,6 +577,8 @@ export function CurrentRecipe() {
                                             w='100%'
                                             p={0}
                                             minW={0}
+                                            bg={index % 2 === 0 ? '#0000000F' : 'white'}
+                                            border='none'
                                         >
                                             <Td
                                                 w='50%'
@@ -585,6 +589,7 @@ export function CurrentRecipe() {
                                                 fontWeight={500}
                                                 fontSize='14px'
                                                 lineHeight='20px'
+                                                border='none'
                                             >
                                                 {ingridient.title}
                                             </Td>
@@ -598,6 +603,7 @@ export function CurrentRecipe() {
                                                 fontWeight={500}
                                                 fontSize='14px'
                                                 lineHeight='20px'
+                                                border='none'
                                             >
                                                 <HStack
                                                     justifyContent='flex-end'

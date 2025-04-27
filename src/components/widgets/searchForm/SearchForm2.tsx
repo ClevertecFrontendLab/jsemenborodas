@@ -38,6 +38,7 @@ interface searchFormPropsInterface {
     isFilterHidden: boolean;
     setIsFilterHidden: (value: boolean) => void;
     selectedFilterCategory: { id: number; title: string; name: string }[];
+    isSuccessful: boolean;
 }
 export function SearchForm2({
     setIsSearchStarted,
@@ -52,6 +53,7 @@ export function SearchForm2({
     isFilterHidden,
     setIsFilterHidden,
     selectedFilterCategory,
+    isSuccessful,
 }: searchFormPropsInterface) {
     const location = useLocation();
     const Name: Record<string, string> = {
@@ -62,14 +64,18 @@ export function SearchForm2({
     const navigate = useNavigate();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const firstSegment = pathSegments[0];
+    const [isLocaleSearchStarted, setIsLocaleSearchStarted] = useState<boolean>(false);
     const title = Name[firstSegment] || 'Приятного аппетита!';
     const [inputValue, setInputValue] = useState(searchValue);
+
     const handleSearch = () => {
         if (inputValue.length >= 3) {
             setIsSearchStarted(true);
+            setIsLocaleSearchStarted(true);
             setSearchValue(inputValue);
         } else {
             setIsSearchStarted(false);
+            setIsLocaleSearchStarted(false);
             setSearchValue('');
         }
     };
@@ -200,7 +206,20 @@ export function SearchForm2({
                                     value={inputValue}
                                     onChange={(e) => setInputValue(e.target.value)}
                                     onKeyDown={handleKeyDown}
-                                    borderColor='#0000007A'
+                                    borderColor={
+                                        isLocaleSearchStarted
+                                            ? isSuccessful
+                                                ? '#2DB100'
+                                                : 'red'
+                                            : '#0000007A'
+                                    }
+                                    _focusVisible={{
+                                        borderColor: isLocaleSearchStarted
+                                            ? isSuccessful
+                                                ? '#2DB100'
+                                                : 'red'
+                                            : '#0000007A',
+                                    }}
                                     placeholder='Название или ингредиент...'
                                     h={{ base: '32px', xl: '48px' }}
                                     _placeholder={{ color: 'rgba(19, 75, 0, 1)' }}
