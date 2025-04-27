@@ -17,7 +17,6 @@ interface PageMenuProps {
     isFilterHidden: boolean;
     setIsFilterHidden: (value: boolean) => void;
     selectedFilterCategory: { id: number; title: string; name: string }[];
-    setSelectedFilterCategory: (value: { id: number; title: string; name: string }[]) => void;
 }
 
 const scrollController = {
@@ -34,7 +33,6 @@ export function DefaultPage({
     isFilterHidden,
     setIsFilterHidden,
     selectedFilterCategory,
-    setSelectedFilterCategory,
 }: PageMenuProps) {
     useEffect(() => {
         if (isBurgerOpen || isFilterHidden === false) {
@@ -48,30 +46,21 @@ export function DefaultPage({
     const [customAllergen, setCustomAllergen] = useState<string[]>([]);
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const [isDisabled, setIsDisabled] = useState(true);
-    const [selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
-    const [selectedSideDishTypes, setSelectedSideDishTypes] = useState<string[]>([]);
-
-    const [selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
     const [isSuccessful, setIsSuccessful] = useState(false);
-
     return (
         <>
             <Box as='section'>
                 <Filter
                     isFilterHidden={isFilterHidden}
-                    selectedMeatTypes={selectedMeatTypes}
-                    selectedSideDishTypes={selectedSideDishTypes}
-                    selectedFilterCategory={selectedFilterCategory}
-                    selectedFilterAuthor={selectedFilterAuthor}
                     isCategoryMenuOpen={isCategoryMenuOpen}
                     isAuthorMenuOpen={isAuthorMenuOpen}
                     setIsFilterHidden={setIsFilterHidden}
-                    setSelectedMeatTypes={setSelectedMeatTypes}
-                    setSelectedSideDishTypes={setSelectedSideDishTypes}
-                    setSelectedFilterCategory={setSelectedFilterCategory}
-                    setSelectedFilterAuthor={setSelectedFilterAuthor}
+                    setSelectedMeatTypes={setMeatTypes}
+                    setSelectedSideDishTypes={setSideDishes}
+                    setSelectedFilterCategory={setCategories}
+                    setSelectedFilterAuthor={setAuthors}
                     setIsCategoryMenuOpen={setIsCategoryMenuOpen}
                     setIsAuthorMenuOpen={setIsAuthorMenuOpen}
                 ></Filter>

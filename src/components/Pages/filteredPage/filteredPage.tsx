@@ -41,7 +41,7 @@ export function FilteredPage({
         defaultAllergen = [],
         inputValue = [],
     } = location.state || {};
-    console.log(inputValue);
+
     const [meatTypes, setMeatTypes] = useState<string[]>(selectedMeatTypes);
     const [sideDishes, setSideDishes] = useState<string[]>(selectedSideDishTypes);
     const [categories, setCategories] =
@@ -56,7 +56,6 @@ export function FilteredPage({
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
     const [isSuccessful, setIsSuccessful] = useState(false);
-
     useEffect(() => {
         if (isBurgerOpen || !isFilterHidden) {
             scrollController.disabledScroll();
@@ -70,10 +69,6 @@ export function FilteredPage({
             <Box as='section'>
                 <Filter
                     isFilterHidden={isFilterHidden}
-                    selectedMeatTypes={meatTypes}
-                    selectedSideDishTypes={sideDishes}
-                    selectedFilterCategory={categories}
-                    selectedFilterAuthor={authors}
                     isCategoryMenuOpen={isCategoryMenuOpen}
                     isAuthorMenuOpen={isAuthorMenuOpen}
                     setIsFilterHidden={setIsFilterHidden}
@@ -159,8 +154,8 @@ export function FilteredPage({
                                             isDisabled={isDisabled}
                                             categories={categories}
                                             authors={authors}
-                                            customAllergen={customAllergen}
                                             isSearchStarted={isSearchStarted}
+                                            defaultAllergen={defaultAllergen}
                                         ></FilterContentRecipe>
                                     </Box>
                                     <Box as='section' display={isSearchStarted ? '""' : 'none'}>
@@ -168,6 +163,7 @@ export function FilteredPage({
                                             searchValue={searchValue}
                                             selectedItems={selectedItems}
                                             customAllergen={customAllergen}
+                                            defaultAllergen={defaultAllergen}
                                             isDisabled={isDisabled}
                                             meatTypes={meatTypes}
                                             sideDishes={sideDishes}

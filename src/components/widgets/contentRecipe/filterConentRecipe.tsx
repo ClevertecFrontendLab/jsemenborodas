@@ -31,8 +31,8 @@ interface ContentRecipeProps {
     sideDishes: { title: string; name: string }[];
     categories: { id: number; title: string; name: string }[];
     authors: string[];
-    customAllergen: string[];
     isSearchStarted: boolean;
+    defaultAllergen: string[];
 }
 
 export function FilterContentRecipe({
@@ -41,8 +41,8 @@ export function FilterContentRecipe({
     sideDishes,
     categories,
     // authors,
-    customAllergen,
     isSearchStarted,
+    defaultAllergen,
 }: ContentRecipeProps) {
     const navigate = useNavigate();
     const filteredRecipes = RecipeData.filter((item) => {
@@ -63,10 +63,10 @@ export function FilterContentRecipe({
             );
 
         const matchesAllergens =
-            customAllergen.length === 0 ||
+            defaultAllergen.length === 0 ||
             !item.ingredients?.some((ingredient) =>
-                customAllergen.some((allergen) =>
-                    ingredient.title.toLowerCase().includes(allergen.toLowerCase()),
+                defaultAllergen.some((allergen) =>
+                    ingredient.title.toLowerCase().includes(allergen.trim().toLowerCase()),
                 ),
             );
 

@@ -16,7 +16,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { FilterAuthorsData } from '~/components/entities/Data/FilterData/FilterAuthorsData';
@@ -29,13 +29,13 @@ import { ExitButtonIcon, ExitFilter, Plus } from '~/icons/Icon';
 interface FilterProps {
     isFilterHidden: boolean;
     setIsFilterHidden: (value: boolean) => void;
-    selectedMeatTypes: { title: string; name: string }[];
+
     setSelectedMeatTypes: (value: { title: string; name: string }[]) => void;
-    selectedSideDishTypes: { title: string; name: string }[];
+
     setSelectedSideDishTypes: (value: { title: string; name: string }[]) => void;
-    selectedFilterCategory: { id: number; title: string; name: string }[];
+
     setSelectedFilterCategory: (value: { id: number; title: string; name: string }[]) => void;
-    selectedFilterAuthor: string[];
+
     setSelectedFilterAuthor: (value: string[]) => void;
     isCategoryMenuOpen: boolean;
     setIsCategoryMenuOpen: (value: boolean) => void;
@@ -46,13 +46,13 @@ interface FilterProps {
 export function Filter({
     isFilterHidden,
     setIsFilterHidden,
-    selectedMeatTypes,
+
     setSelectedMeatTypes,
-    selectedSideDishTypes,
+
     setSelectedSideDishTypes,
-    selectedFilterCategory,
+
     setSelectedFilterCategory,
-    selectedFilterAuthor,
+
     setSelectedFilterAuthor,
     isCategoryMenuOpen,
     setIsCategoryMenuOpen,
@@ -63,8 +63,44 @@ export function Filter({
         setIsFilterHidden(!isFilterHidden);
     };
 
+    const [localSelectedMeatTypes, setLocalSelectedMeatTypes] = useState<
+        { title: string; name: string }[]
+    >([]);
+    const [localSelectedSideDishTypes, setLocalSelectedSideDishTypes] = useState<
+        { title: string; name: string }[]
+    >([]);
+    const [localSelectedFilterCategory, setLocalSelectedFilterCategory] = useState<
+        { id: number; title: string; name: string }[]
+    >([]);
+    const [localSelectedFilterAuthor, setLocalSelectedFilterAuthor] = useState<string[]>([]);
+    const [_localSelectedItems, setLocalSelectedItems] = useState<string[]>([]);
+    const handleFindRecipe = () => {
+        setSelectedMeatTypes(localSelectedMeatTypes);
+        setSelectedSideDishTypes(localSelectedSideDishTypes);
+        setSelectedFilterCategory(localSelectedFilterCategory);
+        setSelectedFilterAuthor(localSelectedFilterAuthor);
+
+        navigate(`/filtered/`, {
+            state: {
+                selectedMeatTypes: localSelectedMeatTypes,
+                selectedSideDishTypes: localSelectedSideDishTypes,
+                selectedFilterCategory: localSelectedFilterCategory,
+                selectedFilterAuthor: localSelectedFilterAuthor,
+                defaultAllergen: defaultAllergen,
+            },
+        });
+        setLocalSelectedFilterAuthor([]);
+        setLocalSelectedFilterCategory([]);
+        setDefaultAllergen([]);
+        setAllFilterFilters([]);
+        setLocalSelectedMeatTypes([]);
+        setLocalSelectedSideDishTypes([]);
+        setSelectedItems([]);
+        setIsFilterHidden(true);
+    };
+
     const toggleSideDish = (item: { title: string; name: string }) => {
-        setSelectedSideDishTypes((prev) => {
+        setLocalSelectedSideDishTypes((prev) => {
             if (prev.find((sideDish) => sideDish.name === item.name)) {
                 return prev.filter((sideDish) => sideDish.name !== item.name);
             } else {
@@ -72,9 +108,27 @@ export function Filter({
             }
         });
     };
-
+    const updateSelectedItems = useCallback(
+        (
+            sideDishes: { title: string; name: string }[],
+            meats: { title: string; name: string }[],
+            categories: { id: number; title: string; name: string }[],
+            authors: string[],
+            allergens: string[],
+        ) => {
+            const selectedItems = [
+                ...categories.map((category) => category.title),
+                ...authors,
+                ...meats.map((meat) => meat.title),
+                ...sideDishes.map((sideDish) => sideDish.title),
+                ...allergens,
+            ];
+            setLocalSelectedItems(Array.from(new Set(selectedItems)));
+        },
+        [setLocalSelectedItems],
+    );
     const toggleMeat = (item: { title: string; name: string }) => {
-        setSelectedMeatTypes((prev) => {
+        setLocalSelectedMeatTypes((prev) => {
             if (prev.find((meat) => meat.name === item.name)) {
                 return prev.filter((meat) => meat.name !== item.name);
             } else {
@@ -88,7 +142,7 @@ export function Filter({
         title: string;
         name: string;
     }) => {
-        setSelectedFilterCategory((prev) => {
+        setLocalSelectedFilterCategory((prev) => {
             if (prev.some((item) => item.id === category.id)) {
                 return prev.filter((item) => item.id !== category.id);
             } else {
@@ -97,14 +151,15 @@ export function Filter({
         });
     };
 
-    const handleAuthorCheckboxChange = (authorName: string) =>
-        setSelectedFilterAuthor((prev) => {
+    const handleAuthorCheckboxChange = (authorName: string) => {
+        setLocalSelectedFilterAuthor((prev) => {
             if (prev.includes(authorName)) {
                 return prev.filter((item) => item !== authorName);
             } else {
                 return [...prev, authorName];
             }
         });
+    };
 
     const [allFilterFilters, setAllFilterFilters] = useState<string[]>([]);
 
@@ -166,15 +221,24 @@ export function Filter({
             }
         }
     };
+
     useEffect(() => {
-        const allSelectedItems = [
-            ...selectedFilterCategory.map((category) => category.title),
-            ...selectedFilterAuthor,
-            ...selectedMeatTypes.map((meat) => meat.title),
-            ...selectedSideDishTypes.map((sideDish) => sideDish.title),
-        ];
-        setSelectedItems(Array.from(new Set(allSelectedItems)));
-    }, []);
+        updateSelectedItems(
+            localSelectedSideDishTypes,
+            localSelectedMeatTypes,
+            localSelectedFilterCategory,
+            localSelectedFilterAuthor,
+            defaultAllergen,
+        );
+    }, [
+        localSelectedSideDishTypes,
+        localSelectedMeatTypes,
+        localSelectedFilterCategory,
+        localSelectedFilterAuthor,
+        defaultAllergen,
+        updateSelectedItems,
+    ]);
+
     return (
         <Box
             display={isFilterHidden ? 'none' : ''}
@@ -246,9 +310,9 @@ export function Filter({
                                     lineHeight='24px'
                                     color='#000000A3'
                                 >
-                                    {selectedFilterCategory.length > 0 ? (
+                                    {localSelectedFilterCategory.length > 0 ? (
                                         <HStack flexWrap='wrap'>
-                                            {selectedFilterCategory.map((item) => (
+                                            {localSelectedFilterCategory.map((item) => (
                                                 <Box
                                                     key={item.id}
                                                     lineHeight='16px'
@@ -286,7 +350,7 @@ export function Filter({
                                     bg={item.id % 2 === 0 ? '#0000000F' : '#FFFFFF'}
                                 >
                                     <Checkbox
-                                        isChecked={selectedFilterCategory.some(
+                                        isChecked={localSelectedFilterCategory.some(
                                             (c) => c.id === item.id,
                                         )}
                                         onChange={() => {
@@ -334,9 +398,9 @@ export function Filter({
                                     lineHeight='24px'
                                     color='#000000A3'
                                 >
-                                    {selectedFilterAuthor.length > 0 ? (
+                                    {localSelectedFilterAuthor.length > 0 ? (
                                         <HStack flexWrap='wrap'>
-                                            {selectedFilterAuthor.map((item) => (
+                                            {localSelectedFilterAuthor.map((item) => (
                                                 <Box
                                                     key={item}
                                                     lineHeight='16px'
@@ -374,7 +438,9 @@ export function Filter({
                                     bg={item.id % 2 === 0 ? '#0000000F' : '#FFFFFF'}
                                 >
                                     <Checkbox
-                                        isChecked={selectedFilterAuthor.includes(item.authorName)}
+                                        isChecked={localSelectedFilterAuthor.includes(
+                                            item.authorName,
+                                        )}
                                         value={item.authorName}
                                         onChange={() => {
                                             handleAuthorCheckboxChange(item.authorName);
@@ -401,7 +467,7 @@ export function Filter({
                         Тип мяса:
                     </Text>
                     <CheckboxGroup
-                        value={selectedMeatTypes?.map((meat) => meat?.title) || []}
+                        value={localSelectedMeatTypes?.map((meat) => meat?.title) || []}
                         onChange={() => toggleMeat}
                     >
                         <VStack alignItems='flex-start'>
@@ -433,7 +499,7 @@ export function Filter({
                         Тип гарнира:
                     </Text>
                     <CheckboxGroup
-                        value={selectedSideDishTypes?.map((sideDish) => sideDish?.title) || []}
+                        value={localSelectedSideDishTypes?.map((sideDish) => sideDish?.title) || []}
                         onChange={() => toggleSideDish}
                     >
                         <VStack alignItems='flex-start'>
@@ -541,7 +607,7 @@ export function Filter({
                                     bg={item.id % 2 === 0 ? '#0000000F' : '#FFFFFF'}
                                 >
                                     <Checkbox
-                                        isChecked={defaultAllergen.includes(item.title)}
+                                        isChecked={defaultAllergen.includes(item.displayTitle)}
                                         onChange={() => {
                                             handleDefaultAllergenChange(item.displayTitle);
                                             toggleItemSelection(item.displayTitle);
@@ -627,12 +693,12 @@ export function Filter({
                             border='1px solid #0000007A'
                             bg='transparent'
                             onClick={() => {
-                                setSelectedFilterCategory([]);
-                                setSelectedFilterAuthor([]);
+                                setLocalSelectedFilterAuthor([]);
+                                setLocalSelectedFilterCategory([]);
                                 setDefaultAllergen([]);
                                 setAllFilterFilters([]);
-                                setSelectedMeatTypes([]);
-                                setSelectedSideDishTypes([]);
+                                setLocalSelectedMeatTypes([]);
+                                setLocalSelectedSideDishTypes([]);
                                 setSelectedItems([]);
                             }}
                             data-test-id={isFilterHidden ? '' : 'clear-filter-button'}
@@ -657,30 +723,14 @@ export function Filter({
                             bg='#000000EB'
                             _hover={{ bg: '#000000EB' }}
                             isDisabled={
-                                selectedFilterCategory.length === 0 &&
-                                defaultAllergen.length === 0 &&
-                                selectedFilterAuthor.length === 0 &&
-                                selectedMeatTypes.length === 0 &&
-                                selectedSideDishTypes.length === 0
+                                localSelectedFilterCategory.length === 0 &&
+                                localSelectedFilterAuthor.length === 0 &&
+                                localSelectedMeatTypes.length === 0 &&
+                                localSelectedSideDishTypes.length === 0 &&
+                                defaultAllergen.length === 0
                             }
                             data-test-id='find-recipe-button'
-                            onClick={() => {
-                                navigate(`/filtered/`, {
-                                    state: {
-                                        selectedMeatTypes: selectedMeatTypes.map((meat) => meat),
-                                        selectedSideDishTypes: selectedSideDishTypes.map(
-                                            (sideDish) => sideDish,
-                                        ),
-                                        selectedFilterCategory: selectedFilterCategory.map(
-                                            (category) => category,
-                                        ),
-                                        selectedFilterAuthor,
-                                        defaultAllergen,
-                                        selectedItems,
-                                    },
-                                });
-                                setIsFilterHidden(true);
-                            }}
+                            onClick={handleFindRecipe}
                             sx={{
                                 _disabled: {
                                     bg: '#0000003D',

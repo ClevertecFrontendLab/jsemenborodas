@@ -49,10 +49,10 @@ export function Main({
     const [customAllergen, setCustomAllergen] = useState<string[]>([]);
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const [isDisabled, setIsDisabled] = useState(true);
-    const [selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
-    const [selectedSideDishTypes, setSelectedSideDishTypes] = useState<string[]>([]);
+    const [_selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
+    const [_selectedSideDishTypes, setSelectedSideDishTypes] = useState<string[]>([]);
 
-    const [selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
+    const [_selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
     const [isSuccessful, setIsSuccessful] = useState(false);
@@ -61,10 +61,6 @@ export function Main({
             <Box as='section'>
                 <Filter
                     isFilterHidden={isFilterHidden}
-                    selectedMeatTypes={selectedMeatTypes}
-                    selectedSideDishTypes={selectedSideDishTypes}
-                    selectedFilterCategory={selectedFilterCategory}
-                    selectedFilterAuthor={selectedFilterAuthor}
                     isCategoryMenuOpen={isCategoryMenuOpen}
                     isAuthorMenuOpen={isAuthorMenuOpen}
                     setIsFilterHidden={setIsFilterHidden}
