@@ -64,6 +64,7 @@ export function FilteredPage({
             scrollController.enabledScroll();
         }
     }, [isBurgerOpen, isFilterHidden]);
+
     return (
         <>
             <Box as='section'>

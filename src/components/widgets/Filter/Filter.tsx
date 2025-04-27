@@ -16,7 +16,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { FilterAuthorsData } from '~/components/entities/Data/FilterData/FilterAuthorsData';
@@ -166,7 +166,15 @@ export function Filter({
             }
         }
     };
-
+    useEffect(() => {
+        const allSelectedItems = [
+            ...selectedFilterCategory.map((category) => category.title),
+            ...selectedFilterAuthor,
+            ...selectedMeatTypes.map((meat) => meat.title),
+            ...selectedSideDishTypes.map((sideDish) => sideDish.title),
+        ];
+        setSelectedItems(Array.from(new Set(allSelectedItems)));
+    }, []);
     return (
         <Box
             display={isFilterHidden ? 'none' : ''}

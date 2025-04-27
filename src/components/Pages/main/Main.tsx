@@ -141,46 +141,10 @@ export function Main({
                                     maxW={{ xl: '1360px' }}
                                     overflow={{ base: 'hidden', xl: 'visible' }}
                                     px={{ base: '16px', md: '0', '2xl': '2px' }}
-                                    display={isSearchStarted === true ? { base: 'none' } : '""'}
-                                >
-                                    <Box
-                                        as='section'
-                                        overflow={{
-                                            base: 'hidden',
-                                            xl: 'hidden',
-                                            '2xl': 'visible',
-                                        }}
-                                    >
-                                        {/* <NewRecipe></NewRecipe> */}
-                                        <Slider></Slider>
-                                    </Box>
-                                    <Box
-                                        as='section'
-                                        overflow={{ base: 'hidden', xl: 'visible' }}
-                                        mt={{ xl: '24px', '2xl': '10px' }}
-                                    >
-                                        <Juciest></Juciest>
-                                    </Box>
-                                    <Box as='section' overflow='hidden'>
-                                        <CookBlog isBurgerOpen={isBurgerOpen}></CookBlog>
-                                    </Box>
-                                    <Box
-                                        as='section'
-                                        overflow='hidden'
-                                        pr={{ base: '32px', xl: '0' }}
-                                    >
-                                        <VeganKitchen></VeganKitchen>
-                                    </Box>
-                                </Box>
-                                <Box
-                                    w={{ xl: '100%' }}
-                                    maxW={{ xl: '1360px' }}
-                                    overflow={{ base: 'hidden', xl: 'visible' }}
-                                    px={{ base: '16px', md: '0', '2xl': '2px' }}
                                     pr={{ base: '32px', md: '0', '2xl': '2px' }}
                                     display={isSearchStarted === true ? { base: '""' } : 'none'}
                                     mt={{ base: '24px', xl: '48px' }}
-                                    mb={{ base: '100px' }}
+                                    mb={{ base: '0px' }}
                                 >
                                     <ContentRecipe
                                         searchValue={searchValue}
@@ -190,6 +154,47 @@ export function Main({
                                         isSearchStarted={isSearchStarted}
                                         setIsSuccessful={setIsSuccessful}
                                     ></ContentRecipe>
+                                </Box>
+                                <Box
+                                    w={{ xl: '100%' }}
+                                    maxW={{ xl: '1360px' }}
+                                    overflow={{ base: 'hidden', xl: 'visible' }}
+                                    px={{ base: '16px', md: '0', '2xl': '2px' }}
+                                >
+                                    <Box
+                                        as='section'
+                                        overflow={{
+                                            base: 'hidden',
+                                            xl: 'hidden',
+                                            '2xl': 'visible',
+                                        }}
+                                        display={isSearchStarted === true ? { base: 'none' } : '""'}
+                                    >
+                                        {/* <NewRecipe></NewRecipe> */}
+                                        <Slider></Slider>
+                                    </Box>
+                                    <Box
+                                        as='section'
+                                        overflow={{ base: 'hidden', xl: 'visible' }}
+                                        mt={{ xl: '24px', '2xl': '10px' }}
+                                        display={isSearchStarted === true ? { base: 'none' } : '""'}
+                                    >
+                                        <Juciest></Juciest>
+                                    </Box>
+                                    <Box
+                                        as='section'
+                                        overflow='hidden'
+                                        display={isSearchStarted === true ? { base: 'none' } : '""'}
+                                    >
+                                        <CookBlog isBurgerOpen={isBurgerOpen}></CookBlog>
+                                    </Box>
+                                    <Box
+                                        as='section'
+                                        overflow='hidden'
+                                        pr={{ base: '32px', xl: '0' }}
+                                    >
+                                        <VeganKitchen></VeganKitchen>
+                                    </Box>
                                 </Box>
                             </VStack>
                         </HStack>
