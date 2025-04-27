@@ -466,3 +466,4 @@ describe('Breadcrumbs Functionality', () => {
         cy.contains('Приятного аппетита!');
     });
 });
+

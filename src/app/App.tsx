@@ -1,15 +1,18 @@
 import './App.css';
 
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
+import { useState } from 'react';
 import { BrowserRouter } from 'react-router';
 
-import { Footer } from '~/components/footer/Footer';
-import { Header } from '~/components/header/Header';
-import { CursorTracker } from '~/components/theme/CursorTracker';
+import { Footer } from '~/components/widgets/footer/Footer';
+import { Header } from '~/components/widgets/header/Header';
 
 import { AppRoutes } from '../components/routes/Routes';
-import { theme } from '../components/theme/theme';
+import { CursorTracker } from '../components/widgets/cursorTracker/CursorTracker';
+import { theme } from './theme';
 function App() {
+    const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+    const [isfilterHidden, setIsFilterHidden] = useState(true);
     return (
         <>
             <BrowserRouter>
@@ -22,13 +25,24 @@ function App() {
                         overflow='hidden'
                     >
                         <GridItem>
-                            <Header></Header>
+                            <Header
+                                isBurgerOpen={isBurgerOpen}
+                                isFilterHidden={isfilterHidden}
+                                setIsBurgerOpen={setIsBurgerOpen}
+                            ></Header>
                         </GridItem>
                         <GridItem>
-                            <AppRoutes></AppRoutes>
+                            <AppRoutes
+                                isBurgerOpen={isBurgerOpen}
+                                isFilterHidden={isfilterHidden}
+                                setIsFilterHidden={setIsFilterHidden}
+                            ></AppRoutes>
                         </GridItem>
                         <GridItem>
-                            <Footer></Footer>
+                            <Footer
+                                isBurgerOpen={isBurgerOpen}
+                                isFilterHidden={isfilterHidden}
+                            ></Footer>
                         </GridItem>
                     </Grid>
                 </ChakraProvider>
