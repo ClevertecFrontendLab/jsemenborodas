@@ -13,10 +13,10 @@ export function Tabs() {
 
     const navigate = useNavigate();
     const { data, isError } = useGetCategoriesQuery({});
-    const currentCategory = data?.find((item) => item.category === pathSegments[0]);
-    const selectedSubCategory = currentCategory?.subCategories.findIndex(
-        (item) => item.category === pathSegments[1],
-    );
+    const currentCategory = data?.find((item) => item?.category === pathSegments[0]);
+    const selectedSubCategory =
+        currentCategory &&
+        currentCategory?.subCategories?.findIndex((item) => item?.category === pathSegments[1]);
     if (isError) {
         dispatch(setAppError('Error'));
         localStorage.setItem('Error', 'Error');
@@ -74,15 +74,15 @@ export function Tabs() {
                             // }}
                         >
                             {currentCategory &&
-                                currentCategory.subCategories.map(
+                                currentCategory?.subCategories?.map(
                                     (item: SubCategory, index: number) => (
                                         <Tab
-                                            data-test-id={`tab-${pathSegments[0] === 'snacks' ? pathSegments[0] : item.category}-${index}`}
+                                            data-test-id={`tab-${pathSegments[0] === 'snacks' ? pathSegments[0] : item?.category}-${index}`}
                                             onClick={() => {
-                                                const path = `/${pathSegments[0]}/${item.category}`;
+                                                const path = `/${pathSegments[0]}/${item?.category}`;
                                                 navigate(path);
                                             }}
-                                            key={item._id}
+                                            key={item?._id}
                                             fontFamily='Inter'
                                             fontWeight={500}
                                             fontSize={{ base: '14px', xl: '16px' }}
@@ -101,7 +101,7 @@ export function Tabs() {
                                                 },
                                             }}
                                         >
-                                            {item.title}
+                                            {item?.title}
                                         </Tab>
                                     ),
                                 )}

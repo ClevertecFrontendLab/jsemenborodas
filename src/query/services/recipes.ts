@@ -16,6 +16,7 @@ interface RecipeArguments {
     subcategoriesIds?: string[];
     sortBy?: string;
     sortOrder?: string;
+    id?: string;
 }
 
 export const recipeApiSlice = apiSlice
@@ -27,6 +28,7 @@ export const recipeApiSlice = apiSlice
             getRecipes: builder.query<recipeRequest, RecipeArguments>({
                 query: (data = {}) => {
                     const params: Record<string, string | number | string[] | undefined> = {};
+                    let url: string = ApiEndpoints.RECIPES;
                     if (data.page !== undefined) params.page = data.page;
                     if (data.limit !== undefined) params.limit = data.limit;
                     if (data.allergens !== undefined) params.allergens = data.allergens;
@@ -37,9 +39,11 @@ export const recipeApiSlice = apiSlice
                         params.subcategoriesIds = data.subcategoriesIds;
                     if (data.sortBy !== undefined) params.sortBy = data.sortBy;
                     if (data.sortOrder !== undefined) params.sortOrder = data.sortOrder;
-
+                    if (data.id !== undefined) {
+                        url = `${ApiEndpoints.RECIPES}${data.id}`;
+                    }
                     return {
-                        url: ApiEndpoints.RECIPES,
+                        url: url,
                         params: Object.keys(params).length > 0 ? params : undefined,
                         method: 'GET',
                         apiGroupName: ApiGroupNames.RECIPES,

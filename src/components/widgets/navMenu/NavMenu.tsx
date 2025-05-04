@@ -28,7 +28,7 @@ export function NavMenu() {
     const selectedCategory = NavMenuData.find((item) => item.category === pathSegments[0]);
 
     const navigate = useNavigate();
-    const { data, isError, isLoading } = useGetCategoriesQuery({});
+    const { data, isError, isLoading, error } = useGetCategoriesQuery({});
     const mockData = localStorage.getItem('navMenu');
 
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
@@ -45,6 +45,7 @@ export function NavMenu() {
     }
 
     if (isError && resultData === null) {
+        console.log(error);
         return <></>;
     }
 

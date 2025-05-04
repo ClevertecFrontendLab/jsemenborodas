@@ -1,175 +1,67 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Text } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 
-import { RecipeData } from '~/components/entities/Data/RecipeData';
+import { useGetCategoriesQuery } from '~/query/services/categories';
+import { useGetRecipesQuery } from '~/query/services/recipes';
+import { setAppError } from '~/store/app-slice';
+import { useAppDispatch } from '~/store/hooks';
 
-interface BreadcrumbsProps {
-    pathNames: string[];
-    recipeId?: string;
-}
+interface BreadcrumbsProps {}
 
-export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ pathNames }) => {
-    const breadCrumbNames: Record<string, string> = {
-        '/the-juiciest': 'Самое сочное',
-        '/SecondDelicious': 'Вторые блюда',
-        '/veganKitchen': 'Веганская кухня',
-        '/salad': 'Салаты',
-        '/meatSalad': 'Мясные салаты',
-        '/fishSalad': 'Рыбные салаты',
-        '/snacks': 'Закуски',
-        '/meatSnacks': 'Мясные закуски',
-        '/fishSnacks': 'Рыбные закуски',
-        '/vegetableSnacks': 'Овощные закуски',
-        '/hotSnacks': 'Теплые закуски',
-        '/sandwiches': 'Бутерброды',
-        '/fastFood': 'Фастфуд',
-        '/firstDelicious': 'Первые блюда',
-        '/meatSoups': 'Мясные супы',
-        '/vegetableSoups': 'Овощные супы',
-        '/broths': 'Бульоны',
-        '/coldSoups': 'Холодные супы',
-        '/dietSoups': 'Диетические супы',
-        '/secondDelicious': 'Вторые блюда',
-        '/meatDishes': 'Мясные',
-        '/fishDishes': 'Рыбные',
-        '/vegetableDishes': 'Овощные',
-        '/chickenDishes': 'Из птицы',
-        '/mushroomDishes': 'Из грибов',
-        '/offalDishes': 'Из субпродуктов',
-        '/steamedDishes': 'На пару',
-        '/dumplings': 'Пельмени, вареники',
-        '/flourGarnishes': 'Мучные гарниры',
-        '/vegetableGarnishes': 'Овощные гарниры',
-        '/pizza': 'Пицца',
-        '/sushi': 'Суши',
-        '/cakes': 'Десерты, выпечка',
-        '/pancakes': 'Блины и оладьи',
-        '/piesAndDonuts': 'Пироги и пончики',
-        '/rolls': 'Рулеты',
-        '/cupcakes': 'Кексы и маффины',
-        '/syrniki': 'Сырники и ватрушки',
-        '/puffPastry': 'Из слоеного теста',
-        '/chouxPastry': 'Из заварного теста',
-        '/yeastPastry': 'Из дрожжевого теста',
-        '/buns': 'Булочки и сдоба',
-        '/bread': 'Хлеб',
-        '/pizzaDough': 'Тесто на пиццу',
-        '/creams': 'Кремы',
-        '/beefs': 'Блюда на гриле',
-        '/beef': 'Говядина',
-        '/pork': 'Свинина',
-        '/poultry': 'Птица',
-        '/fish': 'Рыба',
-        '/mushrooms': 'Грибы',
-        '/vegetables': 'Овощи',
-        '/garnishes': 'Гарниры',
-        '/desserts': 'Десерты',
-        '/bakery': 'Выпечка',
-        '/rawDishes': 'Сыроедческие блюда',
-        '/drinks': 'Напитки',
-        '/childishDelicious': 'Детские блюда',
-        '/glutenFree': 'Без глютена',
-        '/sugarFree': 'Без сахара',
-        '/allergenFree': 'Без аллергенов',
-        '/complementaryFoods': 'Блюда для прикорма',
-        '/healthyDelicious': 'Лечебное питание',
-        '/childDiet': 'Детская диета',
-        '/diet1': 'Диета №1',
-        '/diet2': 'Диета №2',
-        '/diet3': 'Диета №3',
-        '/diet5': 'Диета №5',
-        '/diet6': 'Диета №6',
-        '/diet7': 'Диета №7',
-        '/diet8': 'Диета №8',
-        '/diet9': 'Диета №9',
-        '/diet10': 'Диета №10',
-        '/diet11': 'Диета №11',
-        '/diet12': 'Диета №12',
-        '/diet13': 'Диета №13',
-        '/diet14': 'Диета №14',
-        '/diet15': 'Диета №15',
-        '/internationalFood': 'Национальные',
-        '/americanCuisine': 'Американская кухня',
-        '/armenianCuisine': 'Армянская кухня',
-        '/greekCuisine': 'Греческая кухня',
-        '/georgianCuisine': 'Грузинская кухня',
-        '/italianCuisine': 'Итальянская кухня',
-        '/spanishCuisine': 'Испанская кухня',
-        '/chineseCuisine': 'Китайская кухня',
-        '/mexicanCuisine': 'Мексиканская кухня',
-        '/panAsianCuisine': 'Паназиатская кухня',
-        '/russianCuisine': 'Русская кухня',
-        '/turkishCuisine': 'Турецкая кухня',
-        '/frenchCuisine': 'Французская кухня',
-        '/swedishCuisine': 'Шведская кухня',
-        '/japaneseCuisine': 'Японская кухня',
-        '/otherCuisine': 'Другая кухня',
-        '/sauces': 'Соусы',
-        '/meatSauces': 'Соусы мясные',
-        '/cheeseSauces': 'Соусы сырные',
-        '/marinades': 'Маринады',
-        '/juices': 'Напитки',
-        '/meatPreserves': 'Мясные заготовки',
-        '/fishPreserves': 'Рыбные заготовки',
-        '/cucumberPreserves': 'Из огурцов',
-        '/tomatoPreserves': 'Из томатов',
-        '/mushroomPreserves': 'Из грибов',
-        '/vegetablePreserves': 'Овощные заготовки',
-        '/saladsCaviar': 'Салаты, икра',
-        '/fruitPreserves': 'Из фруктов и ягод',
-        '/blanks': 'Заготовки',
-        '/smoothies': 'Смузи',
-        '/compotes': 'Компоты',
-        '/kissels': 'Кисели',
-        '/coffee': 'Кофе',
-        '/herbalTea': 'Лечебный чай',
-        '/kvass': 'Квас',
-        '/cocktails': 'Коктейли',
-        '/alcoholicDrinks': 'Алкогольные',
-        '/vegetablesSalad': 'Овощные салаты',
-        '/hotSalad': 'Теплые салаты',
-        '/juicesFresh': 'Соки и фреши',
-        '/vegan': 'Веганская кухня',
-        '/hot-snacks': 'Теплые закуски',
-        '/hot-soups': 'Первые блюда',
-        '/cold-salads': 'Холодные салаты',
-        '/second-dish': 'Вторые блюда',
-        '/poultry-dish': 'Из курицы',
-        '/side-dishes': 'Гарниры',
-        '/salads': 'Салаты',
-        '/warm-salads': 'Теплые салаты',
-        '/national': 'Интернациональные',
-        '/soups': 'Супы',
-    };
-    const recipeId = pathNames[pathNames.length - 1];
-    const hasRecipeId = !isNaN(Number(recipeId));
-
-    const displayPaths = hasRecipeId ? pathNames.slice(0, -1) : pathNames;
-
-    return (
-        <Breadcrumb
-            separator={<Text w='8px'> &gt; </Text>}
-            listProps={{ flexWrap: 'wrap' }}
-            data-test-id='breadcrumbs'
-        >
-            <BreadcrumbItem>
-                <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
-            </BreadcrumbItem>
-            {displayPaths.map((_, index) => {
-                const route = `/${pathNames[index]}`;
-                const displayName = breadCrumbNames[route];
-                return (
-                    <BreadcrumbItem key={route}>
-                        <BreadcrumbLink href={route}>{displayName}</BreadcrumbLink>
+export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
+    const location = useLocation();
+    const [recipeId, setRecipeId] = useState<string>('');
+    // const [recipeTitle, setRecipeTitle] = useState<string>('');
+    const dispatch = useAppDispatch();
+    const displayPaths = location.pathname.split('/').filter((x) => x);
+    const { data, isError } = useGetCategoriesQuery({});
+    const breadcrumbName = (route: string) => data?.find((item) => item.category === route)?.title;
+    useEffect(() => {
+        if (displayPaths[0] === 'the-juiciest' && displayPaths[1]) {
+            setRecipeId(displayPaths[1]);
+        } else if (displayPaths[0] && displayPaths[1] && displayPaths[2]) {
+            setRecipeId(displayPaths[2]);
+        } else {
+            setRecipeId('');
+        }
+    }, [location.pathname, displayPaths]);
+    const { data: recipeData, isLoading } = useGetRecipesQuery({ id: recipeId });
+    if (isError) {
+        dispatch(setAppError('Error'));
+        localStorage.setItem('Error', 'Error');
+    } else {
+        if (isLoading) {
+            return <></>;
+        } else {
+            return (
+                <Breadcrumb
+                    separator={<Text w='8px'> &gt; </Text>}
+                    listProps={{ flexWrap: 'wrap' }}
+                    data-test-id='breadcrumbs'
+                >
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
                     </BreadcrumbItem>
-                );
-            })}
-            {hasRecipeId && (
-                <BreadcrumbItem isCurrentPage>
-                    <BreadcrumbLink href='#'>
-                        {RecipeData.find((recipe) => recipe.id === recipeId)?.title || ''}
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-            )}
-        </Breadcrumb>
-    );
+                    {displayPaths.map((_, index) => {
+                        const route = `${displayPaths[index]}`;
+                        const displayName = breadcrumbName(route);
+                        return (
+                            <BreadcrumbItem key={route}>
+                                <BreadcrumbLink href={route}>{displayName}</BreadcrumbLink>
+                            </BreadcrumbItem>
+                        );
+                    })}
+                    {recipeId?.length && recipeData?.data && recipeData.data.length > 0 && (
+                        <>
+                            <BreadcrumbItem isCurrentPage>
+                                <BreadcrumbLink href='#'>{recipeData?.title}</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            ,
+                        </>
+                    )}
+                </Breadcrumb>
+            );
+        }
+    }
 };
