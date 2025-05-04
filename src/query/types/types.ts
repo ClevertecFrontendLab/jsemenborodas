@@ -1,4 +1,5 @@
 export interface SubCategory {
+    _id: string;
     title: string;
     category: string;
     rootCategoryId: string;
@@ -11,4 +12,52 @@ export interface Category {
     icon: string;
     description: string;
     subCategories: SubCategory[];
+}
+
+export interface step {
+    stepNumber: number;
+    description: string;
+    image: string;
+}
+
+export interface ingridient {
+    title: string;
+    count: string;
+    measureUnit: string;
+}
+
+export interface recipe {
+    title: string;
+    description: string;
+    time: number;
+    image: string;
+    meat: string;
+    garnish: string;
+    portions: number;
+    authorId: string;
+    categoriesIds: string[];
+    steps: step[];
+    nutritionValue: {
+        calories: number;
+        protein: number;
+        fats: number;
+        carbohydrates: number;
+    };
+    ingridients: ingridient[];
+    likes: number;
+    views: number;
+    bookmarks: number;
+    createdAt: string;
+    _id: string;
+    authorData: { login: string; firstName: string; lastName: string; subscribers: string[] };
+}
+
+export interface recipeRequest {
+    data: recipe[];
+    meta: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    };
 }
