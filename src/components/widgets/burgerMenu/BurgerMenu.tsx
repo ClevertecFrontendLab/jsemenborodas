@@ -111,9 +111,10 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                                 fontSize='16px'
                                 lineHeight='24px'
                                 letterSpacing={0}
-                                whiteSpace='nowrap'
+                                textAlign='left'
+                                whiteSpace='wrap'
                             >
-                                <Breadcrumbs pathNames={pathNames}></Breadcrumbs>
+                                <Breadcrumbs></Breadcrumbs>
                             </Text>
                         </HStack>
                         <Accordion

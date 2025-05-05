@@ -62,7 +62,12 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
         navigate('/not-found');
     }
     return (
-        <Breadcrumb separator='>' display={displayPaths[0] === 'not-found' ? 'none' : ''}>
+        <Breadcrumb
+            separator='>'
+            display={displayPaths[0] === 'not-found' ? 'none' : ''}
+            listProps={{ flexWrap: 'wrap' }}
+            data-test-id='breadcrumbs'
+        >
             <BreadcrumbItem>
                 <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
             </BreadcrumbItem>

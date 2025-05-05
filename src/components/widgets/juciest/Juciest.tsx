@@ -206,6 +206,7 @@ export function Juciest() {
                                                                     fontWeight={400}
                                                                     fontSize={{ base: '14px' }}
                                                                     lineHeight='20px'
+                                                                    noOfLines={1}
                                                                 >
                                                                     {
                                                                         catData?.find((cat) =>
