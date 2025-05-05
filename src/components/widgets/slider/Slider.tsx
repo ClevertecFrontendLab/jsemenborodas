@@ -125,6 +125,8 @@ export function Slider() {
                         // }}
                     >
                         {catData &&
+                            data &&
+                            'data' in data &&
                             data?.data?.map((item: recipe, index: number) => (
                                 <HStack bg='red' w='20px' minW='0'>
                                     <SwiperSlide

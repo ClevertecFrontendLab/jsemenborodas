@@ -41,7 +41,7 @@ export function ContentRecipeDefault() {
     );
     const catDataSubCategoryId =
         catDataCategory &&
-        catDataCategory[0]?.subCategories.filter((sub) => sub.category === pathSegments[1])[0]._id;
+        catDataCategory[0]?.subCategories.filter((sub) => sub.category === pathSegments[1])[0]?._id;
     const { data, isError } = useGetRecipesQuery({
         subcategoriesIds: catDataSubCategoryId ? [catDataSubCategoryId] : undefined,
     });
@@ -70,6 +70,7 @@ export function ContentRecipeDefault() {
                         }
                     >
                         {data &&
+                            'data' in data &&
                             data.data.map((item) => (
                                 <Card
                                     border='1px solid #00000014'
@@ -361,7 +362,7 @@ export function ContentRecipeDefault() {
                         pl={3}
                         fontSize={16}
                         mt={4}
-                        display={data?.data?.length > 0 ? '' : 'none'}
+                        display={data && 'data' in data && data?.data?.length > 0 ? '' : 'none'}
                     >
                         Загрузить ещё
                     </Button>

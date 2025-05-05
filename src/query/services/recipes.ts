@@ -4,7 +4,7 @@ import { EndpointNames } from '~/query/constants/endpoint-names.ts';
 import { Tags } from '~/query/constants/tags.ts';
 import { apiSlice } from '~/query/create-api.ts';
 
-import { recipeRequest } from '../types/types';
+import { recipe, recipeRequest } from '../types/types';
 
 interface RecipeArguments {
     page?: number;
@@ -19,13 +19,15 @@ interface RecipeArguments {
     id?: string;
 }
 
+type RecipeResponce = recipeRequest | recipe;
+
 export const recipeApiSlice = apiSlice
     .enhanceEndpoints({
         addTagTypes: [Tags.RECIPES],
     })
     .injectEndpoints({
         endpoints: (builder) => ({
-            getRecipes: builder.query<recipeRequest, RecipeArguments>({
+            getRecipes: builder.query<RecipeResponce, RecipeArguments>({
                 query: (data = {}) => {
                     const params: Record<string, string | number | string[] | undefined> = {};
                     let url: string = ApiEndpoints.RECIPES;

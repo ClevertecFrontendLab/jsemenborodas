@@ -1,5 +1,5 @@
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
+// import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import { useGetCategoriesQuery } from '~/query/services/categories';
@@ -11,57 +11,59 @@ interface BreadcrumbsProps {}
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
     const location = useLocation();
-    const [recipeId, setRecipeId] = useState<string>('');
-    // const [recipeTitle, setRecipeTitle] = useState<string>('');
     const dispatch = useAppDispatch();
-    const displayPaths = location.pathname.split('/').filter((x) => x);
-    const { data, isError } = useGetCategoriesQuery({});
-    const breadcrumbName = (route: string) => data?.find((item) => item.category === route)?.title;
-    useEffect(() => {
-        if (displayPaths[0] === 'the-juiciest' && displayPaths[1]) {
-            setRecipeId(displayPaths[1]);
-        } else if (displayPaths[0] && displayPaths[1] && displayPaths[2]) {
-            setRecipeId(displayPaths[2]);
-        } else {
-            setRecipeId('');
-        }
-    }, [location.pathname, displayPaths]);
-    const { data: recipeData, isLoading } = useGetRecipesQuery({ id: recipeId });
-    if (isError) {
+
+    const displayPaths = location.pathname.split('/').filter(Boolean);
+
+    const recipeId =
+        displayPaths.length === 2 && displayPaths[0] === 'the-juiciest'
+            ? displayPaths[1]
+            : displayPaths.length >= 3
+              ? displayPaths[2]
+              : '';
+    console.log(recipeId);
+    const { data: categories, isError: isCategoriesError } = useGetCategoriesQuery({});
+    const { data: recipe, isError: isRecipeError } = useGetRecipesQuery(
+        { id: recipeId },
+        { skip: !recipeId },
+    );
+    if (isRecipeError) {
+        //Заготовка под задание с error-page
+    }
+    if (isCategoriesError) {
         dispatch(setAppError('Error'));
         localStorage.setItem('Error', 'Error');
-    } else {
-        if (isLoading) {
-            return <></>;
-        } else {
-            return (
-                <Breadcrumb
-                    separator={<Text w='8px'> &gt; </Text>}
-                    listProps={{ flexWrap: 'wrap' }}
-                    data-test-id='breadcrumbs'
-                >
-                    <BreadcrumbItem>
-                        <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    {displayPaths.map((_, index) => {
-                        const route = `${displayPaths[index]}`;
-                        const displayName = breadcrumbName(route);
-                        return (
-                            <BreadcrumbItem key={route}>
-                                <BreadcrumbLink href={route}>{displayName}</BreadcrumbLink>
-                            </BreadcrumbItem>
-                        );
-                    })}
-                    {recipeId?.length && recipeData?.data && recipeData.data.length > 0 && (
-                        <>
-                            <BreadcrumbItem isCurrentPage>
-                                <BreadcrumbLink href='#'>{recipeData?.title}</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            ,
-                        </>
-                    )}
-                </Breadcrumb>
-            );
-        }
+        return <></>;
     }
+
+    return (
+        <Breadcrumb separator='>'>
+            <BreadcrumbItem>
+                <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
+            </BreadcrumbItem>
+
+            {displayPaths[0] === 'the-juiciest' && (
+                <BreadcrumbItem>
+                    <BreadcrumbLink href='/the-juiciest'>Самое сочное</BreadcrumbLink>
+                </BreadcrumbItem>
+            )}
+
+            {displayPaths[0] !== 'the-juiciest' &&
+                displayPaths.slice(0, 2).map((path, index) => {
+                    const route = `/${displayPaths.slice(0, index + 1).join('/')}`;
+                    const name = categories?.find((c) => c.category === path)?.title || path;
+                    return (
+                        <BreadcrumbItem key={route}>
+                            <BreadcrumbLink href={route}>{name}</BreadcrumbLink>
+                        </BreadcrumbItem>
+                    );
+                })}
+
+            {recipe && 'title' in recipe && recipe?.title && (
+                <BreadcrumbItem isCurrentPage>
+                    <BreadcrumbLink href='#'>{recipe.title}</BreadcrumbLink>
+                </BreadcrumbItem>
+            )}
+        </Breadcrumb>
+    );
 };
