@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Route, Routes as RouterRoutes } from 'react-router';
+import { useEffect, useState } from 'react';
+import { Route, Routes as RouterRoutes, useLocation } from 'react-router';
 
 import { DefaultPage } from '../Pages/defaultPage/DefaultPage';
 import { ErrorPage } from '../Pages/errorPage/ErrorPage';
@@ -16,9 +16,14 @@ interface RoutesMenuProps {
 }
 
 export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: RoutesMenuProps) {
+    const location = useLocation();
+    const pathSegments = location.pathname.split('/').filter(Boolean);
     const [selectedFilterCategory, setSelectedFilterCategory] = useState<
         { id: number; title: string; name: string }[]
     >([]);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathSegments]);
     return (
         <>
             <RouterRoutes>

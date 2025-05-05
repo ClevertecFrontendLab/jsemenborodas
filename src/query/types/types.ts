@@ -27,7 +27,6 @@ export interface ingridient {
 }
 
 export interface recipe {
-    follows: ReactNode;
     title: string;
     description: string;
     time: number;
@@ -44,7 +43,7 @@ export interface recipe {
         fats: number;
         carbohydrates: number;
     };
-    ingridients: ingridient[];
+    ingredients: ingridient[];
     likes: number;
     views: number;
     bookmarks: number;
