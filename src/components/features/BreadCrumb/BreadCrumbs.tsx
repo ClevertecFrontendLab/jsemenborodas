@@ -48,13 +48,17 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
         displayPaths[0] !== 'the-juiciest' &&
         !displayPaths[0].includes(redirectedCategory[0]?.category)
     ) {
+        dispatch(setAppError('Error'));
+        localStorage.setItem('Error', 'Error');
         navigate('/not-found');
     }
     if (
         redirectedCategory &&
         displayPaths[0]?.includes(redirectedCategory[0]?.category) &&
-        !redirectedCategory[0].subCategories.some((sub) => sub.category.includes(displayPaths[1]))
+        !redirectedCategory[0].subCategories.some((sub) => sub.category === displayPaths[1])
     ) {
+        dispatch(setAppError('Error'));
+        localStorage.setItem('Error', 'Error');
         navigate('/not-found');
     }
     return (
