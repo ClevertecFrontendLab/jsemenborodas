@@ -6,6 +6,7 @@ import { ContentRecipeDefault } from '~/components/widgets/contentRecipe/content
 import { Filter } from '~/components/widgets/Filter/Filter';
 import { Slider } from '~/components/widgets/slider/Slider';
 import { Tabs } from '~/components/widgets/tabs/Tabs';
+import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
@@ -183,6 +184,9 @@ export function DefaultPage({
                                         display={isSearchStarted === true ? { base: 'none' } : '""'}
                                     >
                                         <Slider></Slider>
+                                    </Box>
+                                    <Box as='section' mt='120px'>
+                                        <VeganKitchen></VeganKitchen>
                                     </Box>
                                 </Box>
                             </VStack>
