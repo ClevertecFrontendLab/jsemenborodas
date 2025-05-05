@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Route, Routes as RouterRoutes } from 'react-router';
 
 import { DefaultPage } from '../Pages/defaultPage/DefaultPage';
+import { ErrorPage } from '../Pages/errorPage/ErrorPage';
 import { FilteredPage } from '../Pages/filteredPage/filteredPage';
 import { JuciestPage } from '../Pages/juciest/JuciestPage';
 import { Main } from '../Pages/main/Main';
@@ -79,6 +80,7 @@ export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: R
                     }
                 />
                 <Route path='/:t/:t/:t/*' element={<RecipePage isBurgerOpen={isBurgerOpen} />} />
+                <Route path='/not-found' element={<ErrorPage isBurgerOpen={isBurgerOpen} />} />
                 <Route
                     path='/filtered'
                     element={

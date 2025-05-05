@@ -1,6 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 // import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipesQuery } from '~/query/services/recipes';
@@ -12,9 +12,8 @@ interface BreadcrumbsProps {}
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
     const location = useLocation();
     const dispatch = useAppDispatch();
-
+    const navigate = useNavigate();
     const displayPaths = location.pathname.split('/').filter(Boolean);
-
     const recipeId =
         displayPaths.length === 2 && displayPaths[0] === 'the-juiciest'
             ? displayPaths[1]
@@ -27,17 +26,40 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
         { id: recipeId },
         { skip: !recipeId },
     );
-    if (isRecipeError) {
-        //Заготовка под задание с error-page
-    }
+    const redirectedCategory = categories?.filter(
+        (cat) => (cat.category === displayPaths[0] && cat.subCategories !== undefined) || undefined,
+    );
+
     if (isCategoriesError) {
         dispatch(setAppError('Error'));
         localStorage.setItem('Error', 'Error');
         return <></>;
     }
+    /*Redirect to not-found */
+    if (isRecipeError) {
+        navigate(-1);
+        dispatch(setAppError('Error'));
+        localStorage.setItem('Error', 'Error');
+    }
 
+    if (
+        redirectedCategory &&
+        displayPaths[0] !== undefined &&
+        displayPaths[0] !== 'not-found' &&
+        displayPaths[0] !== 'the-juiciest' &&
+        !displayPaths[0].includes(redirectedCategory[0]?.category)
+    ) {
+        navigate('/not-found');
+    }
+    if (
+        redirectedCategory &&
+        displayPaths[0]?.includes(redirectedCategory[0]?.category) &&
+        !redirectedCategory[0].subCategories.some((sub) => sub.category.includes(displayPaths[1]))
+    ) {
+        navigate('/not-found');
+    }
     return (
-        <Breadcrumb separator='>'>
+        <Breadcrumb separator='>' display={displayPaths[0] === 'not-found' ? 'none' : ''}>
             <BreadcrumbItem>
                 <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
             </BreadcrumbItem>
