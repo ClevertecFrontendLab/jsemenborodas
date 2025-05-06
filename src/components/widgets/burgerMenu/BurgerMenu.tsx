@@ -43,23 +43,23 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
         xl: '',
     });
     const { data, isError, isLoading } = useGetCategoriesQuery({});
-    const mockData = localStorage.getItem('navMenu');
 
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
-    if (mockData === null) {
-        localStorage.setItem('navMenu', JSON.stringify(filteredData));
-    }
+
     let resultData;
-    if (mockData) {
-        resultData = JSON.parse(mockData);
-    }
-    if (isError) {
+
+    if (isError && filteredData) {
         dispatch(setAppError('Error'));
         localStorage.setItem('Error', 'Error');
-    }
-
-    if (isError && resultData === null) {
-        return <></>;
+        const mockData = localStorage.getItem('navMenu');
+        if (mockData === null || (mockData === undefined && data)) {
+            localStorage.setItem('navMenu', JSON.stringify(filteredData));
+        }
+        if (mockData && data && mockData !== undefined) {
+            resultData = JSON.parse(mockData) || null;
+        }
+    } else {
+        localStorage.setItem('navMenu', JSON.stringify(filteredData));
     }
 
     if (isLoading) {

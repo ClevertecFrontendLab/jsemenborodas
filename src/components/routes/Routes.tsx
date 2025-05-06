@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes as RouterRoutes, useLocation } from 'react-router';
 
+import { useAppDispatch } from '~/store/hooks';
+import { resetSearchState } from '~/store/reducers/search';
+
 import { DefaultPage } from '../Pages/defaultPage/DefaultPage';
 import { ErrorPage } from '../Pages/errorPage/ErrorPage';
-import { FilteredPage } from '../Pages/filteredPage/filteredPage';
 import { JuciestPage } from '../Pages/juciest/JuciestPage';
 import { Main } from '../Pages/main/Main';
 import { RecipePage } from '../Pages/RecipePage/RecipePage';
@@ -18,13 +20,15 @@ interface RoutesMenuProps {
 
 export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: RoutesMenuProps) {
     const location = useLocation();
+    const dispatch = useAppDispatch();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const [selectedFilterCategory, setSelectedFilterCategory] = useState<
         { id: number; title: string; name: string }[]
     >([]);
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [pathSegments]);
+        dispatch(resetSearchState());
+    }, [pathSegments, dispatch]);
     return (
         <>
             <AlertNote></AlertNote>
@@ -88,18 +92,6 @@ export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: R
                 />
                 <Route path='/:t/:t/:t/*' element={<RecipePage isBurgerOpen={isBurgerOpen} />} />
                 <Route path='/not-found/*' element={<ErrorPage isBurgerOpen={isBurgerOpen} />} />
-                <Route
-                    path='/filtered'
-                    element={
-                        <FilteredPage
-                            isBurgerOpen={isBurgerOpen}
-                            isFilterHidden={isFilterHidden}
-                            setIsFilterHidden={setIsFilterHidden}
-                            selectedFilterCategory={selectedFilterCategory}
-                            setSelectedFilterCategory={setSelectedFilterCategory}
-                        />
-                    }
-                />
             </RouterRoutes>
         </>
     );

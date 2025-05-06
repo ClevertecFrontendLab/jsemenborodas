@@ -19,64 +19,72 @@ import {
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 
 import { searchFormFiltersData } from '~/components/entities/Data/searchFormFiltersData';
 import { Plus } from '~/icons/Icon';
 import { Filter, Search } from '~/icons/SearchInputIcon';
-
-interface searchFormPropsInterface {
-    setIsSearchStarted: (value: boolean) => void;
-    searchValue: string;
-    setSearchValue: (value: string) => void;
-    selectedItems: string[];
-    setSelectedItems: (items: string[]) => void;
-    customAllergen: string[];
-    setCustomAllergen: (allergens: string[]) => void;
-    isDisabled: boolean;
-    setIsDisabled: (value: boolean) => void;
-    isFilterHidden: boolean;
-    setIsFilterHidden: (value: boolean) => void;
-    selectedFilterCategory: { id: number; title: string; name: string }[];
-    isSuccessful: boolean;
-}
-export function SearchForm2({
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import {
+    addAllergen,
+    removeAllergen,
+    selectAllergens,
+    selectIsError,
+    selectIsLoading,
+    selectIsSearchStarted,
+    selectIsSearchSuccessful,
+    setAllergens,
+    setIsError,
     setIsSearchStarted,
-    searchValue,
-    setSearchValue,
-    selectedItems,
-    setSelectedItems,
-    customAllergen,
-    setCustomAllergen,
-    isDisabled,
-    setIsDisabled,
-    isFilterHidden,
-    setIsFilterHidden,
-    selectedFilterCategory,
-    isSuccessful,
-}: searchFormPropsInterface) {
+    setSearchString,
+} from '~/store/reducers/search';
+
+import { ComponentLoader } from '../loader/ComponentLoader';
+
+export function SearchForm2() {
     const location = useLocation();
     const Name: Record<string, string> = {
         '/': 'Приятного аппетита!',
         Juciest: 'Самое сочное',
         vegan: 'Веганская кухня',
     };
-    const navigate = useNavigate();
+
+    const dispatch = useAppDispatch();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const firstSegment = pathSegments[0];
-    const [isLocaleSearchStarted, setIsLocaleSearchStarted] = useState<boolean>(false);
     const title = Name[firstSegment] || 'Приятного аппетита!';
-    const [inputValue, setInputValue] = useState(searchValue);
+    const [isSwitchActivated, setIsSwitchActivated] = useState<boolean>(false);
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+    const [localAllergens, setLocalAllergens] = useState<string[]>([]);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const searchRef = useRef<HTMLInputElement>(null);
+    const allergens = useAppSelector(selectAllergens);
+    const isSearchStarted = useAppSelector(selectIsSearchStarted);
+    const isSuccessful = useAppSelector(selectIsSearchSuccessful);
+    const isLoading = useAppSelector(selectIsLoading);
+    const isErrorSearch = useAppSelector(selectIsError);
+
+    const handleAllergens = (allergen: string) => {
+        if (allergen === 'Томат (помидор)') {
+            allergen = 'Томат';
+        } else if (allergen === 'Клубника (ягоды)') {
+            allergen = 'Клубника';
+        }
+        if (allergens?.includes(allergen)) {
+            dispatch(removeAllergen(allergen));
+        } else {
+            dispatch(addAllergen(allergen));
+            handleSearch();
+        }
+    };
 
     const handleSearch = () => {
-        if (inputValue.length >= 3) {
-            setIsSearchStarted(true);
-            setIsLocaleSearchStarted(true);
-            setSearchValue(inputValue);
+        if (searchRef.current && searchRef?.current?.value?.length >= 2) {
+            dispatch(setSearchString(searchRef?.current?.value));
+            dispatch(setIsSearchStarted(true));
         } else {
-            setIsSearchStarted(false);
-            setIsLocaleSearchStarted(false);
-            setSearchValue('');
+            dispatch(setIsSearchStarted(false));
+            dispatch(setSearchString(''));
         }
     };
 
@@ -85,254 +93,274 @@ export function SearchForm2({
             handleSearch();
         }
     };
-    const inputRef = useRef<HTMLInputElement>(null);
 
-    const handleAddAllergen = () => {
-        const value = inputRef.current?.value.trim();
-        if (value) {
-            if (!customAllergen.includes(value)) {
-                setCustomAllergen([...customAllergen, value]);
-                if (inputRef.current) {
-                    inputRef.current.value = '';
-                }
-            }
+    const handleSwitch = () => {
+        if (isSwitchActivated) {
+            setLocalAllergens(allergens ? allergens : []);
+            dispatch(setAllergens([]));
+            console.log('allergen placed:');
+            console.log(allergens);
+        } else {
+            dispatch(setAllergens(localAllergens));
+            setLocalAllergens([]);
+            console.log('allergenssetted:');
+            console.log(allergens);
         }
     };
-
-    const handleSelect = () => {
-        setIsDisabled(!isDisabled);
-    };
-
-    const handleCheckboxChange = (id: string) => {
-        setSelectedItems((prev) => {
-            if (prev.includes(id)) {
-                return prev.filter((item) => item !== id);
-            } else {
-                return [...prev, id];
-            }
-        });
-    };
-
-    const handleFilterChange = () => {
-        setIsFilterHidden(!isFilterHidden);
-    };
-
     useEffect(() => {
-        if (searchValue && searchValue.length > 3) {
-            handleSearch();
+        if (isErrorSearch && searchRef.current) {
+            searchRef.current.value = '';
+            dispatch(setIsError(false));
         }
-    }, [searchValue, handleSearch]);
-
-    return (
-        <>
-            <Box
-                mt={{ base: '17px', xl: '32px', '2xl': '32px' }}
-                ml={{ xl: '5px' }}
-                w={{
-                    base: 'calc(328px + (727 - 328) * ((100vw - 360px) / (768 - 360)))',
-                    md: 'calc(727px + (880 - 727) * ((100vw - 768px) / (1440 - 768)))',
-                    xl: '100%',
-                }}
-                mx={{ base: 'auto' }}
-                mr={{ base: '32px', xl: '0' }}
-            >
-                <VStack>
-                    <Box mb={{ xl: '16px' }}>
-                        <Heading
-                            fontWeight='700'
-                            fontFamily='Inter'
-                            fontSize={{ base: '24px', xl: '48px' }}
-                            lineHeight={{ base: '32px', xl: '48px' }}
-                            letterSpacing={{ base: '0.3px', xl: '1px' }}
-                        >
-                            {title}
-                        </Heading>
-                    </Box>
-                    {title === 'Веганская кухня' && (
-                        <Box>
-                            <Text
+    }, [isErrorSearch, dispatch]);
+    if (isLoading) {
+        return (
+            <>
+                <Box
+                    mt={{ base: '17px', xl: '32px', '2xl': '32px' }}
+                    ml={{ xl: '5px' }}
+                    w={{
+                        base: 'calc(328px + (727 - 328) * ((100vw - 360px) / (768 - 360)))',
+                        md: 'calc(727px + (880 - 727) * ((100vw - 768px) / (1440 - 768)))',
+                        xl: '100%',
+                    }}
+                    mx={{ base: 'auto' }}
+                    mr={{ base: '32px', xl: '0' }}
+                >
+                    <VStack>
+                        <Box mb={{ xl: '16px' }}>
+                            <Heading
+                                fontWeight='700'
                                 fontFamily='Inter'
-                                color='#0000007A'
-                                fontWeight={500}
-                                fontSize={{ base: '14px', xl: '16px' }}
-                                w={{ base: '328px', md: '727px', xl: '696px' }}
-                                textAlign='center'
-                                mt={{ base: '4px', md: '6px', xl: '-12px' }}
-                                letterSpacing={{ xl: '0.1px' }}
-                                mb={{ xl: '16px' }}
+                                fontSize={{ base: '24px', xl: '48px' }}
+                                lineHeight={{ base: '32px', xl: '48px' }}
+                                letterSpacing={{ base: '0.3px', xl: '1px' }}
                             >
-                                Интересны не только убеждённым вегетарианцам, но и тем, кто хочет
-                                попробовать вегетарианскую диету и готовить вкусные вегетарианские
-                                блюда.
-                            </Text>
+                                {title}
+                            </Heading>
                         </Box>
-                    )}
 
-                    <Box
-                        mt={{ base: '7px' }}
-                        w={{
-                            base: 'calc(328px + (448 - 328) * ((100vw - 360px) / (480 - 360)))',
-                            sm: 'calc(328px + (727 - 328) * ((100vw - 360px) / (768 - 360)))',
-                            md: 'calc(727px + (880 - 727) * ((100vw - 768px) / (1440 - 768)))',
-                            xl: '518px',
-                        }}
-                    >
-                        <HStack spacing='12px' justifyContent='center'>
-                            <Button
-                                bg='transparent'
-                                border='1px solid #0000007A'
-                                borderRadius='6px'
-                                size={{ base: 'sm' }}
-                                h={{ base: '32px', xl: '48px' }}
-                                w={{ base: '32px', xl: '48px' }}
-                                onClick={handleFilterChange}
-                                data-test-id={isFilterHidden ? 'filter-button' : ''}
+                        <Box
+                            mt={{ base: '7px' }}
+                            w={{
+                                base: 'calc(328px + (448 - 328) * ((100vw - 360px) / (480 - 360)))',
+                                sm: 'calc(328px + (727 - 328) * ((100vw - 360px) / (768 - 360)))',
+                                md: 'calc(727px + (880 - 727) * ((100vw - 768px) / (1440 - 768)))',
+                                xl: '518px',
+                            }}
+                        >
+                            <ComponentLoader></ComponentLoader>
+                        </Box>
+                    </VStack>
+                </Box>
+            </>
+        );
+    } else {
+        return (
+            <>
+                <Box
+                    mt={{ base: '17px', xl: '32px', '2xl': '32px' }}
+                    ml={{ xl: '5px' }}
+                    w={{
+                        base: 'calc(328px + (727 - 328) * ((100vw - 360px) / (768 - 360)))',
+                        md: 'calc(727px + (880 - 727) * ((100vw - 768px) / (1440 - 768)))',
+                        xl: '100%',
+                    }}
+                    mx={{ base: 'auto' }}
+                    mr={{ base: '32px', xl: '0' }}
+                >
+                    <VStack>
+                        <Box mb={{ xl: '16px' }}>
+                            <Heading
+                                fontWeight='700'
+                                fontFamily='Inter'
+                                fontSize={
+                                    isSearchStarted
+                                        ? isSuccessful
+                                            ? { base: '24px', xl: '48px' }
+                                            : { base: '16px' }
+                                        : { base: '24px', xl: '48px' }
+                                }
+                                lineHeight={
+                                    isSearchStarted
+                                        ? isSuccessful
+                                            ? { base: '32px', xl: '48px' }
+                                            : { base: '24px' }
+                                        : { base: '32px', xl: '48px' }
+                                }
+                                letterSpacing={{ base: '0.3px', xl: '1px' }}
+                                w={isSearchStarted ? (isSuccessful ? '""' : '400px') : '""'}
                             >
-                                <Icon
-                                    as={Filter}
-                                    w={{ base: '14px', xl: '24px' }}
-                                    h={{ base: '14px', xl: '24px' }}
-                                ></Icon>
-                            </Button>
-                            <InputGroup
-                                w={{
-                                    base: 'calc(284px + (404 - 284) * ((100vw - 360px) / (480 - 360)))',
-                                    sm: '404px',
-                                    xl: '458px',
-                                }}
-                                h={{ base: '32px', xl: '48px' }}
-                            >
-                                <Input
-                                    value={inputValue}
-                                    onChange={(e) => setInputValue(e.target.value)}
-                                    onKeyDown={handleKeyDown}
-                                    borderColor={
-                                        isLocaleSearchStarted
-                                            ? isSuccessful
-                                                ? '#2DB100'
-                                                : 'red'
-                                            : '#0000007A'
-                                    }
-                                    _focusVisible={{
-                                        borderColor: isLocaleSearchStarted
-                                            ? isSuccessful
-                                                ? '#2DB100'
-                                                : 'red'
-                                            : '#0000007A',
-                                    }}
-                                    placeholder='Название или ингредиент...'
-                                    h={{ base: '32px', xl: '48px' }}
-                                    _placeholder={{ color: 'rgba(19, 75, 0, 1)' }}
-                                    fontSize={{ base: '14px', xl: '18px' }}
+                                {isSearchStarted
+                                    ? isSuccessful
+                                        ? title
+                                        : 'По вашему запросу ничего не найдено. Попробуйте другой запрос.'
+                                    : title}
+                            </Heading>
+                        </Box>
+                        {title === 'Веганская кухня' && (
+                            <Box>
+                                <Text
                                     fontFamily='Inter'
-                                    fontWeight='400'
-                                    letterSpacing={{ xl: '0.15px' }}
-                                    pl={{ base: '12px', xl: '16px' }}
-                                    data-test-id='search-input'
-                                ></Input>
-                                <InputRightElement
-                                    data-test-id='search-button'
-                                    onClick={
-                                        selectedFilterCategory.length > 0
-                                            ? (e) => {
-                                                  e.preventDefault();
-                                                  console.log('searchValue', inputValue);
-                                                  navigate(`/filtered/`, {
-                                                      state: {
-                                                          selectedFilterCategory:
-                                                              selectedFilterCategory.map(
-                                                                  (category) => category,
-                                                              ),
-                                                          selectedItems,
-                                                          inputValue,
-                                                      },
-                                                  });
-                                              }
-                                            : handleSearch
-                                        // Костыль
-                                    }
-                                    w={{ base: '32px', xl: '48px' }}
+                                    color='#0000007A'
+                                    fontWeight={500}
+                                    fontSize={{ base: '14px', xl: '16px' }}
+                                    w={{ base: '328px', md: '727px', xl: '696px' }}
+                                    textAlign='center'
+                                    mt={{ base: '4px', md: '6px', xl: '-12px' }}
+                                    letterSpacing={{ xl: '0.1px' }}
+                                    mb={{ xl: '16px' }}
+                                >
+                                    Интересны не только убеждённым вегетарианцам, но и тем, кто
+                                    хочет попробовать вегетарианскую диету и готовить вкусные
+                                    вегетарианские блюда.
+                                </Text>
+                            </Box>
+                        )}
+
+                        <Box
+                            mt={{ base: '7px' }}
+                            w={{
+                                base: 'calc(328px + (448 - 328) * ((100vw - 360px) / (480 - 360)))',
+                                sm: 'calc(328px + (727 - 328) * ((100vw - 360px) / (768 - 360)))',
+                                md: 'calc(727px + (880 - 727) * ((100vw - 768px) / (1440 - 768)))',
+                                xl: '518px',
+                            }}
+                        >
+                            <HStack spacing='12px' justifyContent='center'>
+                                <Button
+                                    bg='transparent'
+                                    border='1px solid #0000007A'
+                                    borderRadius='6px'
+                                    size={{ base: 'sm' }}
                                     h={{ base: '32px', xl: '48px' }}
-                                    pointerEvents={inputValue.length >= 3 ? '' : 'none'}
+                                    w={{ base: '32px', xl: '48px' }}
+                                    // onClick={handleFilterChange}
+                                    // data-test-id={isFilterHidden ? 'filter-button' : ''}
                                 >
                                     <Icon
-                                        as={Search}
-                                        w={{ base: '32px', xl: '40px' }}
-                                        h={{ base: '32px', xl: '40px' }}
+                                        as={Filter}
+                                        w={{ base: '14px', xl: '24px' }}
+                                        h={{ base: '14px', xl: '24px' }}
                                     ></Icon>
-                                </InputRightElement>
-                            </InputGroup>
-                        </HStack>
-                    </Box>
-                    <Show above='xl'>
-                        <Box mt={{ xl: '8px' }} ml={{ xl: '8px' }}>
-                            <HStack>
-                                <Box w={isDisabled === true ? '268px' : '233px'} h='36px'>
-                                    <HStack spacing='14px'>
-                                        <Text
-                                            fontSize='16px'
-                                            fontFamily='Inter'
-                                            lineHeight='24px'
-                                            fontWeight='500'
-                                            pt={{ xl: '6px' }}
-                                        >
-                                            {isDisabled === true
-                                                ? 'Исключить мои аллергены'
-                                                : 'Исключить аллергены'}
-                                        </Text>
-                                        <Switch
-                                            pt={{ xl: '6px' }}
-                                            onChange={handleSelect}
-                                            data-test-id='allergens-switcher'
-                                        ></Switch>
-                                    </HStack>
-                                </Box>
-                                <Box>
-                                    <Menu
-                                        // disabled={isDisabled}
-                                        // placeholder='Выберите из списка...'
-                                        // color='#000000A3'
-                                        // w='234px'
-                                        // h='40px'
-                                        // borderRadius='6px'
-                                        // border='1px solid #00000014'
-                                        // fontFamily='Inter'
-                                        // fontSize='16px'
-                                        // lineHeight='24px'
-
-                                        closeOnSelect={false}
+                                </Button>
+                                <InputGroup
+                                    w={{
+                                        base: 'calc(284px + (404 - 284) * ((100vw - 360px) / (480 - 360)))',
+                                        sm: '404px',
+                                        xl: '458px',
+                                    }}
+                                    h={{ base: '32px', xl: '48px' }}
+                                >
+                                    <Input
+                                        ref={searchRef}
+                                        onKeyDown={handleKeyDown}
+                                        borderColor={
+                                            isSearchStarted
+                                                ? isSuccessful
+                                                    ? '#2DB100'
+                                                    : 'red'
+                                                : '#0000007A'
+                                        }
+                                        _focusVisible={{
+                                            borderColor: isSearchStarted
+                                                ? isSuccessful
+                                                    ? '#2DB100'
+                                                    : 'red'
+                                                : '#0000007A',
+                                        }}
+                                        placeholder='Название или ингредиент...'
+                                        h={{ base: '32px', xl: '48px' }}
+                                        _placeholder={{ color: 'rgba(19, 75, 0, 1)' }}
+                                        fontSize={{ base: '14px', xl: '18px' }}
+                                        fontFamily='Inter'
+                                        fontWeight='400'
+                                        letterSpacing={{ xl: '0.15px' }}
+                                        pl={{ base: '12px', xl: '16px' }}
+                                        data-test-id='search-input'
+                                    ></Input>
+                                    <InputRightElement
+                                        data-test-id='search-button'
+                                        onClick={() => handleSearch()}
+                                        w={{ base: '32px', xl: '48px' }}
+                                        h={{ base: '32px', xl: '48px' }}
+                                        // pointerEvents={inputValue.length >= 3 ? '' : 'none'}
                                     >
-                                        <MenuButton
-                                            color='#000000A3'
-                                            w={isDisabled === true ? '234px' : '269px'}
-                                            h={isDisabled === true ? '40px' : 'auto'}
-                                            borderRadius='6px'
-                                            border='1px solid #00000014'
-                                            fontFamily='Inter'
-                                            fontSize='16px'
-                                            lineHeight='24px'
-                                            disabled={isDisabled}
-                                            data-test-id='allergens-menu-button'
-                                        >
-                                            <HStack
-                                                p={2}
-                                                overflow='hidden'
-                                                flexWrap='wrap'
-                                                position='relative'
-                                                pr={isDisabled === true ? '0px' : '64px'}
-                                                h={isDisabled === true ? '40px' : 'auto'}
+                                        <Icon
+                                            as={Search}
+                                            w={{ base: '32px', xl: '40px' }}
+                                            h={{ base: '32px', xl: '40px' }}
+                                        ></Icon>
+                                    </InputRightElement>
+                                </InputGroup>
+                            </HStack>
+                        </Box>
+                        <Show above='xl'>
+                            <Box mt={{ xl: '8px' }} ml={{ xl: '8px' }}>
+                                <HStack>
+                                    <Box w='233px' h='36px'>
+                                        <HStack spacing='14px'>
+                                            <Text
+                                                fontSize='16px'
+                                                fontFamily='Inter'
+                                                lineHeight='24px'
+                                                fontWeight='500'
+                                                pt={{ xl: '6px' }}
                                             >
-                                                {(selectedItems.length > 0 &&
-                                                    isDisabled === false) ||
-                                                (customAllergen.length > 0 &&
-                                                    isDisabled === false) ? (
-                                                    selectedItems.map((id) => {
-                                                        const item = searchFormFiltersData.find(
-                                                            (item) => item.id.toString() === id,
-                                                        );
-                                                        return item ? (
+                                                Исключить аллергены
+                                            </Text>
+                                            <Switch
+                                                pt={{ xl: '6px' }}
+                                                isChecked={isSwitchActivated}
+                                                onChange={() => {
+                                                    setIsSwitchActivated(!isSwitchActivated);
+                                                    handleSwitch();
+                                                }}
+                                                // onChange={handleSelect}
+                                                data-test-id='allergens-switcher'
+                                            ></Switch>
+                                        </HStack>
+                                    </Box>
+                                    <Box>
+                                        <Menu
+                                            onOpen={() => setIsMenuOpen(true)}
+                                            onClose={() => setIsMenuOpen(false)}
+                                            closeOnSelect={false}
+                                        >
+                                            <MenuButton
+                                                color='#000000A3'
+                                                w='269px'
+                                                h={
+                                                    isSwitchActivated && allergens?.length
+                                                        ? 'auto'
+                                                        : '40px'
+                                                }
+                                                borderRadius='6px'
+                                                border='1px solid #00000014'
+                                                fontFamily='Inter'
+                                                fontSize='16px'
+                                                lineHeight='24px'
+                                                disabled={!isSwitchActivated}
+                                                data-test-id='allergens-menu-button'
+                                            >
+                                                <HStack
+                                                    p={2}
+                                                    overflow='hidden'
+                                                    flexWrap='wrap'
+                                                    position='relative'
+                                                    pr='64px'
+                                                    h={
+                                                        isSwitchActivated && allergens?.length
+                                                            ? 'auto'
+                                                            : '40px'
+                                                    }
+                                                >
+                                                    {' '}
+                                                    {allergens &&
+                                                    allergens.length > 0 &&
+                                                    isSwitchActivated ? (
+                                                        allergens.map((item) => (
                                                             <Box
-                                                                key={id}
                                                                 lineHeight='16px'
                                                                 fontSize='12px'
                                                                 fontWeight={500}
@@ -342,132 +370,127 @@ export function SearchForm2({
                                                                 borderRadius='6px'
                                                                 px={2}
                                                             >
-                                                                {item.displayTitle}
+                                                                {item}
                                                             </Box>
-                                                        ) : null;
-                                                    })
-                                                ) : (
-                                                    <Text flexWrap='nowrap'>
-                                                        Выберите из списка...
-                                                    </Text>
-                                                )}
-                                                {customAllergen.length > 0 && isDisabled === false
-                                                    ? customAllergen.map((item) => (
-                                                          <Box
-                                                              key={item}
-                                                              lineHeight='16px'
-                                                              fontSize='12px'
-                                                              fontWeight={500}
-                                                              fontFamily='Inter'
-                                                              color='#2DB100'
-                                                              border='1px solid #B1FF2E'
-                                                              borderRadius='6px'
-                                                              px={2}
-                                                          >
-                                                              {item}
-                                                          </Box>
-                                                      ))
-                                                    : ''}
-
-                                                <Image
-                                                    src='/src/components/shared/images/icons/arrowDown.png'
-                                                    display={
-                                                        selectedItems.length > 0 ||
-                                                        customAllergen.length > 0
-                                                            ? 'none'
-                                                            : ''
-                                                    }
-                                                    position='absolute'
-                                                    right='10px'
-                                                ></Image>
-                                                <Image
-                                                    src='/src/components/shared/images/icons/arrowUp.png'
-                                                    display={
-                                                        selectedItems.length > 0 ||
-                                                        customAllergen.length > 0
-                                                            ? ''
-                                                            : 'none'
-                                                    }
-                                                    position='absolute'
-                                                    right='8px'
-                                                ></Image>
-                                            </HStack>
-                                        </MenuButton>
-                                        <Portal>
-                                            <MenuList
-                                                borderRadius={0}
-                                                p={0}
-                                                w='269px'
-                                                data-test-id='allergens-menu'
-                                            >
-                                                {searchFormFiltersData.map((item, index) => (
-                                                    <MenuItem
-                                                        value={item.id.toString()}
-                                                        bg={
-                                                            item.id % 2 === 0
-                                                                ? '#0000000F'
-                                                                : '#FFFFFF'
-                                                        }
-                                                        onChange={() => {
-                                                            handleCheckboxChange(
-                                                                item.id.toString(),
-                                                            );
-                                                            setTimeout(() => {
-                                                                inputRef.current?.focus();
-                                                            }, 300);
-                                                        }}
-                                                    >
-                                                        <Checkbox w='100%' iconColor='black'>
-                                                            <Text
-                                                                data-test-id={`allergen-${index}`}
-                                                            >
-                                                                {item.title}
-                                                            </Text>
-                                                        </Checkbox>
-                                                    </MenuItem>
-                                                ))}
-                                                <HStack ml='24px' spacing='8px'>
-                                                    <Input
-                                                        my='8px'
-                                                        autoFocus={true}
-                                                        w='205px'
-                                                        data-test-id={
-                                                            isFilterHidden
-                                                                ? 'add-other-allergen'
-                                                                : ''
-                                                        }
-                                                        ref={inputRef}
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === 'Enter') {
-                                                                handleAddAllergen();
-                                                            }
-                                                        }}
-                                                    />
-                                                    <Button
-                                                        bg='transparent'
-                                                        border='none'
-                                                        shadow='none'
-                                                        _hover={{ bg: 'transparent' }}
-                                                        p={0}
-                                                        onClick={handleAddAllergen}
-                                                        data-test-id={
-                                                            isFilterHidden
-                                                                ? 'add-allergen-button'
-                                                                : ''
-                                                        }
-                                                    >
-                                                        <Icon as={Plus}></Icon>
-                                                    </Button>
+                                                        ))
+                                                    ) : (
+                                                        <Text flexWrap='nowrap'>
+                                                            Выберите из списка...
+                                                        </Text>
+                                                    )}
+                                                    <Image
+                                                        src='/src/components/shared/images/icons/arrowDown.png'
+                                                        display={isMenuOpen ? 'none' : ''}
+                                                        position='absolute'
+                                                        right='10px'
+                                                    ></Image>
+                                                    <Image
+                                                        src='/src/components/shared/images/icons/arrowUp.png'
+                                                        display={isMenuOpen ? '' : 'none'}
+                                                        position='absolute'
+                                                        right='8px'
+                                                    ></Image>
                                                 </HStack>
-                                            </MenuList>
-                                        </Portal>
-                                    </Menu>
-                                </Box>
-                            </HStack>
-                        </Box>
-                    </Show>
-                </VStack>
-            </Box>
-        </>
-    );
+                                            </MenuButton>
+                                            <Portal>
+                                                <MenuList
+                                                    borderRadius={0}
+                                                    p={0}
+                                                    w='269px'
+                                                    data-test-id='allergens-menu'
+                                                >
+                                                    {searchFormFiltersData.map((item, index) => (
+                                                        <MenuItem
+                                                            value={item.id.toString()}
+                                                            bg={
+                                                                item.id % 2 === 0
+                                                                    ? '#0000000F'
+                                                                    : '#FFFFFF'
+                                                            }
+                                                            onChange={() =>
+                                                                handleAllergens(item.title)
+                                                            }
+                                                        >
+                                                            <Checkbox
+                                                                w='100%'
+                                                                iconColor='black'
+                                                                isChecked={
+                                                                    allergens?.includes(
+                                                                        item.title,
+                                                                    ) ||
+                                                                    allergens?.includes(
+                                                                        item.displayTitle,
+                                                                    )
+                                                                        ? true
+                                                                        : false
+                                                                }
+                                                            >
+                                                                <Text
+                                                                    data-test-id={`allergen-${index}`}
+                                                                >
+                                                                    {item.title}
+                                                                </Text>
+                                                            </Checkbox>
+                                                        </MenuItem>
+                                                    ))}
+                                                    <HStack ml='24px' spacing='8px'>
+                                                        <Input
+                                                            my='8px'
+                                                            autoFocus={true}
+                                                            w='205px'
+                                                            // data-test-id={
+                                                            //     isFilterHidden
+                                                            //         ? 'add-other-allergen'
+                                                            //         : ''
+                                                            // }
+                                                            ref={inputRef}
+                                                            onKeyDown={(e) => {
+                                                                if (
+                                                                    e.key === 'Enter' &&
+                                                                    inputRef.current &&
+                                                                    inputRef.current.value.length
+                                                                ) {
+                                                                    handleAllergens(
+                                                                        inputRef?.current?.value,
+                                                                    );
+                                                                }
+                                                            }}
+                                                        />
+                                                        <Button
+                                                            bg='transparent'
+                                                            border='none'
+                                                            shadow='none'
+                                                            _hover={{ bg: 'transparent' }}
+                                                            p={0}
+                                                            onClick={() => {
+                                                                if (
+                                                                    inputRef.current &&
+                                                                    inputRef.current.value.length
+                                                                ) {
+                                                                    handleAllergens(
+                                                                        inputRef?.current?.value,
+                                                                    );
+                                                                }
+                                                            }}
+                                                            // data-test-id={
+                                                            //     isFilterHidden
+                                                            //         ? 'add-allergen-button'
+                                                            //         : ''
+                                                            // }
+                                                        >
+                                                            <Icon as={Plus}></Icon>
+                                                        </Button>
+                                                    </HStack>
+                                                </MenuList>
+                                            </Portal>
+                                        </Menu>
+                                    </Box>
+                                </HStack>
+                            </Box>
+                        </Show>
+                    </VStack>
+                </Box>
+            </>
+        );
+    }
 }

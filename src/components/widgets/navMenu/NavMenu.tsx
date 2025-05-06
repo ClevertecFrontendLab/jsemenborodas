@@ -32,11 +32,11 @@ export function NavMenu() {
     const mockData = localStorage.getItem('navMenu');
 
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
-    if (mockData === null) {
+    if (mockData === null && data) {
         localStorage.setItem('navMenu', JSON.stringify(filteredData));
     }
     let resultData;
-    if (mockData) {
+    if (mockData && data) {
         resultData = JSON.parse(mockData);
     }
     if (isError) {

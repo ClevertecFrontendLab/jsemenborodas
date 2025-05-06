@@ -6,7 +6,7 @@ import { apiSlice } from '~/query/create-api.ts';
 
 import { recipe, recipeRequest } from '../types/types';
 
-interface RecipeArguments {
+export interface RecipeArguments {
     page?: number;
     limit?: number;
     allergens?: string[];
@@ -38,7 +38,7 @@ export const recipeApiSlice = apiSlice
                     if (data.meat !== undefined) params.meat = data.meat;
                     if (data.garnish !== undefined) params.garnish = data.garnish;
                     if (data.subcategoriesIds !== undefined)
-                        params.subcategoriesIds = data.subcategoriesIds;
+                        params.subcategoriesIds = data.subcategoriesIds.join(',');
                     if (data.sortBy !== undefined) params.sortBy = data.sortBy;
                     if (data.sortOrder !== undefined) params.sortOrder = data.sortOrder;
                     if (data.id !== undefined) {

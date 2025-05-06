@@ -1,11 +1,12 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { ContentRecipe } from '~/components/widgets/contentRecipe/contentRecipe';
 import { ContentRecipeDefault } from '~/components/widgets/contentRecipe/contentRecipeDefault';
-import { Filter } from '~/components/widgets/Filter/Filter';
 import { Tabs } from '~/components/widgets/tabs/Tabs';
 import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
+import { useAppSelector } from '~/store/hooks';
+import { selectIsSearchStarted, selectIsSearchSuccessful } from '~/store/reducers/search';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
@@ -15,9 +16,6 @@ import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 interface PageMenuProps {
     isBurgerOpen: boolean;
     isFilterHidden: boolean;
-    setIsFilterHidden: (value: boolean) => void;
-    selectedFilterCategory: { id: number; title: string; name: string }[];
-    setSelectedFilterCategory: (value: { id: number; title: string; name: string }[]) => void;
 }
 
 const scrollController = {
@@ -29,46 +27,22 @@ const scrollController = {
     },
 };
 
-export function VeganKitchenPage({
-    isBurgerOpen,
-    isFilterHidden,
-    setIsFilterHidden,
-    selectedFilterCategory,
-    setSelectedFilterCategory,
-}: PageMenuProps) {
+export function VeganKitchenPage({ isBurgerOpen, isFilterHidden }: PageMenuProps) {
+    const isSearchStarted = useAppSelector(selectIsSearchStarted);
+    const isSearchSuccessful = useAppSelector(selectIsSearchSuccessful);
     useEffect(() => {
         if (isBurgerOpen || isFilterHidden === false) {
             scrollController.disabledScroll();
         } else {
             scrollController.enabledScroll();
         }
-    });
-    const [isSearchStarted, setIsSearchStarted] = useState(false);
-    const [searchValue, setSearchValue] = useState('');
-    const [customAllergen, setCustomAllergen] = useState<string[]>([]);
-    const [selectedItems, setSelectedItems] = useState<string[]>([]);
-    const [isDisabled, setIsDisabled] = useState(true);
-    const [_selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
-    const [_selectedSideDishTypes, setSelectedSideDishTypes] = useState<string[]>([]);
-    const [_selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
-    const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
-    const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
-    const [isSuccessful, setIsSuccessful] = useState(false);
+    }, [isBurgerOpen, isFilterHidden]);
     return (
         <>
             <Box as='section'>
-                <Filter
-                    isFilterHidden={isFilterHidden}
-                    isCategoryMenuOpen={isCategoryMenuOpen}
-                    isAuthorMenuOpen={isAuthorMenuOpen}
-                    setIsFilterHidden={setIsFilterHidden}
-                    setSelectedMeatTypes={setSelectedMeatTypes}
-                    setSelectedSideDishTypes={setSelectedSideDishTypes}
-                    setSelectedFilterCategory={setSelectedFilterCategory}
-                    setSelectedFilterAuthor={setSelectedFilterAuthor}
-                    setIsCategoryMenuOpen={setIsCategoryMenuOpen}
-                    setIsAuthorMenuOpen={setIsAuthorMenuOpen}
-                ></Filter>
+                {/* <Filter
+
+                ></Filter> */}
             </Box>
             <Box
                 as='article'
@@ -113,21 +87,7 @@ export function VeganKitchenPage({
                                         px={{ base: '16px', md: '20px', xl: '0px' }}
                                         pt={{ md: '2px', xl: '0px' }}
                                     >
-                                        <SearchForm2
-                                            setIsSearchStarted={setIsSearchStarted}
-                                            searchValue={searchValue}
-                                            setSearchValue={setSearchValue}
-                                            selectedItems={selectedItems}
-                                            setSelectedItems={setSelectedItems}
-                                            customAllergen={customAllergen}
-                                            setCustomAllergen={setCustomAllergen}
-                                            isDisabled={isDisabled}
-                                            setIsDisabled={setIsDisabled}
-                                            isFilterHidden={isFilterHidden}
-                                            setIsFilterHidden={setIsFilterHidden}
-                                            selectedFilterCategory={selectedFilterCategory}
-                                            isSuccessful={isSuccessful}
-                                        ></SearchForm2>
+                                        <SearchForm2></SearchForm2>
                                     </Box>
 
                                     <Box
@@ -135,7 +95,11 @@ export function VeganKitchenPage({
                                         maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
                                         h={{ base: '30px' }}
                                         mb='64px'
-                                        display={isSearchStarted === true ? { base: 'none' } : '""'}
+                                        display={
+                                            isSearchStarted && isSearchSuccessful === true
+                                                ? { base: 'none' }
+                                                : '""'
+                                        }
                                     >
                                         <Tabs></Tabs>
                                     </Box>
@@ -147,20 +111,21 @@ export function VeganKitchenPage({
                                         mt={{ base: '24px', md: '25px', xl: '30px', '2xl': '24px' }}
                                         pr={{ base: '16px', md: '18px', xl: 0 }}
                                         display={
-                                            isSearchStarted === true ? { base: 'none' } : 'flex'
+                                            isSearchStarted && isSearchSuccessful === true
+                                                ? { base: 'none' }
+                                                : 'flex'
                                         }
                                     >
-                                        <ContentRecipeDefault
-                                            selectedItems={selectedItems}
-                                            customAllergen={customAllergen}
-                                            isDisabled={isDisabled}
-                                            isSearchStarted={isSearchStarted}
-                                        ></ContentRecipeDefault>
+                                        <ContentRecipeDefault></ContentRecipeDefault>
                                     </Box>
                                     <Box
                                         pl={{ base: '16px', xl: 0 }}
                                         pr={{ base: '16px', xl: '0' }}
-                                        display={isSearchStarted === true ? { base: 'none' } : '""'}
+                                        display={
+                                            isSearchStarted && isSearchSuccessful === true
+                                                ? { base: 'none' }
+                                                : '""'
+                                        }
                                     >
                                         <VeganKitchen></VeganKitchen>
                                     </Box>
@@ -169,17 +134,14 @@ export function VeganKitchenPage({
                                         maxW={{ xl: '1360px' }}
                                         overflow={{ base: 'hidden', xl: 'visible' }}
                                         px={{ base: '16px', md: '0', '2xl': '2px' }}
-                                        display={isSearchStarted === true ? { base: '""' } : 'none'}
+                                        display={
+                                            isSearchStarted && isSearchSuccessful === true
+                                                ? { base: '""' }
+                                                : 'none'
+                                        }
                                         mt={{ base: '24px', xl: '48px' }}
                                     >
-                                        <ContentRecipe
-                                            searchValue={searchValue}
-                                            selectedItems={selectedItems}
-                                            customAllergen={customAllergen}
-                                            isDisabled={isDisabled}
-                                            isSearchStarted={isSearchStarted}
-                                            setIsSuccessful={setIsSuccessful}
-                                        ></ContentRecipe>
+                                        <ContentRecipe></ContentRecipe>
                                     </Box>
                                 </Box>
                                 <Box
