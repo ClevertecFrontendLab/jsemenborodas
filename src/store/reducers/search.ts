@@ -14,6 +14,10 @@ export interface SearchState {
     isSearchSuccessful?: boolean;
     isLoading?: boolean;
     isError?: boolean;
+    authors?: string[];
+    categories?: string[];
+    isEliminateAllergensActivated?: boolean;
+    allFilters?: string[];
 }
 
 const initialState: SearchState = {
@@ -30,6 +34,10 @@ const initialState: SearchState = {
     isSearchSuccessful: true,
     isLoading: false,
     isError: false,
+    authors: [],
+    categories: [],
+    isEliminateAllergensActivated: false,
+    allFilters: [],
 };
 
 export const searchSlice = createSlice({
@@ -57,6 +65,9 @@ export const searchSlice = createSlice({
         setSubcategoriesIds(state, { payload }: PayloadAction<string[]>) {
             state.subcategoriesIds = payload;
         },
+        setAuthors(state, { payload }: PayloadAction<string[]>) {
+            state.authors = payload;
+        },
         setSortBy(state, { payload }: PayloadAction<string>) {
             state.sortBy = payload;
         },
@@ -76,6 +87,15 @@ export const searchSlice = createSlice({
         },
         setIsError(state, { payload }: PayloadAction<boolean>) {
             state.isError = payload;
+        },
+        setIsEliminatAllergensActivated(state) {
+            state.isEliminateAllergensActivated = !state.isEliminateAllergensActivated;
+        },
+        setCategories(state, { payload }: PayloadAction<string[]>) {
+            state.categories = payload;
+        },
+        setAllFilters(state, { payload }: PayloadAction<string[]>) {
+            state.allFilters = payload;
         },
         addAllergen(state, { payload }: PayloadAction<string>) {
             if (!state.allergens) {
@@ -101,6 +121,24 @@ export const searchSlice = createSlice({
             }
             state.subcategoriesIds.push(payload);
         },
+        addAuthor(state, { payload }: PayloadAction<string>) {
+            if (!state.authors) {
+                state.authors = [];
+            }
+            state.authors.push(payload);
+        },
+        addCategory(state, { payload }: PayloadAction<string>) {
+            if (!state.categories) {
+                state.categories = [];
+            }
+            state.categories.push(payload);
+        },
+        addFilter(state, { payload }: PayloadAction<string>) {
+            if (!state.allFilters) {
+                state.allFilters = [];
+            }
+            state.allFilters.push(payload);
+        },
 
         removeAllergen(state, { payload }: PayloadAction<string>) {
             if (state.allergens) {
@@ -122,7 +160,21 @@ export const searchSlice = createSlice({
                 state.subcategoriesIds = state.subcategoriesIds.filter((item) => item !== payload);
             }
         },
-
+        removeAuthors(state, { payload }: PayloadAction<string>) {
+            if (state.authors) {
+                state.authors = state.authors.filter((item) => item !== payload);
+            }
+        },
+        removeCategory(state, { payload }: PayloadAction<string>) {
+            if (state.categories) {
+                state.categories = state.categories.filter((item) => item !== payload);
+            }
+        },
+        removeFilter(state, { payload }: PayloadAction<string>) {
+            if (state.allFilters) {
+                state.allFilters = state.allFilters.filter((item) => item !== payload);
+            }
+        },
         resetSearchState(state) {
             Object.assign(state, initialState);
         },
@@ -146,6 +198,11 @@ export const selectIsSearchSuccessful = (state: { search: SearchState }) =>
     state.search.isSearchSuccessful;
 export const selectIsLoading = (state: { search: SearchState }) => state.search.isLoading;
 export const selectIsError = (state: { search: SearchState }) => state.search.isError;
+export const selectAuthors = (state: { search: SearchState }) => state.search.authors;
+export const selectCategories = (state: { search: SearchState }) => state.search.categories;
+export const selectAllFilters = (state: { search: SearchState }) => state.search.allFilters;
+export const selectEliminateAllergens = (state: { search: SearchState }) =>
+    state.search.isEliminateAllergensActivated;
 export const {
     setPage,
     setLimit,
@@ -169,6 +226,16 @@ export const {
     removeGarnish,
     removeSubcategoryId,
     resetSearchState,
+    setAuthors,
+    addAuthor,
+    removeAuthors,
+    setCategories,
+    addCategory,
+    removeCategory,
+    setIsEliminatAllergensActivated,
+    addFilter,
+    removeFilter,
+    setAllFilters,
 } = searchSlice.actions;
 
 export default searchSlice.reducer;

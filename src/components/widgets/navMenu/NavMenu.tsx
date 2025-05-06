@@ -163,7 +163,6 @@ export function NavMenu() {
                                             {item.subCategories.map((child) => (
                                                 <Box
                                                     _hover={{ cursor: 'pointer' }}
-                                                    key={child.id}
                                                     w='230px'
                                                     h='36px'
                                                     textAlign='left'

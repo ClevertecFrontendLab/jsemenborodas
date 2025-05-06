@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes as RouterRoutes, useLocation } from 'react-router';
 
-import { useAppDispatch } from '~/store/hooks';
-import { resetSearchState } from '~/store/reducers/search';
-
 import { DefaultPage } from '../Pages/defaultPage/DefaultPage';
 import { ErrorPage } from '../Pages/errorPage/ErrorPage';
 import { JuciestPage } from '../Pages/juciest/JuciestPage';
@@ -20,15 +17,13 @@ interface RoutesMenuProps {
 
 export function AppRoutes({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: RoutesMenuProps) {
     const location = useLocation();
-    const dispatch = useAppDispatch();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const [selectedFilterCategory, setSelectedFilterCategory] = useState<
         { id: number; title: string; name: string }[]
     >([]);
     useEffect(() => {
         window.scrollTo(0, 0);
-        dispatch(resetSearchState());
-    }, [pathSegments, dispatch]);
+    }, [pathSegments]);
     return (
         <>
             <AlertNote></AlertNote>

@@ -25,15 +25,18 @@ import { searchFormFiltersData } from '~/components/entities/Data/searchFormFilt
 import { Plus } from '~/icons/Icon';
 import { Filter, Search } from '~/icons/SearchInputIcon';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { setIsFilterOpen } from '~/store/reducers/open';
 import {
     addAllergen,
     removeAllergen,
     selectAllergens,
+    selectEliminateAllergens,
     selectIsError,
     selectIsLoading,
     selectIsSearchStarted,
     selectIsSearchSuccessful,
     setAllergens,
+    setIsEliminatAllergensActivated,
     setIsError,
     setIsSearchStarted,
     setSearchString,
@@ -53,7 +56,6 @@ export function SearchForm2() {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const firstSegment = pathSegments[0];
     const title = Name[firstSegment] || 'Приятного аппетита!';
-    const [isSwitchActivated, setIsSwitchActivated] = useState<boolean>(false);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [localAllergens, setLocalAllergens] = useState<string[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -63,7 +65,11 @@ export function SearchForm2() {
     const isSuccessful = useAppSelector(selectIsSearchSuccessful);
     const isLoading = useAppSelector(selectIsLoading);
     const isErrorSearch = useAppSelector(selectIsError);
+    const isEliminateAllergensOn = useAppSelector(selectEliminateAllergens);
 
+    const handleEliminate = () => {
+        dispatch(setIsEliminatAllergensActivated());
+    };
     const handleAllergens = (allergen: string) => {
         if (allergen === 'Томат (помидор)') {
             allergen = 'Томат';
@@ -76,6 +82,11 @@ export function SearchForm2() {
             dispatch(addAllergen(allergen));
             handleSearch();
         }
+    };
+
+    const handleFilter = () => {
+        dispatch(setIsFilterOpen());
+        dispatch(setIsSearchStarted(false));
     };
 
     const handleSearch = () => {
@@ -95,7 +106,7 @@ export function SearchForm2() {
     };
 
     const handleSwitch = () => {
-        if (isSwitchActivated) {
+        if (isEliminateAllergensOn) {
             setLocalAllergens(allergens ? allergens : []);
             dispatch(setAllergens([]));
             console.log('allergen placed:');
@@ -235,7 +246,7 @@ export function SearchForm2() {
                                     size={{ base: 'sm' }}
                                     h={{ base: '32px', xl: '48px' }}
                                     w={{ base: '32px', xl: '48px' }}
-                                    // onClick={handleFilterChange}
+                                    onClick={handleFilter}
                                     // data-test-id={isFilterHidden ? 'filter-button' : ''}
                                 >
                                     <Icon
@@ -311,9 +322,9 @@ export function SearchForm2() {
                                             </Text>
                                             <Switch
                                                 pt={{ xl: '6px' }}
-                                                isChecked={isSwitchActivated}
+                                                isChecked={isEliminateAllergensOn}
                                                 onChange={() => {
-                                                    setIsSwitchActivated(!isSwitchActivated);
+                                                    handleEliminate();
                                                     handleSwitch();
                                                 }}
                                                 // onChange={handleSelect}
@@ -331,7 +342,7 @@ export function SearchForm2() {
                                                 color='#000000A3'
                                                 w='269px'
                                                 h={
-                                                    isSwitchActivated && allergens?.length
+                                                    isEliminateAllergensOn && allergens?.length
                                                         ? 'auto'
                                                         : '40px'
                                                 }
@@ -340,7 +351,7 @@ export function SearchForm2() {
                                                 fontFamily='Inter'
                                                 fontSize='16px'
                                                 lineHeight='24px'
-                                                disabled={!isSwitchActivated}
+                                                disabled={!isEliminateAllergensOn}
                                                 data-test-id='allergens-menu-button'
                                             >
                                                 <HStack
@@ -350,7 +361,7 @@ export function SearchForm2() {
                                                     position='relative'
                                                     pr='64px'
                                                     h={
-                                                        isSwitchActivated && allergens?.length
+                                                        isEliminateAllergensOn && allergens?.length
                                                             ? 'auto'
                                                             : '40px'
                                                     }
@@ -358,7 +369,7 @@ export function SearchForm2() {
                                                     {' '}
                                                     {allergens &&
                                                     allergens.length > 0 &&
-                                                    isSwitchActivated ? (
+                                                    isEliminateAllergensOn ? (
                                                         allergens.map((item) => (
                                                             <Box
                                                                 lineHeight='16px'
@@ -407,9 +418,6 @@ export function SearchForm2() {
                                                                     ? '#0000000F'
                                                                     : '#FFFFFF'
                                                             }
-                                                            onChange={() =>
-                                                                handleAllergens(item.title)
-                                                            }
                                                         >
                                                             <Checkbox
                                                                 w='100%'
@@ -423,6 +431,9 @@ export function SearchForm2() {
                                                                     )
                                                                         ? true
                                                                         : false
+                                                                }
+                                                                onChange={() =>
+                                                                    handleAllergens(item.title)
                                                                 }
                                                             >
                                                                 <Text

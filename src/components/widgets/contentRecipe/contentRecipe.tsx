@@ -23,13 +23,13 @@ import { setAppError } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
     selectAllergens,
+    selectCategories,
     selectGarnish,
     selectIsSearchStarted,
     selectMeat,
     selectSearchString,
     selectSortBy,
     selectSortOrder,
-    selectSubcategoriesIds,
     setIsError,
     setIsLoading,
     setIsSearchStarted,
@@ -48,7 +48,7 @@ export function ContentRecipe() {
     const searchString = useAppSelector(selectSearchString);
     const meat = useAppSelector(selectMeat);
     const garnish = useAppSelector(selectGarnish);
-    const subcategoriesIds = useAppSelector(selectSubcategoriesIds);
+    const categories = useAppSelector(selectCategories);
     const sortBy = useAppSelector(selectSortBy);
     const sortOrder = useAppSelector(selectSortOrder);
     const isSearchStarted = useAppSelector(selectIsSearchStarted);
@@ -56,6 +56,17 @@ export function ContentRecipe() {
     const catId = catData?.filter(
         (cat) => cat.category === pathSegments[0] && cat.subCategories !== undefined,
     );
+    const catTotal =
+        categories &&
+        (
+            categories?.map((item) =>
+                catData?.filter((cat) => cat.title === item && cat.subCategories !== undefined),
+            ) ?? []
+        ).flat();
+    const subCatIds: string[] | undefined = catTotal
+        ?.map((cat) => cat?.subCategories?.map((sub) => sub._id) ?? [])
+        .flat()
+        .filter(Boolean) as string[];
     const queryParams = (): RecipeArguments => {
         const params: RecipeArguments = {};
 
@@ -63,8 +74,10 @@ export function ContentRecipe() {
         if (searchString) params.searchString = searchString;
         if (meat?.length) params.meat = meat;
         if (garnish?.length) params.garnish = garnish;
-        if (subcategoriesIds?.length && pathSegments[0] === undefined) {
-            params.subcategoriesIds = subcategoriesIds;
+        if (pathSegments[0] === undefined) {
+            params.subcategoriesIds = subCatIds;
+            console.log(subCatIds);
+            console.log(params.subcategoriesIds);
         } else {
             params.subcategoriesIds = catId
                 ? catId?.[0]?.subCategories.map((sub) => sub._id)
@@ -86,7 +99,6 @@ export function ContentRecipe() {
     } else {
         dispatch(setIsLoading(false));
     }
-    console.log(data);
 
     useEffect(() => {
         if (data && data?.data && data?.data?.length) {

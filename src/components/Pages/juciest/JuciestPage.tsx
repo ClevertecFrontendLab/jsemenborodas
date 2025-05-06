@@ -2,9 +2,11 @@ import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
 import { ContentRecipe } from '~/components/widgets/contentRecipe/contentRecipe';
+import { Filter } from '~/components/widgets/Filter/Filter';
 import { JuciestOnJuciest } from '~/components/widgets/juciest/JuciestOnJuciest';
 import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
 import { useAppSelector } from '~/store/hooks';
+import { selectorIsFilterOpen } from '~/store/reducers/open';
 import { selectIsSearchStarted, selectIsSearchSuccessful } from '~/store/reducers/search';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
@@ -29,19 +31,22 @@ const scrollController = {
 export function JuciestPage({ isBurgerOpen, isFilterHidden }: PageMenuProps) {
     const isSearchStarted = useAppSelector(selectIsSearchStarted);
     const isSearchSuccessful = useAppSelector(selectIsSearchSuccessful);
+    const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     useEffect(() => {
-        if (isBurgerOpen || isFilterHidden === false) {
+        if (isBurgerOpen || isFilterOpen) {
             scrollController.disabledScroll();
         } else {
             scrollController.enabledScroll();
         }
-    }, [isBurgerOpen, isFilterHidden]);
+    }, [isBurgerOpen, isFilterOpen]);
+
     return (
         <>
-            <Box as='section'>
-                {/* <Filter
-                ></Filter> */}
-            </Box>
+            {isFilterOpen && (
+                <Box as='section'>
+                    <Filter></Filter>
+                </Box>
+            )}
             <Box
                 as='article'
                 w='100%'
