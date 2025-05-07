@@ -76,8 +76,6 @@ export function ContentRecipe() {
         if (garnish?.length) params.garnish = garnish;
         if (pathSegments[0] === undefined) {
             params.subcategoriesIds = subCatIds;
-            console.log(subCatIds);
-            console.log(params.subcategoriesIds);
         } else {
             params.subcategoriesIds = catId
                 ? catId?.[0]?.subCategories.map((sub) => sub._id)
@@ -103,10 +101,8 @@ export function ContentRecipe() {
     useEffect(() => {
         if (data && data?.data && data?.data?.length) {
             dispatch(setIsSearchSuccessful(true));
-            console.log('1');
         } else {
             dispatch(setIsSearchSuccessful(false));
-            console.log('2');
         }
     }, [data, dispatch]);
     if (isError) {
@@ -141,6 +137,7 @@ export function ContentRecipe() {
                                     borderRadius='8px'
                                     overflow='hidden'
                                     minW={{ xl: '880px', '2xl': '0' }}
+                                    data-test-id={isSearchStarted ? 'food-card' : ''}
                                 >
                                     <CardBody p={0} maxH={{ xl: '244px' }} w='100%' maxW='100%'>
                                         <HStack h='100%' maxW='100%'>

@@ -77,7 +77,7 @@ export function Tabs() {
                                 currentCategory?.subCategories?.map(
                                     (item: SubCategory, index: number) => (
                                         <Tab
-                                            data-test-id={`tab-${pathSegments[0] === 'snacks' ? pathSegments[0] : item?.category}-${index}`}
+                                            data-test-id={`tab-${pathSegments[0] === 'snacks' ? pathSegments[1] : item?.category}-${index}`}
                                             onClick={() => {
                                                 const path = `/${pathSegments[0]}/${item?.category}`;
                                                 navigate(path);

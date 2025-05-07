@@ -17,7 +17,7 @@ import { useLocation } from 'react-router';
 
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
-import { useGetRecipesQuery } from '~/query/services/recipes';
+import { useGetRecipeByCategoryQuery } from '~/query/services/recipesnew';
 import { Category, recipe, SubCategory } from '~/query/types/types';
 import { setAppError } from '~/store/app-slice';
 import { useAppDispatch } from '~/store/hooks';
@@ -58,9 +58,14 @@ export function VeganKitchen() {
             );
         }
     }, [randomCategory]);
-    const { data: recipesOfRandomSubCategory, isLoading: _isRecipesLoading } = useGetRecipesQuery(
+    const {
+        data: recipesOfRandomSubCategory,
+        isLoading: _isRecipesLoading,
+        isError: isRecipeError,
+    } = useGetRecipeByCategoryQuery(
         {
-            subcategoriesIds: randomSubCategory?._id ? [randomSubCategory?._id] : [],
+            _id: randomSubCategory?._id ? randomSubCategory?._id : '',
+            limit: 5,
         },
         { skip: !randomSubCategory },
     );
@@ -69,7 +74,7 @@ export function VeganKitchen() {
             setFiveRecipes(recipesOfRandomSubCategory?.data.slice(0, 5));
         }
     }, [recipesOfRandomSubCategory]);
-    if (isCategoryError) {
+    if (isCategoryError || isRecipeError) {
         dispatch(setAppError('Error'));
         localStorage.setItem('Error', 'Error');
         return null;
@@ -83,7 +88,7 @@ export function VeganKitchen() {
                         w='100%'
                         mt={{ base: '40px', md: '39px', xl: '62px', '3xl': '60px' }}
                         h={{ xl: '308px' }}
-                        mb={{ base: '100px', xl: 0 }}
+                        mb={{ base: '100px' }}
                     >
                         <Grid>
                             <GridItem>

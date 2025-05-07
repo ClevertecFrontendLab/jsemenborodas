@@ -30,7 +30,7 @@ export const recipeApiSlice = apiSlice
             getRecipes: builder.query<RecipeResponce, RecipeArguments>({
                 query: (data = {}) => {
                     const params: Record<string, string | number | string[] | undefined> = {};
-                    let url: string = ApiEndpoints.RECIPES;
+                    let url: string = ApiEndpoints.TEST;
                     if (data.page !== undefined) params.page = data.page;
                     if (data.limit !== undefined) params.limit = data.limit;
                     if (data.allergens !== undefined) params.allergens = data.allergens;

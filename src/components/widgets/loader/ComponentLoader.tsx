@@ -9,6 +9,7 @@ export function ComponentLoader() {
             <Center zIndex={999999} position='relative'>
                 {' '}
                 <Box
+                    data-test-id='loader-search-block'
                     minW={sizes}
                     maxW={sizes}
                     w={sizes}

@@ -25,7 +25,14 @@ import { searchFormFiltersData } from '~/components/entities/Data/searchFormFilt
 import { Plus } from '~/icons/Icon';
 import { Filter, Search } from '~/icons/SearchInputIcon';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { setIsFilterOpen } from '~/store/reducers/open';
+import {
+    selectAllergensOnFilter,
+    selectAuthorsOnFilter,
+    selectCategoriesOnFilter,
+    selectGarnishOnFilter,
+    selectMeatOnFilter,
+} from '~/store/reducers/filter';
+import { selectorIsFilterOpen, setIsFilterOpen } from '~/store/reducers/open';
 import {
     addAllergen,
     removeAllergen,
@@ -36,6 +43,7 @@ import {
     selectIsSearchStarted,
     selectIsSearchSuccessful,
     setAllergens,
+    setCategories,
     setIsEliminatAllergensActivated,
     setIsError,
     setIsSearchStarted,
@@ -58,6 +66,7 @@ export function SearchForm2() {
     const title = Name[firstSegment] || 'Приятного аппетита!';
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [localAllergens, setLocalAllergens] = useState<string[]>([]);
+    const [searchInput, setSearchInput] = useState<string>('');
     const inputRef = useRef<HTMLInputElement>(null);
     const searchRef = useRef<HTMLInputElement>(null);
     const allergens = useAppSelector(selectAllergens);
@@ -66,7 +75,12 @@ export function SearchForm2() {
     const isLoading = useAppSelector(selectIsLoading);
     const isErrorSearch = useAppSelector(selectIsError);
     const isEliminateAllergensOn = useAppSelector(selectEliminateAllergens);
-
+    const isFilterOpen = useAppSelector(selectorIsFilterOpen);
+    const categories = useAppSelector(selectCategoriesOnFilter);
+    const authors = useAppSelector(selectAuthorsOnFilter);
+    const meat = useAppSelector(selectMeatOnFilter);
+    const garnish = useAppSelector(selectGarnishOnFilter);
+    const allergensOnFilter = useAppSelector(selectAllergensOnFilter);
     const handleEliminate = () => {
         dispatch(setIsEliminatAllergensActivated());
     };
@@ -80,19 +94,23 @@ export function SearchForm2() {
             dispatch(removeAllergen(allergen));
         } else {
             dispatch(addAllergen(allergen));
-            handleSearch();
         }
     };
 
     const handleFilter = () => {
         dispatch(setIsFilterOpen());
-        dispatch(setIsSearchStarted(false));
     };
 
     const handleSearch = () => {
-        if (searchRef.current && searchRef?.current?.value?.length >= 2) {
+        if ((searchRef.current && searchRef?.current?.value?.length >= 2) || allergens?.length) {
             dispatch(setSearchString(searchRef?.current?.value));
             dispatch(setIsSearchStarted(true));
+            console.log(categories);
+            categories?.length ? setCategories(categories) : '';
+            authors?.length ? setCategories(authors) : '';
+            meat?.length ? setCategories(meat) : '';
+            garnish?.length ? setCategories(garnish) : '';
+            allergensOnFilter?.length ? setCategories(allergensOnFilter) : '';
         } else {
             dispatch(setIsSearchStarted(false));
             dispatch(setSearchString(''));
@@ -247,7 +265,7 @@ export function SearchForm2() {
                                     h={{ base: '32px', xl: '48px' }}
                                     w={{ base: '32px', xl: '48px' }}
                                     onClick={handleFilter}
-                                    // data-test-id={isFilterHidden ? 'filter-button' : ''}
+                                    data-test-id={!isFilterOpen ? 'filter-button' : ''}
                                 >
                                     <Icon
                                         as={Filter}
@@ -266,6 +284,8 @@ export function SearchForm2() {
                                     <Input
                                         ref={searchRef}
                                         onKeyDown={handleKeyDown}
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                        value={searchInput}
                                         borderColor={
                                             isSearchStarted
                                                 ? isSuccessful
@@ -295,7 +315,14 @@ export function SearchForm2() {
                                         onClick={() => handleSearch()}
                                         w={{ base: '32px', xl: '48px' }}
                                         h={{ base: '32px', xl: '48px' }}
-                                        // pointerEvents={inputValue.length >= 3 ? '' : 'none'}
+                                        pointerEvents={
+                                            allergens && allergens.length
+                                                ? 'auto'
+                                                : searchInput.length > 2
+                                                  ? 'auto'
+                                                  : 'none'
+                                        }
+                                        // pointerEvents={searchRef.current && searchRef.current.value.length >= 2 ? '' : 'none'}
                                     >
                                         <Icon
                                             as={Search}
@@ -432,9 +459,12 @@ export function SearchForm2() {
                                                                         ? true
                                                                         : false
                                                                 }
-                                                                onChange={() =>
-                                                                    handleAllergens(item.title)
-                                                                }
+                                                                onChange={() => {
+                                                                    handleAllergens(item.title);
+                                                                    setTimeout(() => {
+                                                                        inputRef.current?.focus();
+                                                                    }, 300);
+                                                                }}
                                                             >
                                                                 <Text
                                                                     data-test-id={`allergen-${index}`}
@@ -449,11 +479,11 @@ export function SearchForm2() {
                                                             my='8px'
                                                             autoFocus={true}
                                                             w='205px'
-                                                            // data-test-id={
-                                                            //     isFilterHidden
-                                                            //         ? 'add-other-allergen'
-                                                            //         : ''
-                                                            // }
+                                                            data-test-id={
+                                                                !isFilterOpen
+                                                                    ? 'add-other-allergen'
+                                                                    : ''
+                                                            }
                                                             ref={inputRef}
                                                             onKeyDown={(e) => {
                                                                 if (
@@ -483,11 +513,11 @@ export function SearchForm2() {
                                                                     );
                                                                 }
                                                             }}
-                                                            // data-test-id={
-                                                            //     isFilterHidden
-                                                            //         ? 'add-allergen-button'
-                                                            //         : ''
-                                                            // }
+                                                            data-test-id={
+                                                                !isFilterOpen
+                                                                    ? 'add-allergen-button'
+                                                                    : ''
+                                                            }
                                                         >
                                                             <Icon as={Plus}></Icon>
                                                         </Button>

@@ -42,7 +42,7 @@ export function CurrentRecipe() {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const recipeId = pathSegments[pathSegments.length - 1];
 
-    const [inputValue, setInputValue] = useState(4);
+    const [inputValue, setInputValue] = useState(3);
 
     const handleChange = (valueString: string) => {
         const valueNumber = parseInt(valueString, 10);
@@ -673,21 +673,24 @@ export function CurrentRecipe() {
                                                                 lineHeight='20px'
                                                                 data-test-id={`ingredient-quantity-${index}`}
                                                             >
-                                                                {Number.isInteger(
-                                                                    Number(ingridient.count) *
-                                                                        inputValue,
-                                                                )
-                                                                    ? Number(ingridient.count) *
-                                                                      inputValue
-                                                                    : !Number.isFinite(
-                                                                            ingridient.count,
-                                                                        )
-                                                                      ? ingridient.count.toString()
-                                                                      : (
-                                                                            Number(
-                                                                                ingridient.count,
-                                                                            ) * inputValue
-                                                                        ).toFixed(2)}
+                                                                {typeof ingridient.count ===
+                                                                    'string' &&
+                                                                isNaN(+ingridient.count)
+                                                                    ? ingridient.count
+                                                                    : (() => {
+                                                                          const count =
+                                                                              +ingridient.count;
+                                                                          const portions =
+                                                                              +data?.portions || 1;
+                                                                          const value =
+                                                                              (count / portions) *
+                                                                              inputValue;
+                                                                          return Number.isInteger(
+                                                                              value,
+                                                                          )
+                                                                              ? value
+                                                                              : value.toFixed(2);
+                                                                      })()}
                                                             </Text>
                                                             <Text
                                                                 fontFamily='Inter'

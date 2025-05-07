@@ -19,6 +19,7 @@ export function Loader() {
                 right={0}
                 bottom={0}
                 left={0}
+                data-test-id='app-loader'
             >
                 <AbsoluteCenter zIndex={999999}>
                     <Box

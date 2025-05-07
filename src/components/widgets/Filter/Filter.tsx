@@ -22,31 +22,38 @@ import { searchFormFiltersData } from '~/components/entities/Data/searchFormFilt
 import { ExitFilter, Plus } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { setIsFilterOpen } from '~/store/reducers/open';
 import {
-    addAllergen,
-    addAuthor,
-    addCategory,
-    addFilter,
-    addGarnish,
-    addMeat,
-    removeAllergen,
-    removeAuthors,
-    removeCategory,
-    removeFilter,
-    removeGarnish,
-    removeMeat,
-    resetSearchState,
-    selectAllergens,
-    selectAllFilters,
-    selectAuthors,
-    selectCategories,
+    addAllergenOnFilter,
+    addAuthorOnFilter,
+    addCategoryOnFilter,
+    addFilterOnFilter,
+    addGarnishOnFilter,
+    addMeatOnFilter,
+    removeAllergenOnFilter,
+    removeAuthorsOnFilter,
+    removeCategoryOnFilter,
+    removeFilterOnFilter,
+    removeGarnishOnFilter,
+    removeMeatOnFilter,
+    resetSearchStateOnFilter,
+    selectAllergensOnFilter,
+    selectAllFiltersOnFilter,
+    selectAuthorsOnFilter,
+    selectCategoriesOnFilter,
+    selectGarnishOnFilter,
+    selectMeatOnFilter,
+    setAllergensOnFilter,
+} from '~/store/reducers/filter';
+import { selectorIsFilterOpen, setIsFilterOpen } from '~/store/reducers/open';
+import {
     selectEliminateAllergens,
-    selectGarnish,
-    selectMeat,
     setAllergens,
+    setAuthors,
+    setCategories,
+    setGarnish,
     setIsEliminatAllergensActivated,
     setIsSearchStarted,
+    setMeat,
 } from '~/store/reducers/search';
 
 import { authorMockData } from './assets/authorMockData';
@@ -56,18 +63,20 @@ import { meatMockData } from './assets/meatMockData';
 export function Filter() {
     const dispatch = useAppDispatch();
 
-    const categories = useAppSelector(selectCategories);
-    const authors = useAppSelector(selectAuthors);
-    const meat = useAppSelector(selectMeat);
-    const garnish = useAppSelector(selectGarnish);
-    const allergens = useAppSelector(selectAllergens);
+    const categories = useAppSelector(selectCategoriesOnFilter);
+    const authors = useAppSelector(selectAuthorsOnFilter);
+    const meat = useAppSelector(selectMeatOnFilter);
+    const garnish = useAppSelector(selectGarnishOnFilter);
+    const allergens = useAppSelector(selectAllergensOnFilter);
     const isEliminateAllergensOn = useAppSelector(selectEliminateAllergens);
-    const allFilters = useAppSelector(selectAllFilters);
+    const allFilters = useAppSelector(selectAllFiltersOnFilter);
+    const isFilterOpen = useAppSelector(selectorIsFilterOpen);
 
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState<boolean>(false);
     const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState<boolean>(false);
     const [isAllergenMenuOpen, setIsAllergenMenuOpen] = useState<boolean>(false);
     const [localAllergens, setLocalAllergens] = useState<string[]>([]);
+
     // const [allFilters, setAllFilters] = useState<string[]>([]);
 
     const { data: catData } = useGetCategoriesQuery({});
@@ -76,32 +85,34 @@ export function Filter() {
 
     const handleCategories = (category: string) => {
         if (categories?.includes(category)) {
-            dispatch(removeCategory(category));
+            dispatch(removeCategoryOnFilter(category));
+            console.log(categories);
         } else {
-            dispatch(addCategory(category));
+            dispatch(addCategoryOnFilter(category));
+            console.log(categories);
         }
     };
     const handleAuthors = (author: string) => {
         if (authors?.includes(author)) {
-            dispatch(removeAuthors(author));
+            dispatch(removeAuthorsOnFilter(author));
         } else {
-            dispatch(addAuthor(author));
+            dispatch(addAuthorOnFilter(author));
         }
     };
 
     const handleMeat = (m: string) => {
         if (meat?.includes(m)) {
-            dispatch(removeMeat(m));
+            dispatch(removeMeatOnFilter(m));
         } else {
-            dispatch(addMeat(m));
+            dispatch(addMeatOnFilter(m));
         }
     };
 
     const handleGarnish = (g: string) => {
         if (garnish?.includes(g)) {
-            dispatch(removeGarnish(g));
+            dispatch(removeGarnishOnFilter(g));
         } else {
-            dispatch(addGarnish(g));
+            dispatch(addGarnishOnFilter(g));
         }
     };
 
@@ -112,19 +123,20 @@ export function Filter() {
             allergen = 'Клубника';
         }
         if (allergens?.includes(allergen)) {
-            dispatch(removeAllergen(allergen));
+            dispatch(removeAllergenOnFilter(allergen));
         } else {
-            dispatch(addAllergen(allergen));
+            dispatch(addAllergenOnFilter(allergen));
+            console.log(allergen);
         }
     };
     const handleSwitch = () => {
         if (isEliminateAllergensOn) {
             setLocalAllergens(allergens ? allergens : []);
-            dispatch(setAllergens([]));
+            dispatch(setAllergensOnFilter([]));
             console.log('allergen placed:');
             console.log(allergens);
         } else {
-            dispatch(setAllergens(localAllergens));
+            dispatch(setAllergensOnFilter(localAllergens));
             setLocalAllergens([]);
             console.log('allergenssetted:');
             console.log(allergens);
@@ -133,19 +145,25 @@ export function Filter() {
 
     const handleAllFilters = (item: string) => {
         if (allFilters?.includes(item)) {
-            dispatch(removeFilter(item));
+            dispatch(removeFilterOnFilter(item));
         } else {
-            dispatch(addFilter(item));
+            dispatch(addFilterOnFilter(item));
         }
     };
 
     const resetFilters = () => {
-        dispatch(resetSearchState());
+        dispatch(resetSearchStateOnFilter());
     };
 
     const handleFindRecipe = () => {
+        categories ? dispatch(setCategories(categories)) : '';
+        meat ? dispatch(setMeat(meat)) : '';
+        garnish ? dispatch(setGarnish(garnish)) : '';
+        authors ? dispatch(setAuthors(authors)) : '';
+        allergens ? dispatch(setAllergens(allergens)) : '';
         dispatch(setIsSearchStarted(true));
         dispatch(setIsFilterOpen());
+        resetFilters();
     };
 
     const handleEliminate = () => {
@@ -172,7 +190,7 @@ export function Filter() {
             overflow='hidden'
             w={{ base: '344px', xl: '463px' }}
             minW={0}
-            // data-test-id={isFilterHidden ? '' : 'filter-drawer'}
+            data-test-id={!isFilterOpen ? '' : 'filter-drawer'}
         >
             <Box
                 maxH='calc(100vh - 100px)'
@@ -291,11 +309,11 @@ export function Filter() {
                                                 }}
                                             >
                                                 <Text
-                                                // data-test-id={
-                                                //     item.name === 'vegan'
-                                                //         ? 'checkbox-веганская кухня'
-                                                //         : ''
-                                                // }
+                                                    data-test-id={
+                                                        item.category === 'vegan'
+                                                            ? 'checkbox-веганская кухня'
+                                                            : ''
+                                                    }
                                                 >
                                                     {item.title}
                                                 </Text>
@@ -448,9 +466,9 @@ export function Filter() {
                                     isChecked={garnish?.includes(item.title)}
                                 >
                                     <Text
-                                    // data-test-id={
-                                    //     item.name === 'potatoes' ? 'checkbox-картошка' : ''
-                                    // }
+                                        data-test-id={
+                                            item.title === 'Картошка' ? 'checkbox-картошка' : ''
+                                        }
                                     >
                                         {item.title}
                                     </Text>
@@ -494,6 +512,7 @@ export function Filter() {
                                     {allFilters && allFilters.length > 0 ? (
                                         allFilters.map((item) => (
                                             <Box
+                                                data-test-id='filter-tag'
                                                 lineHeight='16px'
                                                 fontSize='12px'
                                                 fontWeight={500}
@@ -551,7 +570,7 @@ export function Filter() {
                                         }}
                                     >
                                         <Text
-                                        // data-test-id={isFilterHidden ? '' : `allergen-${index}`}
+                                            data-test-id={!isFilterOpen ? '' : `allergen-${index}`}
                                         >
                                             {item.title}
                                         </Text>
@@ -562,7 +581,7 @@ export function Filter() {
                                 <Input
                                     my='8px'
                                     w='205px'
-                                    // data-test-id={isFilterHidden ? '' : 'add-other-allergen'}
+                                    data-test-id={!isFilterOpen ? '' : 'add-other-allergen'}
                                     ref={inputRef}
                                     onKeyDown={(e) => {
                                         if (
@@ -587,7 +606,7 @@ export function Filter() {
                                             handleAllFilters(inputRef.current.value);
                                         }
                                     }}
-                                    // data-test-id={isFilterHidden ? '' : 'add-allergen-button'}
+                                    data-test-id={!isFilterOpen ? '' : 'add-allergen-button'}
                                 >
                                     <Icon as={Plus} />
                                 </Button>
@@ -651,7 +670,7 @@ export function Filter() {
                             //     setLocalSelectedSideDishTypes([]);
                             //     setSelectedItems([]);
                             // }}
-                            // data-test-id={isFilterHidden ? '' : 'clear-filter-button'}
+                            data-test-id={!isFilterOpen ? '' : 'clear-filter-button'}
                         >
                             <Text
                                 color='#000000CC'
@@ -681,6 +700,7 @@ export function Filter() {
                             // }
                             data-test-id='find-recipe-button'
                             onClick={handleFindRecipe}
+                            isDisabled={!allFilters?.length}
                             sx={{
                                 _disabled: {
                                     bg: '#0000003D',

@@ -32,7 +32,7 @@ export function AlertNote() {
             const timer = setTimeout(() => {
                 dispatch(setAppError(null));
                 localStorage.removeItem('Error');
-            }, 5000);
+            }, 15000);
 
             return () => clearTimeout(timer);
         }
@@ -50,6 +50,7 @@ export function AlertNote() {
                 w={{ base: '328px', xl: '400px' }}
                 h={{ base: '72px' }}
                 zIndex={100000990}
+                data-test-id='error-notification'
             >
                 <AlertIcon color='white' />
                 <VStack alignItems='flex-start' spacing={0}>
@@ -81,7 +82,7 @@ export function AlertNote() {
                         localStorage.removeItem('Error');
                     }}
                 >
-                    <CloseButton color='white'></CloseButton>
+                    <CloseButton color='white' data-test-id='close-alert-button'></CloseButton>
                 </Box>
             </Alert>
         </Center>

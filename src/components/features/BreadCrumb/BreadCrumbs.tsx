@@ -25,9 +25,9 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
         { id: recipeId },
         { skip: !recipeId },
     );
-    const redirectedCategory = categories?.filter(
-        (cat) => (cat.category === displayPaths[0] && cat.subCategories !== undefined) || undefined,
-    );
+    // const redirectedCategory = categories?.filter(
+    //     (cat) => (cat.category === displayPaths[0] && cat.subCategories !== undefined) || undefined,
+    // );
 
     if (isCategoriesError) {
         dispatch(setAppError('Error'));
@@ -40,27 +40,26 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
         dispatch(setAppError('Error'));
         localStorage.setItem('Error', 'Error');
     }
-
-    if (
-        redirectedCategory &&
-        displayPaths[0] !== undefined &&
-        displayPaths[0] !== 'not-found' &&
-        displayPaths[0] !== 'the-juiciest' &&
-        !displayPaths[0].includes(redirectedCategory[0]?.category)
-    ) {
-        dispatch(setAppError('Error'));
-        localStorage.setItem('Error', 'Error');
-        navigate('/not-found');
-    }
-    if (
-        redirectedCategory &&
-        displayPaths[0]?.includes(redirectedCategory[0]?.category) &&
-        !redirectedCategory[0].subCategories.some((sub) => sub.category === displayPaths[1])
-    ) {
-        dispatch(setAppError('Error'));
-        localStorage.setItem('Error', 'Error');
-        navigate('/not-found');
-    }
+    // if (
+    //     redirectedCategory &&
+    //     displayPaths[0] !== undefined &&
+    //     displayPaths[0] !== 'not-found' &&
+    //     displayPaths[0] !== 'the-juiciest' &&
+    //     !displayPaths[0].includes(redirectedCategory[0]?.category)
+    // ) {
+    //     dispatch(setAppError('Error'));
+    //     localStorage.setItem('Error', 'Error');
+    //     navigate('/not-found');
+    // }
+    // if (
+    //     redirectedCategory &&
+    //     displayPaths[0]?.includes(redirectedCategory[0]?.category) &&
+    //     !redirectedCategory[0]?.subCategories.some((sub) => sub.category === displayPaths[1])
+    // ) {
+    //     dispatch(setAppError('Error'));
+    //     localStorage.setItem('Error', 'Error');
+    //     navigate('/not-found');
+    // }
     return (
         <Breadcrumb
             separator='>'

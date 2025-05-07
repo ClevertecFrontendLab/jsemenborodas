@@ -19,28 +19,15 @@ export const categoryApiSlice = apiSlice
             getCategories: builder.query<Category[], CategoriesProps>({
                 query: (params = {}) => ({
                     url: params._id
-                        ? `${ApiEndpoints.CATEGORIES}${params._id}`
+                        ? `${ApiEndpoints.CATEGORIES}/${params._id}`
                         : ApiEndpoints.CATEGORIES,
                     method: 'GET',
                     apiGroupName: ApiGroupNames.CATEGORIES,
                     name: EndpointNames.GET_CATEGORIES,
                 }),
-                providesTags: [Tags.CATEGORIES],
-            }),
-            getOnlyParentCategories: builder.query<Category[], CategoriesProps>({
-                query: (params = {}) => ({
-                    url: params._id
-                        ? `${ApiEndpoints.CATEGORIES}${params._id}`
-                        : ApiEndpoints.CATEGORIES,
-                    method: 'GET',
-                    apiGroupName: ApiGroupNames.CATEGORIES,
-                    name: EndpointNames.GET_CATEGORIES,
-                }),
-                transformResponse: (response: Category[]) =>
-                    response.filter((res) => res.subCategories !== undefined),
                 providesTags: [Tags.CATEGORIES],
             }),
         }),
     });
 
-export const { useGetCategoriesQuery, useGetOnlyParentCategoriesQuery } = categoryApiSlice;
+export const { useGetCategoriesQuery } = categoryApiSlice;

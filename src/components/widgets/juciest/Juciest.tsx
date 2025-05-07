@@ -18,8 +18,7 @@ import { useNavigate } from 'react-router';
 
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
-import { useGetRecipesQuery } from '~/query/services/recipes';
-import { recipeRequest } from '~/query/types/types';
+import { useGetRecipeByLikesQuery } from '~/query/services/recipesnew';
 import { setAppError } from '~/store/app-slice';
 import { useAppDispatch } from '~/store/hooks';
 
@@ -28,11 +27,9 @@ import RightArrow from '../../shared/images/buttonImages/Vector.png';
 export function Juciest() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { data, isError } = useGetRecipesQuery({
-        sortBy: 'likes',
-        sortOrder: 'desc',
+    const { data, isError } = useGetRecipeByLikesQuery({
         limit: 4,
-    }) as { data: recipeRequest; isError: boolean };
+    });
     const { data: catData } = useGetCategoriesQuery({});
     if (isError) {
         dispatch(setAppError('Error'));
@@ -59,35 +56,35 @@ export function Juciest() {
                         >
                             Самое сочное
                         </Heading>
-                        <Show above='xl'>
-                            <Button
-                                w={{ xl: '167px', '3xl': '197px' }}
-                                h={{ xl: '40px', '3xl': '48px' }}
-                                paddingX={{ xl: '16.5px' }}
-                                pt={{ xl: '1px', '3xl': '4.5px' }}
-                                pl={{ base: '15px', '3xl': '20px' }}
-                                bg='#B1FF2E'
-                                mt={{ md: '-2px' }}
-                                borderRadius='6px'
-                                data-test-id='juiciest-link'
-                                onClick={() => navigate('/the-juiciest')}
-                                // className='custom-cursor'
-                                cursor='pointer'
-                            >
-                                <HStack spacing='10px'>
-                                    <Text
-                                        fontWeight={600}
-                                        fontFamily='Inter'
-                                        lineHeight='24px'
-                                        letterSpacing={{ '3xl': '0.2px' }}
-                                        fontSize={{ base: '16px', '3xl': '18px' }}
-                                    >
-                                        Вся подборка
-                                    </Text>
-                                    <Image src={RightArrow} w='14px' h='8px'></Image>
-                                </HStack>
-                            </Button>
-                        </Show>
+
+                        <Button
+                            w={{ base: '167px', '3xl': '197px' }}
+                            h={{ base: '40px', '3xl': '48px' }}
+                            paddingX={{ base: '16.5px' }}
+                            pt={{ base: '1px', '3xl': '4.5px' }}
+                            pl={{ base: '15px', '3xl': '20px' }}
+                            bg='#B1FF2E'
+                            mt={{ md: '-2px' }}
+                            borderRadius='6px'
+                            data-test-id='juiciest-link'
+                            onClick={() => navigate('/the-juiciest')}
+                            // className='custom-cursor'
+                            cursor='pointer'
+                            display={{ base: 'none', md: 'block' }}
+                        >
+                            <HStack spacing='10px'>
+                                <Text
+                                    fontWeight={600}
+                                    fontFamily='Inter'
+                                    lineHeight='24px'
+                                    letterSpacing={{ '3xl': '0.2px' }}
+                                    fontSize={{ base: '16px', '3xl': '18px' }}
+                                >
+                                    Вся подборка
+                                </Text>
+                                <Image src={RightArrow} w='14px' h='8px'></Image>
+                            </HStack>
+                        </Button>
                     </HStack>
 
                     <Grid
@@ -504,8 +501,8 @@ export function Juciest() {
                             data-test-id='juiciest-link-mobile'
                             height={{ xl: '0' }}
                             sx={{
-                                visibility: {
-                                    xl: 'hidden',
+                                display: {
+                                    md: 'none',
                                 },
                             }}
                         >

@@ -11,7 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Metrics } from '~/components/features/Metrics/Metrics';
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
-import { useGetRecipesQuery } from '~/query/services/recipes';
+import { useGetRecipeByCreateDateQuery } from '~/query/services/recipesnew';
 import { Category, recipe, SubCategory } from '~/query/types/types';
 import { setAppError } from '~/store/app-slice';
 import { useAppDispatch } from '~/store/hooks';
@@ -34,13 +34,14 @@ export function Slider() {
     });
 
     const navigate = useNavigate();
-
-    const { data, isError } = useGetRecipesQuery({
+    const { data, isError } = useGetRecipeByCreateDateQuery({
         limit: 10,
-        sortBy: 'createdAt',
-        sortOrder: 'desc',
     });
     const { data: catData } = useGetCategoriesQuery({});
+    const filteredData = data?.data
+        ?.slice()
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
     if (isError) {
         dispatch(setAppError('Error'));
         localStorage.setItem('Error', 'Error');
@@ -127,11 +128,16 @@ export function Slider() {
                         {catData &&
                             data &&
                             'data' in data &&
-                            data?.data?.map((item: recipe, index: number) => (
+                            filteredData &&
+                            filteredData.map((item: recipe, index: number) => (
                                 <HStack bg='red' w='20px' minW='0'>
                                     <SwiperSlide
-                                        data-test-id={`carousel-card-${index}-${item._id}`}
-                                        style={{ width: width, minWidth: width, maxWidth: width }}
+                                        data-test-id={`carousel-card-${index}`}
+                                        style={{
+                                            width: width,
+                                            minWidth: width,
+                                            maxWidth: width,
+                                        }}
                                     >
                                         <VStack
                                             h={{ base: '220px', xl: '402px', '2xl': '414px' }}
@@ -162,7 +168,11 @@ export function Slider() {
                                             // }
                                         >
                                             <Box
-                                                w={{ base: '158px', xl: '277px', '2xl': '322px' }}
+                                                w={{
+                                                    base: '158px',
+                                                    xl: '277px',
+                                                    '2xl': '322px',
+                                                }}
                                                 minH={{ base: '128px', xl: '230px' }}
                                                 maxH={{ xl: '230px' }}
                                             >
@@ -276,7 +286,10 @@ export function Slider() {
                                                     >
                                                         <Show above='xl'>
                                                             <HStack
-                                                                ml={{ xl: '12px', '2xl': '2px' }}
+                                                                ml={{
+                                                                    xl: '12px',
+                                                                    '2xl': '2px',
+                                                                }}
                                                                 px={2}
                                                                 spacing='8px'
                                                                 w='fit-content'
@@ -316,7 +329,10 @@ export function Slider() {
                                                             </HStack>
                                                         </Show>
                                                         <HStack
-                                                            spacing={{ base: '16px', xl: '8px' }}
+                                                            spacing={{
+                                                                base: '16px',
+                                                                xl: '8px',
+                                                            }}
                                                             mr={{ xl: '12px', '2xl': '-1px' }}
                                                             w='fit-content'
                                                             bg='transparent'

@@ -42,7 +42,7 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
         base: 'vegan-cuisine',
         xl: '',
     });
-    const { data, isError, isLoading } = useGetCategoriesQuery({});
+    const { data, isError, isLoading, isFetching } = useGetCategoriesQuery({});
 
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
 
@@ -62,7 +62,7 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
         localStorage.setItem('navMenu', JSON.stringify(filteredData));
     }
 
-    if (isLoading) {
+    if (isLoading || isFetching) {
         return (
             <>
                 <Loader></Loader>
@@ -301,7 +301,7 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                         </Box>
                     </VStack>
                 </Box>
-                <Box
+                {/* <Box
                     position='fixed'
                     top='61px'
                     bottom='0'
@@ -311,7 +311,9 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                     zIndex='1'
                     bg='rgba(0, 0, 0, 0.16)'
                     onClick={toggleMenu}
-                ></Box>
+                    data-testid='overlay'
+                    pointerEvents='none'
+                ></Box> */}
             </>
         );
     }

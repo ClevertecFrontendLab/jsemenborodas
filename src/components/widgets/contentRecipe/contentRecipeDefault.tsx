@@ -16,10 +16,11 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
-import { useGetRecipesQuery } from '~/query/services/recipes';
+import { useGetRecipeByCategoryQuery } from '~/query/services/recipesnew';
 import { Category, SubCategory } from '~/query/types/types';
 import { setAppError } from '~/store/app-slice';
-import { useAppDispatch } from '~/store/hooks';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { selectIsSearchStarted } from '~/store/reducers/search';
 
 import { Metrics } from '../../features/Metrics/Metrics';
 
@@ -36,14 +37,15 @@ export function ContentRecipeDefault() {
     const title = Name[secondSegment];
     const navigate = useNavigate();
     const { data: catData } = useGetCategoriesQuery({});
+    const isSearchStarted = useAppSelector(selectIsSearchStarted);
     const catDataCategory = catData?.filter(
         (cat) => cat.category === pathSegments[0] && cat.subCategories !== undefined,
     );
     const catDataSubCategoryId =
         catDataCategory &&
         catDataCategory[0]?.subCategories.filter((sub) => sub.category === pathSegments[1])[0]?._id;
-    const { data, isError } = useGetRecipesQuery({
-        subcategoriesIds: catDataSubCategoryId ? [catDataSubCategoryId] : undefined,
+    const { data, isError } = useGetRecipeByCategoryQuery({
+        _id: catDataSubCategoryId ? catDataSubCategoryId : '',
     });
     if (isError) {
         dispatch(setAppError('Error'));
@@ -71,7 +73,7 @@ export function ContentRecipeDefault() {
                     >
                         {data &&
                             'data' in data &&
-                            data.data.map((item) => (
+                            data?.data?.map((item, index) => (
                                 <Card
                                     border='1px solid #00000014'
                                     bg='transparent'
@@ -80,6 +82,7 @@ export function ContentRecipeDefault() {
                                     borderRadius='8px'
                                     overflow='hidden'
                                     minW={{ xl: '880px', '2xl': '0' }}
+                                    data-test-id={isSearchStarted ? '' : `food-card-${index}`}
                                 >
                                     <CardBody p={0} maxH={{ xl: '244px' }} w='100%' maxW='100%'>
                                         <HStack h='100%' maxW='100%'>

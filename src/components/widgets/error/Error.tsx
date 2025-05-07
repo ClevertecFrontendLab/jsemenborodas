@@ -38,6 +38,7 @@ export function ErrorComponent() {
                             fontWeight='700'
                             lineHeight='32px'
                             letterSpacing={{ base: 0, xl: '0.5px' }}
+                            as='h1'
                         >
                             Упс! Такой страницы нет
                         </Heading>
@@ -56,6 +57,7 @@ export function ErrorComponent() {
                                 _hover={{
                                     cursor: 'pointer',
                                 }}
+                                data-test-id='error-page-go-home'
                             >
                                 здесь.
                             </Box>
