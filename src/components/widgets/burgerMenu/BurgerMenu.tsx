@@ -20,7 +20,7 @@ import { Category } from '~/query/types/types';
 import { setAppError } from '~/store/app-slice';
 import { useAppDispatch } from '~/store/hooks';
 
-import exiticon from '../../../../public/exitIcon.png';
+import exiticon from '../../../someimages/exitIcon.png';
 import { Loader } from '../loader/Loader';
 interface BurgerMenuProps {
     isOpen: boolean;

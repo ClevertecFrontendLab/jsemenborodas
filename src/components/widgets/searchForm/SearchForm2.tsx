@@ -56,7 +56,7 @@ export function SearchForm2() {
     const location = useLocation();
     const Name: Record<string, string> = {
         '/': 'Приятного аппетита!',
-        Juciest: 'Самое сочное',
+        'the-juiciest': 'Самое сочное',
         vegan: 'Веганская кухня',
     };
 

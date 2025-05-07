@@ -30,6 +30,7 @@ export function Juciest() {
     const { data, isError } = useGetRecipeByLikesQuery({
         limit: 4,
     });
+
     const { data: catData } = useGetCategoriesQuery({});
     if (isError) {
         dispatch(setAppError('Error'));

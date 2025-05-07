@@ -25,9 +25,9 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
         { id: recipeId },
         { skip: !recipeId },
     );
-    // const redirectedCategory = categories?.filter(
-    //     (cat) => (cat.category === displayPaths[0] && cat.subCategories !== undefined) || undefined,
-    // );
+    const redirectedCategory = categories?.filter(
+        (cat) => (cat.category === displayPaths[0] && cat.subCategories !== undefined) || undefined,
+    );
 
     if (isCategoriesError) {
         dispatch(setAppError('Error'));
@@ -83,7 +83,15 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
                     const name = categories?.find((c) => c.category === path)?.title || path;
                     return (
                         <BreadcrumbItem key={route}>
-                            <BreadcrumbLink href={route}>{name}</BreadcrumbLink>
+                            <BreadcrumbLink
+                                href={
+                                    name === redirectedCategory?.[0]?.title
+                                        ? `/${redirectedCategory?.[0]?.category}/${redirectedCategory?.[0]?.subCategories?.[0]?.category}`
+                                        : route
+                                }
+                            >
+                                {name}
+                            </BreadcrumbLink>
                         </BreadcrumbItem>
                     );
                 })}

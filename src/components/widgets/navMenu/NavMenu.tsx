@@ -18,14 +18,12 @@ import { Category } from '~/query/types/types';
 import { setAppError } from '~/store/app-slice';
 import { useAppDispatch } from '~/store/hooks';
 
-import exiticon from '../../../../public/exitIcon.png';
-import { NavMenuData } from '../../entities/Data/NavMenuData';
+import exiticon from '../../../someimages//exitIcon.png';
 import { Loader } from '../loader/Loader';
 export function NavMenu() {
     const dispatch = useAppDispatch();
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    const selectedCategory = NavMenuData.find((item) => item.category === pathSegments[0]);
 
     const navigate = useNavigate();
     const { data, isError, isLoading, error, isFetching } = useGetCategoriesQuery({});
@@ -138,11 +136,9 @@ export function NavMenu() {
                                                     // }
                                                     letterSpacing='0px'
                                                     data-test-id={
-                                                        selectedCategory?.title === item.title
-                                                            ? selectedCategory?.category
-                                                            : item.title === 'Веганская кухня'
-                                                              ? 'vegan-cuisine'
-                                                              : '""'
+                                                        item?.category === 'vegan'
+                                                            ? 'vegan-cuisine'
+                                                            : ''
                                                     }
                                                 >
                                                     {' '}
