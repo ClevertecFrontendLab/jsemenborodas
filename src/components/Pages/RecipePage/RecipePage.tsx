@@ -1,6 +1,7 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
+import { scrollController } from '~/components/shared/utils/scrollController';
 import { CurrentRecipe } from '~/components/widgets/currentRecipe/currentRecipe';
 import { Slider } from '~/components/widgets/slider/Slider';
 
@@ -12,23 +13,14 @@ interface PageMenuProps {
     isBurgerOpen: boolean;
 }
 
-const scrollController = {
-    disabledScroll() {
-        document.body.style.overflow = 'hidden';
-    },
-    enabledScroll() {
-        document.body.style.overflow = 'auto';
-    },
-};
-
 export function RecipePage({ isBurgerOpen }: PageMenuProps) {
     useEffect(() => {
         if (isBurgerOpen) {
             scrollController.disabledScroll();
-        } else {
-            scrollController.enabledScroll();
+            return;
         }
-    });
+        scrollController.enabledScroll();
+    }, [isBurgerOpen]);
     return (
         <>
             <Box
@@ -77,7 +69,7 @@ export function RecipePage({ isBurgerOpen }: PageMenuProps) {
                                     px={{ base: '16px', md: '0', '2xl': '2px' }}
                                 >
                                     <Box as='section' overflow='hidden'>
-                                        <CurrentRecipe></CurrentRecipe>
+                                        <CurrentRecipe />
                                     </Box>
                                     <Box
                                         as='section'
@@ -88,8 +80,7 @@ export function RecipePage({ isBurgerOpen }: PageMenuProps) {
                                         }}
                                         mb={{ base: '118px' }}
                                     >
-                                        {/* <NewRecipe></NewRecipe> */}
-                                        <Slider></Slider>
+                                        <Slider />
                                     </Box>
                                 </Box>
                             </VStack>
@@ -101,7 +92,7 @@ export function RecipePage({ isBurgerOpen }: PageMenuProps) {
                                 <MetricsDesktop />
                             </Box>
                             <Box minW='208px' position='fixed' bottom='1px' pl='5px'>
-                                <AddRecipe></AddRecipe>
+                                <AddRecipe />
                             </Box>
                         </Show>
                     </GridItem>

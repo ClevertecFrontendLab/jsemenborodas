@@ -11,22 +11,52 @@ import {
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
-import exiticon from '../../../../public/exitIcon.png';
-import { NavMenuData } from '../../entities/Data/NavMenuData';
+import { useGetCategoriesQuery } from '~/query/services/categories';
+import { Category } from '~/query/types/types';
+
+import exiticon from '../../../someimages//exitIcon.png';
+import { Loader } from '../loader/Loader';
 export function NavMenu() {
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    const selectedCategory = NavMenuData.find((item) => item.category === pathSegments[0]);
-
+    const [loader, setLoader] = useState<boolean>(true);
     const navigate = useNavigate();
+    const { data, isError, isLoading, error, isFetching } = useGetCategoriesQuery({});
+    const mockData = localStorage.getItem('navMenu');
+
+    const filteredData = data?.filter((item) => item.subCategories !== undefined);
+    useEffect(() => {
+        if (!isLoading && !isFetching) {
+            setLoader(false);
+        }
+    }, [isLoading, isFetching]);
+    if (loader) {
+        return <Loader />;
+    }
+    if (mockData === null && data) {
+        localStorage.setItem('navMenu', JSON.stringify(filteredData));
+    }
+    let resultData;
+    if (mockData && data) {
+        resultData = JSON.parse(mockData);
+    }
+    if (isError) {
+        return null;
+    }
+
+    if (isError && resultData === null) {
+        console.log(error);
+        return null;
+    }
 
     return (
         <>
             <Box
                 position='fixed'
-                zIndex='200'
+                zIndex='10'
                 boxShadow='none'
                 borderRight='1px solid #00000024'
                 w='260px'
@@ -64,8 +94,8 @@ export function NavMenu() {
                             },
                         }}
                     >
-                        {NavMenuData.map((item) => (
-                            <AccordionItem key={item.id} border='none' boxShadow='none'>
+                        {(isError ? resultData : filteredData)?.map((item: Category) => (
+                            <AccordionItem key={item._id} border='none' boxShadow='none'>
                                 <AccordionButton
                                     py={0}
                                     px={0}
@@ -75,13 +105,17 @@ export function NavMenu() {
                                     _expanded={{ bg: '#EAFFC7' }}
                                     pl='4px'
                                     onClick={() => {
-                                        const path = `/${item.category}/${item.childrens[0].subCategory}`;
+                                        const path = `/${item.category}/${item.subCategories[0].category}`;
                                         navigate(path);
                                     }}
                                 >
                                     <Box as='span' flex='1' textAlign='left'>
                                         <HStack spacing='12px' align='center' h='48px'>
-                                            <Image src={item.icon} w='24px' h='24px'></Image>
+                                            <Image
+                                                src={`https://training-api.clevertec.ru${item.icon}`}
+                                                w='24px'
+                                                h='24px'
+                                            ></Image>
                                             <Heading
                                                 as='h4'
                                                 fontFamily='Inter'
@@ -90,19 +124,11 @@ export function NavMenu() {
                                                 fontWeight={
                                                     pathSegments[0] === item.category ? 700 : 500
                                                 }
-                                                // fontWeight={
-                                                //     title === 'Второе блюдо' &&
-                                                //     item.title === 'Веганская кухня'
-                                                //         ? 700
-                                                //         : 500
-                                                // }
                                                 letterSpacing='0px'
                                                 data-test-id={
-                                                    selectedCategory?.title === item.title
-                                                        ? selectedCategory?.category
-                                                        : item.title === 'Веганская кухня'
-                                                          ? 'vegan-cuisine'
-                                                          : '""'
+                                                    item?.category === 'vegan'
+                                                        ? 'vegan-cuisine'
+                                                        : ''
                                                 }
                                             >
                                                 {' '}
@@ -120,10 +146,9 @@ export function NavMenu() {
                                     boxShadow='none'
                                 >
                                     <VStack spacing={0}>
-                                        {item.childrens.map((child) => (
+                                        {item.subCategories.map((child) => (
                                             <Box
                                                 _hover={{ cursor: 'pointer' }}
-                                                key={child.id}
                                                 w='230px'
                                                 h='36px'
                                                 textAlign='left'
@@ -131,7 +156,7 @@ export function NavMenu() {
                                                 pt='10px'
                                                 position='relative'
                                                 onClick={() => {
-                                                    const path = `/${item.category}/${child.subCategory}`;
+                                                    const path = `/${item.category}/${child.category}`;
                                                     navigate(path);
                                                 }}
                                             >
@@ -142,18 +167,18 @@ export function NavMenu() {
                                                     whiteSpace='nowrap'
                                                     letterSpacing='0.1px'
                                                     data-test-id={
-                                                        pathSegments[1] === child.subCategory
+                                                        pathSegments[1] === child.category
                                                             ? `${pathSegments[1]}-active`
                                                             : '""'
                                                     }
                                                     fontWeight={
-                                                        pathSegments[1] === child.subCategory
+                                                        pathSegments[1] === child.category
                                                             ? 700
                                                             : 500
                                                     }
                                                     sx={{
                                                         '&::before':
-                                                            pathSegments[1] === child.subCategory
+                                                            pathSegments[1] === child.category
                                                                 ? {
                                                                       content: '""',
                                                                       position: 'absolute',
@@ -172,42 +197,6 @@ export function NavMenu() {
                                                                       backgroundColor: '#C4FF61',
                                                                   },
                                                     }}
-                                                    // fontWeight={
-                                                    //     title === 'Второе блюдо' &&
-                                                    //     child.title === 'Вторые блюда'
-                                                    //         ? 700
-                                                    //         : 500
-                                                    // }
-                                                    // sx={{
-                                                    //     '&::before':
-                                                    //         title === 'Второе блюдо'
-                                                    //             ? {
-                                                    //                   content: '""',
-                                                    //                   position: 'absolute',
-                                                    //                   left:
-                                                    //                       child.title ===
-                                                    //                       'Вторые блюда'
-                                                    //                           ? '35px'
-                                                    //                           : '43px',
-                                                    //                   transform:
-                                                    //                       child.title ===
-                                                    //                       'Вторые блюда'
-                                                    //                           ? 'translateY(-4px)'
-                                                    //                           : '',
-                                                    //                   height:
-                                                    //                       child.title ===
-                                                    //                       'Вторые блюда'
-                                                    //                           ? '28px'
-                                                    //                           : '24px',
-                                                    //                   width:
-                                                    //                       child.title ===
-                                                    //                       'Вторые блюда'
-                                                    //                           ? '8px'
-                                                    //                           : '1px',
-                                                    //                   backgroundColor: '#C4FF61',
-                                                    //               }
-                                                    //             : {},
-                                                    // }}
                                                 >
                                                     {Object.values(child.title).join('')}
                                                 </Heading>

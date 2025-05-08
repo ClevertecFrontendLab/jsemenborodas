@@ -3,6 +3,9 @@ import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 
+import { useAppSelector } from '~/store/hooks';
+import { selectorIsFilterOpen } from '~/store/reducers/open';
+
 import Avatar from '../../shared/images/avatarImages/avatar.jpg';
 import Notes from '../../shared/images/FooterImages/IconButton.png';
 import Home from '../../shared/images/FooterImages/left-icon.png';
@@ -10,10 +13,16 @@ import Search from '../../shared/images/FooterImages/Vector.png';
 
 interface FooterMenuProps {
     isBurgerOpen: boolean;
-    isFilterHidden: boolean;
 }
-export function Footer({ isBurgerOpen, isFilterHidden }: FooterMenuProps) {
+export function Footer({ isBurgerOpen }: FooterMenuProps) {
     const navigate = useNavigate();
+    const isFilterOpen = useAppSelector(selectorIsFilterOpen);
+    const isBurgerOrFilterOpen = () => {
+        if (isBurgerOpen || isFilterOpen) {
+            return true;
+        }
+        return false;
+    };
     return (
         <>
             <Hide above='xl'>
@@ -26,7 +35,7 @@ export function Footer({ isBurgerOpen, isFilterHidden }: FooterMenuProps) {
                     data-test-id='footer'
                     position='fixed'
                     bottom='0px'
-                    filter={isBurgerOpen || isFilterHidden === false ? 'blur(2px)' : ''}
+                    filter={isBurgerOrFilterOpen() ? 'blur(2px)' : ''}
                 >
                     <Button
                         bg='radial-gradient(circle, #C4FF61 0%, #FFFFD3 40%)'

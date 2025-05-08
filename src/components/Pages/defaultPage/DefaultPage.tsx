@@ -1,11 +1,16 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
+import { DisplayUtil } from '~/components/shared/utils/displayUtil';
+import { scrollController } from '~/components/shared/utils/scrollController';
 import { ContentRecipe } from '~/components/widgets/contentRecipe/contentRecipe';
 import { ContentRecipeDefault } from '~/components/widgets/contentRecipe/contentRecipeDefault';
 import { Filter } from '~/components/widgets/Filter/Filter';
 import { Slider } from '~/components/widgets/slider/Slider';
 import { Tabs } from '~/components/widgets/tabs/Tabs';
+import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
+import { useAppSelector } from '~/store/hooks';
+import { selectorIsFilterOpen } from '~/store/reducers/open';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
@@ -14,63 +19,24 @@ import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 
 interface PageMenuProps {
     isBurgerOpen: boolean;
-    isFilterHidden: boolean;
-    setIsFilterHidden: (value: boolean) => void;
-    selectedFilterCategory: { id: number; title: string; name: string }[];
-    setSelectedFilterCategory: (value: { id: number; title: string; name: string }[]) => void;
 }
 
-const scrollController = {
-    disabledScroll() {
-        document.body.style.overflow = 'hidden';
-    },
-    enabledScroll() {
-        document.body.style.overflow = 'auto';
-    },
-};
-
-export function DefaultPage({
-    isBurgerOpen,
-    isFilterHidden,
-    setIsFilterHidden,
-    selectedFilterCategory,
-    setSelectedFilterCategory,
-}: PageMenuProps) {
+export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
+    const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     useEffect(() => {
-        if (isBurgerOpen || isFilterHidden === false) {
+        if (isBurgerOpen || isFilterOpen) {
             scrollController.disabledScroll();
-        } else {
-            scrollController.enabledScroll();
+            return;
         }
-    });
-    const [isSearchStarted, setIsSearchStarted] = useState(false);
-    const [searchValue, setSearchValue] = useState('');
-    const [customAllergen, setCustomAllergen] = useState<string[]>([]);
-    const [selectedItems, setSelectedItems] = useState<string[]>([]);
-    const [isDisabled, setIsDisabled] = useState(true);
-    const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
-    const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
-    const [isSuccessful, setIsSuccessful] = useState(false);
-    const [_selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
-    const [_selectedSideDishTypes, setSelectedSideDishTypes] = useState<string[]>([]);
-
-    const [_selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
+        scrollController.enabledScroll();
+    }, [isBurgerOpen, isFilterOpen]);
     return (
         <>
-            <Box as='section'>
-                <Filter
-                    isFilterHidden={isFilterHidden}
-                    isCategoryMenuOpen={isCategoryMenuOpen}
-                    isAuthorMenuOpen={isAuthorMenuOpen}
-                    setIsFilterHidden={setIsFilterHidden}
-                    setSelectedMeatTypes={setSelectedMeatTypes}
-                    setSelectedSideDishTypes={setSelectedSideDishTypes}
-                    setSelectedFilterCategory={setSelectedFilterCategory}
-                    setSelectedFilterAuthor={setSelectedFilterAuthor}
-                    setIsCategoryMenuOpen={setIsCategoryMenuOpen}
-                    setIsAuthorMenuOpen={setIsAuthorMenuOpen}
-                ></Filter>
-            </Box>
+            {isFilterOpen && (
+                <Box as='section'>
+                    <Filter />
+                </Box>
+            )}
             <Box
                 as='article'
                 w='100%'
@@ -78,14 +44,14 @@ export function DefaultPage({
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
-                filter={isBurgerOpen || isFilterHidden === false ? 'blur(4px)' : ''}
-                bg={isBurgerOpen || isFilterHidden === false ? 'rgba(0, 0, 0, 0.16)' : ''}
+                filter={isBurgerOpen ? 'blur(4px)' : ''}
+                bg={isBurgerOpen ? 'rgba(0, 0, 0, 0.16)' : ''}
             >
                 <Grid
                     templateColumns={{ xl: '256px auto 208px' }}
                     maxW='100vw'
                     gap={{ xl: '24px' }}
-                    overflow='hidden'
+                    overflow='visible'
                 >
                     <GridItem>
                         <Show above='xl'>
@@ -111,21 +77,7 @@ export function DefaultPage({
                                 minW={{ xl: '880px' }}
                             >
                                 <Box as='section' px={{ base: '0px', md: '0px', xl: '0' }}>
-                                    <SearchForm2
-                                        setIsSearchStarted={setIsSearchStarted}
-                                        searchValue={searchValue}
-                                        setSearchValue={setSearchValue}
-                                        selectedItems={selectedItems}
-                                        setSelectedItems={setSelectedItems}
-                                        customAllergen={customAllergen}
-                                        setCustomAllergen={setCustomAllergen}
-                                        isDisabled={isDisabled}
-                                        setIsDisabled={setIsDisabled}
-                                        isFilterHidden={isFilterHidden}
-                                        setIsFilterHidden={setIsFilterHidden}
-                                        selectedFilterCategory={selectedFilterCategory}
-                                        isSuccessful={isSuccessful}
-                                    ></SearchForm2>
+                                    <SearchForm2 />
                                 </Box>
                                 <Box
                                     w={{ xl: '100%' }}
@@ -137,8 +89,9 @@ export function DefaultPage({
                                         w={{ xl: '100%' }}
                                         maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
                                         h={{ base: 'auto' }}
+                                        display={DisplayUtil(false)}
                                     >
-                                        <Tabs></Tabs>
+                                        <Tabs />
                                     </Box>
 
                                     <Box
@@ -146,33 +99,19 @@ export function DefaultPage({
                                         maxW={{ xl: '1360px' }}
                                         overflow={{ base: 'hidden', xl: 'visible' }}
                                         px={{ base: '16px', md: '0', '2xl': '2px' }}
-                                        display={isSearchStarted === true ? { base: 'none' } : '""'}
+                                        display={DisplayUtil(false)}
                                         mt={{ base: '24px', xl: '48px' }}
                                     >
-                                        <ContentRecipeDefault
-                                            selectedItems={selectedItems}
-                                            customAllergen={customAllergen}
-                                            isDisabled={isDisabled}
-                                            isSearchStarted={isSearchStarted}
-                                        ></ContentRecipeDefault>
+                                        <ContentRecipeDefault />
                                     </Box>
                                     <Box
                                         w={{ xl: '100%' }}
                                         maxW={{ xl: '1360px' }}
                                         overflow={{ base: 'hidden', xl: 'visible' }}
                                         px={{ base: '16px', md: '0', '2xl': '2px' }}
-                                        display={isSearchStarted === true ? { base: '""' } : 'none'}
+                                        display={DisplayUtil(true)}
                                         mt={{ base: '24px', xl: '48px' }}
-                                    >
-                                        <ContentRecipe
-                                            isSearchStarted={isSearchStarted}
-                                            searchValue={searchValue}
-                                            selectedItems={selectedItems}
-                                            customAllergen={customAllergen}
-                                            isDisabled={isDisabled}
-                                            setIsSuccessful={setIsSuccessful}
-                                        ></ContentRecipe>
-                                    </Box>
+                                    ></Box>
                                     <Box
                                         as='section'
                                         overflow={{
@@ -180,9 +119,15 @@ export function DefaultPage({
                                             xl: 'hidden',
                                             '2xl': 'visible',
                                         }}
-                                        display={isSearchStarted === true ? { base: 'none' } : '""'}
+                                        display={DisplayUtil(false)}
                                     >
-                                        <Slider></Slider>
+                                        <Slider />
+                                    </Box>
+                                    <Box as='section' display={DisplayUtil(true)}>
+                                        <ContentRecipe />
+                                    </Box>
+                                    <Box as='section' mt='120px'>
+                                        <VeganKitchen />
                                     </Box>
                                 </Box>
                             </VStack>
@@ -194,7 +139,7 @@ export function DefaultPage({
                                 <MetricsDesktop />
                             </Box>
                             <Box minW='208px' position='fixed' bottom='1px' pl='5px'>
-                                <AddRecipe></AddRecipe>
+                                <AddRecipe />
                             </Box>
                         </Show>
                     </GridItem>

@@ -24,58 +24,47 @@ import {
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
 import { useState } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
-import healthyFood from '/public/healthyEating.png';
-// eslint-disable-next-line import/order
-import leaf from '/public/leaf.png';
-import { RecipeData } from '~/components/entities/Data/RecipeData';
 import { Metrics } from '~/components/features/Metrics/Metrics';
 import { FavouriteNotes, Likes } from '~/icons/Icon';
+import { useGetCategoriesQuery } from '~/query/services/categories';
+import { useGetRecipesQuery } from '~/query/services/recipes';
+import { recipe } from '~/query/types/types';
 
-// interface PageMenuProps {
-//     isBurgerOpen: boolean;
-// }
-import childTasty from '../../../../public/childTasty.png';
-import internationalFood from '../../../../public/internationalFood.png';
-import pan from '../../../../public/pan.png';
 import BookMarks from '../../shared/images/icons/bookmarks.png';
 import BsAlarm from '../../shared/images/icons/BsAlarm.png';
 import LoveSmile from '../../shared/images/icons/loveSmile.png';
+import { Loader } from '../loader/Loader';
 export function CurrentRecipe() {
-    // { isBurgerOpen }: PageMenuProps
     const location = useLocation();
+    const navigate = useNavigate();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const recipeId = pathSegments[pathSegments.length - 1];
-    const recipe = RecipeData.find((recipe) => recipe.id === recipeId);
-    const allCategories: string[] = [];
-    allCategories.push(...(recipe?.category.map((item) => item.toString()) || []));
-    const categoriesDecrypt: { [key: string]: string } = {
-        'second-dish': 'Вторые блюда',
-        national: 'Национальные',
-        'child-food': 'Детские блюда',
-        vegan: 'Веганская кухня',
-        snacks: 'Закуски',
-    };
-    const categoriesTagDecrypt: { [key: string]: string } = {
-        'second-dish': pan,
-        national: internationalFood,
-        'child-food': childTasty,
-        vegan: leaf,
-        snacks: healthyFood,
-    };
 
-    const [inputValue, setInputValue] = useState(4);
+    const [inputValue, setInputValue] = useState(3);
 
     const handleChange = (valueString: string) => {
         const valueNumber = parseInt(valueString, 10);
         setInputValue(valueNumber);
-        console.log(valueNumber);
     };
-
+    const { data, isError, isLoading } = useGetRecipesQuery({ id: recipeId }) as {
+        data: recipe;
+        isError: boolean;
+        isLoading: boolean;
+    };
+    const { data: catData } = useGetCategoriesQuery({});
+    if (isLoading) {
+        return <Loader />;
+    }
+    if (isError) {
+        navigate(-1);
+        localStorage.setItem('Error', 'Error');
+        return null;
+    }
     return (
         <>
-            {recipe && (
+            {data && (
                 <Box
                     w={{ base: 'calc( 100% - 32px )', md: '100%' }}
                     mt={{ base: '16px', md: '18px', xl: '56px' }}
@@ -91,7 +80,7 @@ export function CurrentRecipe() {
                         }}
                     >
                         <Image
-                            src={recipe.image}
+                            src={`https://training-api.clevertec.ru/${data.image}`}
                             objectFit='fill'
                             objectPosition='center'
                             w={{
@@ -107,33 +96,45 @@ export function CurrentRecipe() {
                                     flexWrap={{ base: 'wrap' }}
                                     ml={{ md: '16px', xl: '24px', '3xl': '22px' }}
                                 >
-                                    {allCategories.map((item) => (
-                                        <Box
-                                            key={item}
-                                            w='fit-content'
-                                            mb={{ base: '8px' }}
-                                            mr={{ base: '8px', md: '10px', '3xl': '17px' }}
-                                            alignItems='flex-start'
-                                        >
-                                            <HStack bg='#FFFFD3' p='2px 8px'>
-                                                <Image
-                                                    src={categoriesTagDecrypt[item]}
-                                                    w='16px'
-                                                    h='16px'
-                                                ></Image>
-                                                <Text
-                                                    fontFamily='Inter'
-                                                    fontSize='14px'
-                                                    lineHeight='20px'
-                                                    fontWeight='400'
-                                                    letterSpacing={0}
-                                                    whiteSpace='nowrap'
-                                                >
-                                                    {categoriesDecrypt[item]}
-                                                </Text>
-                                            </HStack>
-                                        </Box>
-                                    ))}
+                                    <Box
+                                        key={`${data._id} ${data.authorData} ${data.bookmarks}`}
+                                        w='fit-content'
+                                        mb={{ base: '8px' }}
+                                        mr={{ base: '8px', md: '10px', '3xl': '17px' }}
+                                        alignItems='flex-start'
+                                    >
+                                        <HStack bg='#FFFFD3' p='2px 8px'>
+                                            <Image
+                                                src={`https://training-api.clevertec.ru/${
+                                                    catData?.find((cat) =>
+                                                        cat.subCategories?.some(
+                                                            (sub) =>
+                                                                sub._id === data.categoriesIds[0],
+                                                        ),
+                                                    )?.icon
+                                                }`}
+                                                w='16px'
+                                                h='16px'
+                                            ></Image>
+                                            <Text
+                                                fontFamily='Inter'
+                                                fontSize='14px'
+                                                lineHeight='20px'
+                                                fontWeight='400'
+                                                letterSpacing={0}
+                                                whiteSpace='nowrap'
+                                            >
+                                                {
+                                                    catData?.find((cat) =>
+                                                        cat.subCategories?.some(
+                                                            (sub) =>
+                                                                sub._id === data.categoriesIds[0],
+                                                        ),
+                                                    )?.title
+                                                }
+                                            </Text>
+                                        </HStack>
+                                    </Box>
                                 </Flex>
                                 <Box
                                     h='100%'
@@ -141,21 +142,31 @@ export function CurrentRecipe() {
                                     mr={{ base: '5px', '3xl': '11px' }}
                                 >
                                     <HStack h='100%' spacing={{ base: 4, '3xl': 8 }}>
-                                        {recipe.bookmarks > 0 && (
+                                        {data.bookmarks > 0 && (
                                             <Metrics
                                                 icon={FavouriteNotes}
                                                 iconSizeXL='14px'
                                                 spacingXL='8px'
                                             >
-                                                <Text fontSize={{ base: '12px', '3xl': '14px' }}>
-                                                    {recipe.bookmarks}
+                                                <Text
+                                                    fontSize={{
+                                                        base: '12px',
+                                                        '3xl': '14px',
+                                                    }}
+                                                >
+                                                    {data.bookmarks}
                                                 </Text>
                                             </Metrics>
                                         )}
-                                        {recipe.likes > 0 && (
+                                        {data.likes > 0 && (
                                             <Metrics icon={Likes} iconSizeXL='14px' spacingXL='8px'>
-                                                <Text fontSize={{ base: '12px', '3xl': '14px' }}>
-                                                    {recipe.likes}
+                                                <Text
+                                                    fontSize={{
+                                                        base: '12px',
+                                                        '3xl': '14px',
+                                                    }}
+                                                >
+                                                    {data.likes}
                                                 </Text>
                                             </Metrics>
                                         )}
@@ -182,7 +193,7 @@ export function CurrentRecipe() {
                                         w={{ xl: '437px' }}
                                         noOfLines={2}
                                     >
-                                        {recipe.title}
+                                        {data.title}
                                     </Heading>
                                 </HStack>
                                 <HStack
@@ -199,7 +210,7 @@ export function CurrentRecipe() {
                                         maxH={{ md: '40px', xl: '60px' }}
                                         overflow='hidden'
                                     >
-                                        {recipe.description}
+                                        {data.description}
                                     </Text>
                                 </HStack>
                             </VStack>
@@ -218,7 +229,12 @@ export function CurrentRecipe() {
                                     p='2px 8px'
                                     h={{ base: '24px' }}
                                     mb={{ base: '12px' }}
-                                    mr={{ base: '13px', md: '66px', xl: '26px', '2xl': '172px' }}
+                                    mr={{
+                                        base: '13px',
+                                        md: '66px',
+                                        xl: '26px',
+                                        '2xl': '172px',
+                                    }}
                                     ml={{ md: '16px', xl: '24px', '3xl': '22px' }}
                                     mt={{ xl: '8px', '3xl': '24px' }}
                                 >
@@ -229,7 +245,7 @@ export function CurrentRecipe() {
                                         fontSize='14px'
                                         lineHeight='20px'
                                     >
-                                        {recipe.time}
+                                        {data.time}
                                     </Text>
                                 </HStack>
                                 <HStack
@@ -240,7 +256,11 @@ export function CurrentRecipe() {
                                     <HStack
                                         borderRadius='6px'
                                         border='1px solid #0000007A'
-                                        p={{ base: '0px 8px', xl: '0px 12px', '3xl': '0px 24px' }}
+                                        p={{
+                                            base: '0px 8px',
+                                            xl: '0px 12px',
+                                            '3xl': '0px 24px',
+                                        }}
                                         h={{ base: '24px', xl: '32px', '3xl': '48px' }}
                                         spacing={{ base: '5px', xl: '8px' }}
                                     >
@@ -252,8 +272,16 @@ export function CurrentRecipe() {
                                         <Text
                                             fontFamily='Inter'
                                             fontWeight={600}
-                                            fontSize={{ base: '12px', xl: '14px', '3xl': '18px' }}
-                                            lineHeight={{ base: '16px', xl: '20px', '3xl': '28px' }}
+                                            fontSize={{
+                                                base: '12px',
+                                                xl: '14px',
+                                                '3xl': '18px',
+                                            }}
+                                            lineHeight={{
+                                                base: '16px',
+                                                xl: '20px',
+                                                '3xl': '28px',
+                                            }}
                                             color='#000000CC'
                                         >
                                             Оценить рецепт
@@ -262,7 +290,11 @@ export function CurrentRecipe() {
                                     <HStack
                                         borderRadius='6px'
                                         bg='#B1FF2E'
-                                        p={{ base: '0px 8px', xl: '0px 12px', '3xl': '0px 24px' }}
+                                        p={{
+                                            base: '0px 8px',
+                                            xl: '0px 12px',
+                                            '3xl': '0px 24px',
+                                        }}
                                         h={{ base: '24px', xl: '32px', '3xl': '48px' }}
                                         spacing={{ base: '5px', xl: '8px' }}
                                     >
@@ -274,8 +306,16 @@ export function CurrentRecipe() {
                                         <Text
                                             fontFamily='Inter'
                                             fontWeight={600}
-                                            fontSize={{ base: '12px', xl: '14px', '3xl': '18px' }}
-                                            lineHeight={{ base: '16px', xl: '20px', '3xl': '28px' }}
+                                            fontSize={{
+                                                base: '12px',
+                                                xl: '14px',
+                                                '3xl': '18px',
+                                            }}
+                                            lineHeight={{
+                                                base: '16px',
+                                                xl: '20px',
+                                                '3xl': '28px',
+                                            }}
                                         >
                                             Сохранить в закладки
                                         </Text>
@@ -344,7 +384,7 @@ export function CurrentRecipe() {
                                         mt={{ md: '12px' }}
                                         letterSpacing={{ md: '2px' }}
                                     >
-                                        {recipe.nutritionValue.calories}
+                                        {data.nutritionValue.calories}
                                     </Text>
                                     <Text
                                         fontFamily='Inter'
@@ -395,7 +435,7 @@ export function CurrentRecipe() {
                                         mt={{ md: '12px' }}
                                         letterSpacing={{ md: '2px' }}
                                     >
-                                        {recipe.nutritionValue.proteins}
+                                        {data.nutritionValue.protein}
                                     </Text>
                                     <Text
                                         fontFamily='Inter'
@@ -446,7 +486,7 @@ export function CurrentRecipe() {
                                         mt={{ md: '12px' }}
                                         letterSpacing={{ md: '2px' }}
                                     >
-                                        {recipe.nutritionValue.fats}
+                                        {data.nutritionValue.fats}
                                     </Text>
                                     <Text
                                         fontFamily='Inter'
@@ -497,7 +537,7 @@ export function CurrentRecipe() {
                                         mt={{ md: '12px' }}
                                         letterSpacing={{ md: '2px' }}
                                     >
-                                        {recipe.nutritionValue.carbohydrates}
+                                        {data.nutritionValue.carbohydrates}
                                     </Text>
                                     <Text
                                         fontFamily='Inter'
@@ -571,7 +611,7 @@ export function CurrentRecipe() {
                                     </Tr>
                                 </Thead>
                                 <Tbody p={0} minW={0}>
-                                    {recipe.ingredients.map((ingridient, index) => (
+                                    {data?.ingredients?.map((ingridient, index) => (
                                         <Tr
                                             h={{ base: '40px', xl: '52px' }}
                                             w='100%'
@@ -617,7 +657,20 @@ export function CurrentRecipe() {
                                                         lineHeight='20px'
                                                         data-test-id={`ingredient-quantity-${index}`}
                                                     >
-                                                        {Number(ingridient.count) * inputValue}
+                                                        {typeof ingridient.count === 'string' &&
+                                                        isNaN(+ingridient.count)
+                                                            ? ingridient.count
+                                                            : (() => {
+                                                                  const count = +ingridient.count;
+                                                                  const portions =
+                                                                      +data?.portions || 1;
+                                                                  const value =
+                                                                      (count / portions) *
+                                                                      inputValue;
+                                                                  return Number.isInteger(value)
+                                                                      ? value
+                                                                      : value.toFixed(2);
+                                                              })()}
                                                     </Text>
                                                     <Text
                                                         fontFamily='Inter'
@@ -650,22 +703,26 @@ export function CurrentRecipe() {
                         >
                             Шаги приготовления
                         </Heading>
-                        {recipe.steps.map((step) => (
+                        {data.steps.map((step) => (
                             <HStack
                                 mt={{ base: '12px' }}
                                 w={{ base: '100%' }}
                                 h={
-                                    step.image !== ''
+                                    step.image !== undefined && step.image !== ''
                                         ? { base: '128px', xl: '244px' }
                                         : { base: '88px', md: 'auto', xl: 'auto' }
                                 }
-                                maxH={step.image === '' ? { base: '88px', xl: '120px' } : ''}
+                                maxH={
+                                    step.image !== undefined && step.image !== ''
+                                        ? { base: '88px', xl: '120px' }
+                                        : ''
+                                }
                                 border='1px solid #00000014'
                                 borderRadius='8px'
                                 overflow='hidden'
                                 spacing={{ base: '0' }}
                             >
-                                {step.image !== '' && (
+                                {step.image !== undefined && step.image !== '' && (
                                     <Box
                                         minW={{
                                             base: '48.2%',
@@ -675,10 +732,10 @@ export function CurrentRecipe() {
                                         }}
                                     >
                                         <Image
-                                            src={step.image}
+                                            src={`https://training-api.clevertec.ru/${step.image}`}
                                             borderLeftRadius='8px'
                                             w={{ base: '100%' }}
-                                            h={{ base: '128px', xl: '244px' }}
+                                            h={{ base: '88px', xl: '120px' }}
                                         ></Image>
                                     </Box>
                                 )}
@@ -687,7 +744,7 @@ export function CurrentRecipe() {
                                     overflow='hidden'
                                     p={{ base: '4px 0px 0px 7px', xl: '16px 0px 0px 24px' }}
                                     pt={
-                                        step.image !== ''
+                                        step.image !== undefined && step.image !== ''
                                             ? { base: '4px' }
                                             : { base: '4px', md: '8px' }
                                     }
@@ -702,22 +759,37 @@ export function CurrentRecipe() {
                                         fontWeight={400}
                                         w='100%'
                                         h='24px'
-                                        p={{ base: '5px 0px 0px 8px', md: '5px 0px 0px 8px' }}
-                                        pt={step.image !== '' ? '' : { md: '1px', xl: '5px' }}
+                                        p={{
+                                            base: '5px 0px 0px 8px',
+                                            md: '5px 0px 0px 8px',
+                                        }}
+                                        pt={
+                                            step.image !== undefined && step.image !== ''
+                                                ? ''
+                                                : { md: '1px', xl: '5px' }
+                                        }
                                         letterSpacing='0.4px'
                                     >
                                         Шаг {step.stepNumber}
                                     </Text>
                                     <Text
                                         w='100%'
-                                        h={step.image !== '' ? '80px' : 'auto'}
+                                        h={
+                                            step.image !== undefined && step.image !== ''
+                                                ? '80px'
+                                                : 'auto'
+                                        }
                                         textAlign='left'
                                         fontFamily='Inter'
                                         fontSize='14px'
                                         lineHeight='20px'
                                         fontWeight={400}
                                         mt={{ base: '16px', md: '4px', xl: '8px' }}
-                                        m={step.image !== '' ? '' : { md: '0px' }}
+                                        m={
+                                            step.image !== undefined && step.image !== ''
+                                                ? ''
+                                                : { md: '0px' }
+                                        }
                                         pl={{ base: '1px', xl: 0 }}
                                         pr={{ base: '6px', md: '12px', xl: '24px' }}
                                         pb={{ base: '2px', xl: '19px', '2xl': '17.5px' }}

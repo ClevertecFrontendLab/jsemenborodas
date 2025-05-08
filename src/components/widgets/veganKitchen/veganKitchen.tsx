@@ -12,73 +12,136 @@ import {
 } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import { FavouriteNotes, Likes } from '~/icons/Icon';
+import { useGetCategoriesQuery } from '~/query/services/categories';
+import { useGetRecipeByCategoryQuery } from '~/query/services/recipesnew';
+import { Category, recipe, SubCategory } from '~/query/types/types';
+import { setAppError } from '~/store/app-slice';
+import { useAppDispatch } from '~/store/hooks';
 
-import { CardData } from '../../entities/Data/cardData';
-import { DerestiCardData } from '../../entities/Data/DerestiCardData';
-import { DesetiData } from '../../entities/Data/DesetiData';
-import { veganKitchenData } from '../../entities/Data/veganKitchenData';
 import { Metrics } from '../../features/Metrics/Metrics';
+import { Loader } from '../loader/Loader';
 
 export function VeganKitchen() {
+    const dispatch = useAppDispatch();
+    const [randomCategory, setRandomCategory] = useState<Category>();
+    const [randomSubCategory, setRandomSubCategory] = useState<SubCategory>();
+    const [categories, setCategories] = useState<Category[]>();
+    const [fiveRecipes, setFiveRecipes] = useState<recipe[]>([]);
+    const [loader, setLoader] = useState<boolean>(true);
     const location = useLocation();
-    const Name: Record<string, string> = {
-        '/': 'Приятного аппетита!',
-        Juciest: 'Самое сочное',
-        SecondDelicious: 'Второе блюдо',
-        VeganKitchen: 'Веганская кухня',
-    };
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    const secondSegment = pathSegments[1];
-    const title = Name[secondSegment];
+    const categoryName = pathSegments[0];
+    const {
+        data: categoryData,
+        isError: isCategoryError,
+        isLoading: isCategoryLoading,
+    } = useGetCategoriesQuery({});
+    useEffect(() => {
+        setCategories(categoryData?.filter((cat) => cat.subCategories !== undefined));
+    }, [categoryData]);
+
+    useEffect(() => {
+        if (categoryName && categoryData) {
+            setCategories(categoryData?.filter((cat) => cat.category === categoryName));
+        }
+    }, [categoryName, categoryData]);
+    useEffect(() => {
+        if (categories && categories.length) {
+            setRandomCategory(categories[Math.floor(Math.random() * (categories?.length - 0) + 0)]);
+        }
+    }, [categories]);
+    useEffect(() => {
+        if (randomCategory && randomCategory.subCategories) {
+            setRandomSubCategory(
+                randomCategory?.subCategories[
+                    Math.floor(Math.random() * (randomCategory?.subCategories?.length - 0) + 0)
+                ],
+            );
+        }
+    }, [randomCategory]);
+    const {
+        data: recipesOfRandomSubCategory,
+        isLoading: isRecipesLoading,
+        isError: isRecipeError,
+    } = useGetRecipeByCategoryQuery(
+        {
+            _id: randomSubCategory?._id ? randomSubCategory?._id : '',
+            limit: 5,
+        },
+        { skip: !randomSubCategory },
+    );
+    useEffect(() => {
+        if (recipesOfRandomSubCategory && recipesOfRandomSubCategory?.data) {
+            setFiveRecipes(recipesOfRandomSubCategory?.data.slice(0, 5));
+        }
+    }, [recipesOfRandomSubCategory]);
+    useEffect(() => {
+        if (!isRecipesLoading && !isCategoryLoading) {
+            setLoader(false);
+        }
+    }, [isRecipesLoading, isCategoryLoading]);
+    if (loader) {
+        return <Loader />;
+    }
+    if (isCategoryError || isRecipeError) {
+        dispatch(setAppError('Error'));
+        return null;
+    }
+    if (!fiveRecipes?.length) {
+        return null;
+    }
+
     return (
         <>
             <Box
                 w='100%'
                 mt={{ base: '40px', md: '39px', xl: '62px', '3xl': '60px' }}
                 h={{ xl: '308px' }}
-                mb={{ base: '100px', xl: 0 }}
-                ml={title === 'Второе блюдо' ? { md: '4px' } : {}}
+                mb={{ base: '100px' }}
             >
                 <Grid>
                     <GridItem>
                         <Grid
                             templateColumns={{ xl: '33% 1fr' }}
-                            gap={
-                                title === 'Второе блюдо'
-                                    ? { xl: '8px', '3xl': '245px' }
-                                    : { xl: '14px', '3xl': '245px' }
-                            }
+                            gap={{ base: '14px', '3xl': '245px' }}
                         >
                             <GridItem>
                                 <Heading
                                     textAlign='left'
                                     fontFamily='Inter'
                                     fontWeight={500}
-                                    fontSize={
-                                        title === 'Второе блюдо'
-                                            ? { base: '24px', xl: '48px' }
-                                            : { base: '24px', xl: '36px', '3xl': '48px' }
-                                    }
-                                    letterSpacing={{ base: '0.4px', xl: '1px', '3xl': '1.5px' }}
+                                    fontSize={{ base: '24px', xl: '36px', '3xl': '48px' }}
+                                    letterSpacing={{
+                                        base: '0.4px',
+                                        xl: '1px',
+                                        '3xl': '1.5px',
+                                    }}
                                     pl={{ xl: '4px', '3xl': '2px' }}
                                     pt={{ xl: '2px', '3xl': '8px' }}
-                                    lineHeight={
-                                        title === 'Второе блюдо' ? { xl: '48px' } : { xl: '40px' }
-                                    }
+                                    lineHeight={{ xl: '40px' }}
                                 >
-                                    {title === 'Второе блюдо'
-                                        ? 'Десерты, выпечка'
-                                        : 'Веганская кухня'}
+                                    {randomCategory?.title}
                                 </Heading>
                             </GridItem>
                             <GridItem
                                 mt={
                                     pathSegments[0] === 'Juciest'
-                                        ? { base: '6px', md: '8px', xl: '4px', '2xl': '2px' }
-                                        : { base: '6px', md: '8px', xl: '4px', '2xl': '6px' }
+                                        ? {
+                                              base: '6px',
+                                              md: '8px',
+                                              xl: '4px',
+                                              '2xl': '2px',
+                                          }
+                                        : {
+                                              base: '6px',
+                                              md: '8px',
+                                              xl: '4px',
+                                              '2xl': '6px',
+                                          }
                                 }
                                 w={{ base: '90%', md: '100%' }}
                             >
@@ -91,22 +154,15 @@ export function VeganKitchen() {
                                     fontSize={{ base: '14px', xl: '16px' }}
                                     letterSpacing={{ xl: '0.05px' }}
                                     lineHeight={{ base: '20px', xl: '24px' }}
-                                    mt={title === 'Второе блюдо' ? { md: '2px', xl: '0px' } : {}}
                                 >
-                                    {title === 'Второе блюдо'
-                                        ? 'Без них невозможно представить себе ни современную, ни традиционную кулинарию. Пироги и печенья, блины, пончики, вареники и, конечно, хлеб — рецепты изделий из теста многообразны и невероятно популярны.'
-                                        : 'Интересны не только убеждённым вегетарианцам, но и тем, кто хочет  попробовать вегетарианскую диету и готовить вкусные  вегетарианские блюда.'}
+                                    {randomCategory?.description}
                                 </Text>
                             </GridItem>
                         </Grid>
                     </GridItem>
                     <GridItem
                         h={{ base: '540px', md: '172px' }}
-                        mt={
-                            title === 'Второе блюдо'
-                                ? { base: '16px', md: '14px', xl: '20px' }
-                                : { base: '16px', md: '14px', xl: '24px' }
-                        }
+                        mt={{ base: '16px', md: '14px', xl: '24px' }}
                     >
                         <Grid
                             templateRows={{ base: 'repeat(3, 1fr)', md: '1fr' }}
@@ -116,15 +172,12 @@ export function VeganKitchen() {
                                 xl: '31.9% 31.9% 31.5%',
                                 '2xl': '23.9% 23.9% 1fr',
                             }}
-                            gap={
-                                title === 'Второе блюдо'
-                                    ? { base: '12px', xl: '18px', '2xl': '22px' }
-                                    : { base: '12px', xl: '20px', '2xl': '22px' }
-                            }
+                            gap={{ base: '12px', xl: '20px', '2xl': '22px' }}
                             ml={{ xl: '4px' }}
                         >
-                            {(title === 'Второе блюдо' ? DesetiData : veganKitchenData).map(
-                                (item) => (
+                            {fiveRecipes &&
+                                fiveRecipes.length &&
+                                fiveRecipes?.slice(0, 2).map((item) => (
                                     <GridItem
                                         h={{ base: '168px', xl: '180px', '2xl': '194px' }}
                                         minWidth='0'
@@ -134,7 +187,6 @@ export function VeganKitchen() {
                                             borderRadius='8px'
                                             border='1px solid #00000014'
                                             boxShadow='none'
-                                            className='custom-cursor'
                                             bg='transparent'
                                         >
                                             <CardBody
@@ -145,11 +197,7 @@ export function VeganKitchen() {
                                             >
                                                 <VStack
                                                     alignItems='flex-start'
-                                                    spacing={
-                                                        title === 'Второе блюдо'
-                                                            ? { xl: '0px' }
-                                                            : { xl: '5px' }
-                                                    }
+                                                    spacing={{ xl: '5px' }}
                                                 >
                                                     <Box
                                                         maxW={{ base: '100%', xl: '95%' }}
@@ -158,7 +206,10 @@ export function VeganKitchen() {
                                                         <Text
                                                             fontFamily='Inter'
                                                             fontWeight={500}
-                                                            fontSize={{ base: '16px', xl: '20px' }}
+                                                            fontSize={{
+                                                                base: '16px',
+                                                                xl: '20px',
+                                                            }}
                                                             lineHeight={{
                                                                 base: '24px',
                                                                 xl: '28px',
@@ -184,11 +235,7 @@ export function VeganKitchen() {
                                                             lineHeight={{ base: '20px' }}
                                                             textAlign='left'
                                                             noOfLines={3}
-                                                            mt={
-                                                                title === 'Второе блюдо'
-                                                                    ? { md: '6px' }
-                                                                    : { base: '6px', xl: '0px' }
-                                                            }
+                                                            mt={{ base: '6px', xl: '0px' }}
                                                         >
                                                             {item.description}
                                                         </Text>
@@ -197,8 +244,16 @@ export function VeganKitchen() {
                                             </CardBody>
                                             <CardFooter
                                                 h={{ '2xl': '50px' }}
-                                                pt={{ base: '16px', xl: '16px', '2xl': '4px' }}
-                                                pr={{ base: '17px', md: '18px', '2xl': '30.5px' }}
+                                                pt={{
+                                                    base: '16px',
+                                                    xl: '16px',
+                                                    '2xl': '4px',
+                                                }}
+                                                pr={{
+                                                    base: '17px',
+                                                    md: '18px',
+                                                    '2xl': '30.5px',
+                                                }}
                                                 pl={{ base: '10px', '2xl': '20px' }}
                                             >
                                                 <HStack
@@ -209,17 +264,39 @@ export function VeganKitchen() {
                                                 >
                                                     <Box bg='#FFFFD3' py='2px' px='8px'>
                                                         <HStack>
-                                                            <Image src={item.tagIcon}></Image>
+                                                            <Image
+                                                                src={`https://training-api.clevertec.ru/${
+                                                                    categoryData?.find((cat) =>
+                                                                        cat.subCategories?.some(
+                                                                            (sub) =>
+                                                                                sub._id ===
+                                                                                item
+                                                                                    .categoriesIds[0],
+                                                                        ),
+                                                                    )?.icon
+                                                                }`}
+                                                            ></Image>
                                                             <Text
                                                                 fontFamily='Inter'
                                                                 fontSize={{ base: '14px' }}
-                                                                lineHeight={{ base: '20px' }}
+                                                                lineHeight={{
+                                                                    base: '20px',
+                                                                }}
                                                                 fontWeight={400}
                                                                 whiteSpace='nowrap'
                                                                 textOverflow='ellipsis'
                                                                 overflow='hidden'
                                                             >
-                                                                {item.tag}
+                                                                {
+                                                                    categoryData?.find((cat) =>
+                                                                        cat.subCategories?.some(
+                                                                            (sub) =>
+                                                                                sub._id ===
+                                                                                item
+                                                                                    .categoriesIds[0],
+                                                                        ),
+                                                                    )?.title
+                                                                }
                                                             </Text>
                                                         </HStack>
                                                     </Box>
@@ -228,12 +305,16 @@ export function VeganKitchen() {
                                                             <Metrics icon={FavouriteNotes}>
                                                                 <Text
                                                                     fontFamily='Inter'
-                                                                    fontSize={{ base: '12px' }}
-                                                                    lineHeight={{ base: '20px' }}
+                                                                    fontSize={{
+                                                                        base: '12px',
+                                                                    }}
+                                                                    lineHeight={{
+                                                                        base: '20px',
+                                                                    }}
                                                                     fontWeight={600}
                                                                     color='#2DB100'
                                                                 >
-                                                                    {item.follows}
+                                                                    {item.bookmarks}
                                                                 </Text>
                                                             </Metrics>
                                                             <Metrics icon={Likes}>
@@ -245,68 +326,65 @@ export function VeganKitchen() {
                                             </CardFooter>
                                         </Card>
                                     </GridItem>
-                                ),
-                            )}
+                                ))}
                             <GridItem
                                 h={{ base: '180px', xl: '200px' }}
                                 minW='0'
                                 height={{ base: '52px' }}
                             >
                                 <VStack
-                                    spacing={
-                                        title === 'Второе блюдо'
-                                            ? { base: '12px', md: '6px', xl: '12px' }
-                                            : { base: '12px', md: '6px', xl: '12px', '2xl': '16px' }
-                                    }
+                                    spacing={{
+                                        base: '12px',
+                                        md: '6px',
+                                        xl: '12px',
+                                        '2xl': '16px',
+                                    }}
                                 >
-                                    {(title === 'Второе блюдо' ? DerestiCardData : CardData).map(
-                                        (item) => (
+                                    {fiveRecipes &&
+                                        fiveRecipes.slice(2, 5).map((item) => (
                                             <Card
                                                 borderRadius='8px'
                                                 border='1px solid #00000014'
-                                                h={
-                                                    title === 'Второе блюдо'
-                                                        ? { base: '52px', '2xl': '57px' }
-                                                        : { base: '52px' }
-                                                }
+                                                h={{ base: '52px' }}
                                                 w='100%'
                                                 minW='0'
                                                 overflow='hidden'
                                                 maxW='100%'
                                                 boxShadow='none'
-                                                className='custom-cursor'
                                                 bg='transparent'
                                             >
                                                 <CardBody
                                                     p={{ base: '16px 0px 0px 12px' }}
-                                                    pt={
-                                                        title === 'Второе блюдо'
-                                                            ? { xl: '16px' }
-                                                            : { xl: '12px' }
-                                                    }
+                                                    pt={{ xl: '12px' }}
                                                     pl={{ md: '10px', xl: '9px' }}
                                                     minW='0'
                                                     w='100%'
                                                 >
                                                     <HStack
                                                         flexShrink={1}
-                                                        w={{ base: '63%', md: '57%', xl: '67%' }}
+                                                        w={{
+                                                            base: '63%',
+                                                            md: '57%',
+                                                            xl: '67%',
+                                                        }}
                                                     >
-                                                        <HStack
-                                                            minW='0'
-                                                            gap={
-                                                                title === 'Второе блюдо'
-                                                                    ? { '2xl': '0' }
-                                                                    : { base: '8px' }
-                                                            }
-                                                        >
+                                                        <HStack minW='0' gap={{ base: '8px' }}>
                                                             <Box
                                                                 minW='24px'
                                                                 w='24px'
                                                                 ml={{ '2xl': '12px' }}
                                                             >
                                                                 <Image
-                                                                    src={item.tagIcon}
+                                                                    src={`https://training-api.clevertec.ru/${
+                                                                        categoryData?.find((cat) =>
+                                                                            cat.subCategories?.some(
+                                                                                (sub) =>
+                                                                                    sub._id ===
+                                                                                    item
+                                                                                        .categoriesIds[0],
+                                                                            ),
+                                                                        )?.icon
+                                                                    }`}
                                                                     w='24px'
                                                                     h='24px'
                                                                 ></Image>
@@ -333,7 +411,9 @@ export function VeganKitchen() {
                                                                     whiteSpace='nowrap'
                                                                     overflow='hidden'
                                                                     textOverflow='ellipsis'
-                                                                    textAlign={{ '2xl': 'left' }}
+                                                                    textAlign={{
+                                                                        '2xl': 'left',
+                                                                    }}
                                                                     sx={{
                                                                         WebkitLineClamp: '1',
                                                                     }}
@@ -345,7 +425,10 @@ export function VeganKitchen() {
                                                         </HStack>
                                                         <Box
                                                             ml={{ base: '4px' }}
-                                                            mr={{ md: '12px', '2xl': '18px' }}
+                                                            mr={{
+                                                                md: '12px',
+                                                                '2xl': '18px',
+                                                            }}
                                                         >
                                                             <Button
                                                                 bg='transparent'
@@ -353,35 +436,21 @@ export function VeganKitchen() {
                                                                 borderRadius='6px'
                                                                 minW='70px'
                                                                 minH='32px'
-                                                                w={{ base: '70px', '2xl': '87px' }}
+                                                                w={{
+                                                                    base: '70px',
+                                                                    '2xl': '87px',
+                                                                }}
                                                                 h='32px'
-                                                                cursor='none'
                                                                 position='absolute'
-                                                                right={
-                                                                    title === 'Второе блюдо'
-                                                                        ? {
-                                                                              base: '12px',
-                                                                              xl: '6px',
-                                                                              '2xl': '24px',
-                                                                          }
-                                                                        : {
-                                                                              base: '12px',
-                                                                              xl: '6px',
-                                                                              '2xl': '16px',
-                                                                          }
-                                                                }
-                                                                top={
-                                                                    title === 'Второе блюдо'
-                                                                        ? {
-                                                                              base: '12px',
-                                                                              xl: '10px',
-                                                                              '2xl': '14px',
-                                                                          }
-                                                                        : {
-                                                                              base: '12px',
-                                                                              xl: '10px',
-                                                                          }
-                                                                }
+                                                                right={{
+                                                                    base: '12px',
+                                                                    xl: '6px',
+                                                                    '2xl': '16px',
+                                                                }}
+                                                                top={{
+                                                                    base: '12px',
+                                                                    xl: '10px',
+                                                                }}
                                                             >
                                                                 <Text
                                                                     fontFamily='Inter'
@@ -399,8 +468,7 @@ export function VeganKitchen() {
                                                     </HStack>
                                                 </CardBody>
                                             </Card>
-                                        ),
-                                    )}
+                                        ))}
                                 </VStack>
                             </GridItem>
                         </Grid>

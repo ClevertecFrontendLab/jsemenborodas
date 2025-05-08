@@ -13,14 +13,16 @@ import {
 import { Image, Text } from '@chakra-ui/react';
 import { useLocation, useNavigate } from 'react-router';
 
-import { NavMenuData } from '~/components/entities/Data/NavMenuData';
 import { Breadcrumbs } from '~/components/features/BreadCrumb/BreadCrumbs';
 import { Burger, OpenBurger } from '~/icons/Icon';
+import { useGetCategoriesQuery } from '~/query/services/categories';
+import { Category } from '~/query/types/types';
 
-import exiticon from '../../../../public/exitIcon.png';
+import exiticon from '../../../someimages/exitIcon.png';
+import { Loader } from '../loader/Loader';
 interface BurgerMenuProps {
     isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>; // Dispatch - тип, который представляет функцию, используемую для изменения состояния. Свэг.
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
@@ -37,9 +39,30 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
         base: 'vegan-cuisine',
         xl: '',
     });
+    const { data, isError, isLoading, isFetching } = useGetCategoriesQuery({});
+
+    const filteredData = data?.filter((item) => item.subCategories !== undefined);
+
+    let resultData;
+
+    if (isError && filteredData) {
+        const mockData = localStorage.getItem('navMenu');
+        if (mockData === null || (mockData === undefined && data)) {
+            localStorage.setItem('navMenu', JSON.stringify(filteredData));
+        }
+        if (mockData && data && mockData !== undefined) {
+            resultData = JSON.parse(mockData) || null;
+        }
+    } else {
+        localStorage.setItem('navMenu', JSON.stringify(filteredData));
+    }
+
+    if (isLoading || isFetching) {
+        return <Loader />;
+    }
     return (
         <>
-            <Box onClick={toggleMenu} zIndex='9999'>
+            <Box onClick={toggleMenu} zIndex='11'>
                 <Icon
                     as={isOpen ? OpenBurger : Burger}
                     w={isOpen ? 3 : 6}
@@ -56,7 +79,7 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                 w='344px'
                 h={{ base: '82vh', sm: '85vh' }}
                 maxH={{ base: '652px', md: '876px' }}
-                zIndex='8000'
+                zIndex='11'
                 background='white'
                 borderBottomRadius={12}
                 overflow='hidden'
@@ -79,9 +102,10 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                             fontSize='16px'
                             lineHeight='24px'
                             letterSpacing={0}
-                            whiteSpace='nowrap'
+                            textAlign='left'
+                            whiteSpace='wrap'
                         >
-                            <Breadcrumbs pathNames={pathNames}></Breadcrumbs>
+                            <Breadcrumbs></Breadcrumbs>
                         </Text>
                     </HStack>
                     <Accordion
@@ -89,7 +113,10 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                         borderRadius='8px'
                         w='100%'
                         minH='0px'
-                        h={{ base: 'calc(100% - 144px - 24px)', md: 'calc(100% - 144px - 66px)' }}
+                        h={{
+                            base: 'calc(100% - 144px - 24px)',
+                            md: 'calc(100% - 144px - 66px)',
+                        }}
                         allowToggle
                         overflow='hidden'
                         overflowY='auto'
@@ -111,14 +138,14 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                             },
                         }}
                     >
-                        {NavMenuData.map((item) => (
+                        {(isError ? resultData : filteredData)?.map((item: Category) => (
                             <AccordionItem border='none' boxShadow='none'>
                                 <AccordionButton
                                     p={0}
                                     h='48px'
                                     _expanded={{ bg: '#EAFFC7' }}
                                     onClick={() => {
-                                        const path = `/${item.category}/${item.childrens[0].subCategory}`;
+                                        const path = `/${item.category}/${item.subCategories[0].category}`;
                                         navigate(path);
                                     }}
                                 >
@@ -129,7 +156,11 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                                         pr={{ base: '28px', sm: '22px', md: '24px' }}
                                     >
                                         <HStack spacing='12px'>
-                                            <Image src={item.icon} w='24px' h='24px'></Image>
+                                            <Image
+                                                src={`https://training-api.clevertec.ru${item.icon}`}
+                                                w='24px'
+                                                h='24px'
+                                            ></Image>
                                             <Text
                                                 fontFamily='Inter'
                                                 fontWeight={
@@ -151,20 +182,20 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                                 </AccordionButton>
                                 <AccordionPanel overflow='hidden' boxShadow='none' p={0} pt={2}>
                                     <VStack alignItems='flex-start' spacing={0}>
-                                        {item.childrens.map((child) => (
+                                        {item.subCategories.map((child) => (
                                             <Box
                                                 w='230px'
                                                 h='36px'
                                                 pl='62px'
                                                 onClick={() => {
-                                                    const path = `/${item.category}/${child.subCategory}`;
+                                                    const path = `/${item.category}/${child.category}`;
                                                     navigate(path);
                                                 }}
                                             >
                                                 <HStack position='relative'>
                                                     <Text
                                                         fontWeight={
-                                                            pathNames[1] === child.subCategory
+                                                            pathNames[1] === child.category
                                                                 ? '700'
                                                                 : '500'
                                                         }
@@ -175,7 +206,7 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                                                         whiteSpace='nowrap'
                                                         sx={{
                                                             '&::before':
-                                                                pathNames[1] === child.subCategory
+                                                                pathNames[1] === child.category
                                                                     ? {
                                                                           content: '""',
                                                                           position: 'absolute',
@@ -258,17 +289,6 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                     </Box>
                 </VStack>
             </Box>
-            <Box
-                position='fixed'
-                top='61px'
-                bottom='0'
-                left='0'
-                right='0'
-                display={isOpen ? 'block' : 'none'}
-                zIndex='1'
-                bg='rgba(0, 0, 0, 0.16)'
-                onClick={toggleMenu}
-            ></Box>
         </>
     );
 }

@@ -5,6 +5,8 @@ import { useLocation } from 'react-router';
 import { UserAvatar } from '~/components/features/Avatar/Avatar';
 import { Breadcrumbs } from '~/components/features/BreadCrumb/BreadCrumbs';
 import { FavouriteNotes, FullLogo, Likes, Logo, Subscribers } from '~/icons/Icon';
+import { useAppSelector } from '~/store/hooks';
+import { selectorIsFilterOpen } from '~/store/reducers/open';
 
 import { Metrics } from '../../features/Metrics/Metrics';
 import AvatarImg from '../../shared/images/avatarImages/avatar.jpg';
@@ -13,14 +15,20 @@ import { BurgerMenu } from '../burgerMenu/BurgerMenu';
 interface HeaderMenuProps {
     isBurgerOpen: boolean;
     setIsBurgerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    isFilterHidden: boolean;
 }
 
-export function Header({ isBurgerOpen, setIsBurgerOpen, isFilterHidden }: HeaderMenuProps) {
+export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
     const location = useLocation();
     const pathNames = location.pathname.split('/').filter((x) => x);
     const userName = 'Екатерина Константинопольская';
     const userUsername = '@bake_and_pie';
+    const isFilterOpen = useAppSelector(selectorIsFilterOpen);
+    const isBurgerOrFilterOpen = () => {
+        if (isBurgerOpen || isFilterOpen) {
+            return true;
+        }
+        return false;
+    };
     const marginLeft =
         pathNames[0] === 'Juciest' ? { xl: '48px', '2xl': '55px' } : { xl: '53px', '2xl': '55px' };
     useEffect(() => {
@@ -41,17 +49,13 @@ export function Header({ isBurgerOpen, setIsBurgerOpen, isFilterHidden }: Header
     return (
         <Box
             as='header'
-            bg={
-                isBurgerOpen || isFilterHidden === false
-                    ? 'rgba(255,255,255,1)'
-                    : 'rgba(255, 255, 211, 1)'
-            }
+            bg={isBurgerOrFilterOpen() ? 'rgba(255,255,255,1)' : 'rgba(255, 255, 211, 1)'}
             data-test-id='header'
             w='100%'
             position='fixed'
             top='0'
             maxW={{ base: '1920px', sm: '100vw', xl: '1920px' }}
-            zIndex='1200'
+            zIndex='10'
             pb='2px'
         >
             <HStack
@@ -85,31 +89,13 @@ export function Header({ isBurgerOpen, setIsBurgerOpen, isFilterHidden }: Header
                         w='100%'
                     >
                         <Hide above='xl'>
-                            <Box
-                                w={14}
-                                h={6}
-                                display={
-                                    isBurgerOpen || isFilterHidden === false ? 'none' : 'block'
-                                }
-                            >
+                            <Box w={14} h={6} display={isBurgerOrFilterOpen() ? 'none' : 'block'}>
                                 <Metrics icon={FavouriteNotes}>185</Metrics>
                             </Box>
-                            <Box
-                                w='58px'
-                                h={6}
-                                display={
-                                    isBurgerOpen || isFilterHidden === false ? 'none' : 'block'
-                                }
-                            >
+                            <Box w='58px' h={6} display={isBurgerOrFilterOpen() ? 'none' : 'block'}>
                                 <Metrics icon={Subscribers}>589</Metrics>
                             </Box>
-                            <Box
-                                w='57px'
-                                h={6}
-                                display={
-                                    isBurgerOpen || isFilterHidden === false ? 'none' : 'block'
-                                }
-                            >
+                            <Box w='57px' h={6} display={isBurgerOrFilterOpen() ? 'none' : 'block'}>
                                 <Metrics icon={Likes}>587</Metrics>
                             </Box>
                         </Hide>
@@ -121,7 +107,7 @@ export function Header({ isBurgerOpen, setIsBurgerOpen, isFilterHidden }: Header
                                 padding={0}
                                 fontFamily='Inter'
                             >
-                                <Breadcrumbs pathNames={pathNames} />
+                                <Breadcrumbs />
                             </Heading>
                         </Show>
                     </HStack>

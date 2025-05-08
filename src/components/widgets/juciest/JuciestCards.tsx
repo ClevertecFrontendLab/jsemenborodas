@@ -7,128 +7,70 @@ import {
     Hide,
     HStack,
     Icon,
-    Image,
     Show,
-    Text,
     VStack,
 } from '@chakra-ui/react';
+import { Image, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 
-import childTasty from '/public/childTasty.png';
-import healthyFood from '/public/healthyEating.png';
-import internationalFood from '/public/internationalFood.png';
-import leaf from '/public/leaf.png';
-// eslint-disable-next-line import/order
-import pan from '/public/pan.png';
-import { RecipeData } from '~/components/entities/Data/RecipeData';
+import { Metrics } from '~/components/features/Metrics/Metrics';
 import { FavouriteNotes, Likes } from '~/icons/Icon';
+import { useGetCategoriesQuery } from '~/query/services/categories';
+import { useGetRecipesQuery } from '~/query/services/recipes';
+import { recipeRequest } from '~/query/types/types';
 
-import { Metrics } from '../../features/Metrics/Metrics';
+import { Loader } from '../loader/Loader';
 
-interface ContentRecipeProps {
-    searchValue: string;
-    selectedItems: string[];
-    customAllergen: string[];
-    isDisabled: boolean;
-    meatTypes: { title: string; name: string }[];
-    sideDishes: { title: string; name: string }[];
-    categories: { id: number; title: string; name: string }[];
-    authors: string[];
-    isSearchStarted: boolean;
-    setIsSuccessful: (value: boolean) => void;
+interface pageProps {
+    page: number;
 }
 
-export function FilterContentRecipeSearch({
-    searchValue,
-    selectedItems,
-    customAllergen,
-    isDisabled,
-    meatTypes,
-    sideDishes,
-    categories,
-    // authors,
-    isSearchStarted,
-}: ContentRecipeProps) {
+export function JuciestCards({ page }: pageProps) {
+    const { data, isError, isLoading, isFetching } = useGetRecipesQuery({
+        sortBy: 'likes',
+        sortOrder: 'desc',
+        limit: 8,
+        page: page,
+    }) as { data: recipeRequest; isError: boolean; isLoading: boolean; isFetching: boolean };
+    const {
+        data: catData,
+        isLoading: catLoad,
+        isFetching: catFetching,
+    } = useGetCategoriesQuery({});
     const navigate = useNavigate();
-
-    const filteredRecipes = RecipeData.filter((item) => {
-        if (!item?.title) return false;
-
-        const matchesSearch = item.title.toLowerCase().includes(searchValue.toLowerCase());
-        const matchesMeatType =
-            meatTypes.length === 0 ||
-            (item.meat && meatTypes.some((meat) => meat.name === item.meat));
-        const matchesSideDish =
-            sideDishes.length === 0 ||
-            (item.side && sideDishes.some((side) => side.name === item.side));
-        const matchesCategory =
-            categories.length === 0 ||
-            item.category.some((cat) => categories.some((category) => category.name === cat));
-
-        return matchesSearch && matchesMeatType && matchesSideDish && matchesCategory;
-    });
-
-    const categoriesDecrypt: Record<string, string> = {
-        'second-dish': 'Вторые блюда',
-        national: 'Национальные',
-        'child-food': 'Детские блюда',
-        vegan: 'Веганская кухня',
-        snacks: 'Закуски',
-        salads: 'Салаты',
-        soups: 'Супы',
-    };
-
-    const categoriesTagDecrypt: Record<string, string> = {
-        'second-dish': pan,
-        national: internationalFood,
-        'child-food': childTasty,
-        vegan: leaf,
-        snacks: healthyFood,
-        salads: leaf,
-        soups: pan,
-    };
-
-    const allAllergens = [...selectedItems, ...customAllergen].map((allergen) =>
-        allergen.toLowerCase(),
-    );
-
-    const finalFilteredRecipes = filteredRecipes
-        .filter((item) => {
-            if (isDisabled && allAllergens.length > 0) {
-                return !item.ingredients.some((ingredient) =>
-                    allAllergens.includes(ingredient.title.toLowerCase()),
-                );
-            }
-            return true;
-        })
-        .slice(0, 8);
-
+    if (isLoading || catLoad || catFetching || isFetching) {
+        return <Loader />;
+    }
+    if (isError) {
+        return null;
+    }
     return (
-        <Box w='100%' pl={{ xl: '4px' }} mt='48px'>
+        <>
             <Grid
                 w='100%'
                 h='100%'
                 gridTemplateRows={{ base: 'repeat(1, 1fr)' }}
                 gridTemplateColumns={{
-                    md: 'repeat(2, 1fr)',
+                    md: ' repeat(2, 1fr)',
                     xl: 'repeat(1, 1fr)',
-                    '2xl': 'repeat(2, 1fr)',
+                    '2xl': ' repeat(2, 1fr)',
                 }}
-                rowGap={{ base: '12px', xl: '16px' }}
-                columnGap={{ md: '15px', '2xl': '30px' }}
+                rowGap={4}
+                columnGap={{ md: '15px', '2xl': '24px' }}
             >
-                {finalFilteredRecipes.map((item) => (
+                {data?.data?.map((item, index) => (
                     <Card
-                        key={item.id}
+                        data-test-id='food-card'
                         border='1px solid #00000014'
                         bg='transparent'
                         w='100%'
                         h={{ base: '128px', xl: '244px' }}
                         borderRadius='8px'
                         overflow='hidden'
-                        data-test-id={isSearchStarted ? 'food-card' : ''}
+                        minW={{ xl: '880px', '2xl': '0' }}
+                        key={`${item._id}${index}${item.bookmarks}`}
                     >
-                        <CardBody p={0}>
+                        <CardBody p={0} maxH={{ xl: '244px' }} w='100%' maxW='100%'>
                             <HStack h='100%' maxW='100%'>
                                 <Box
                                     overflow='hidden'
@@ -141,13 +83,12 @@ export function FilterContentRecipeSearch({
                                     position='relative'
                                 >
                                     <Image
-                                        src={item.image}
+                                        src={`https://training-api.clevertec.ru/${item.image}`}
                                         h={{ base: '126px', xl: '242px' }}
                                         w='100%'
                                         objectFit='cover'
                                         objectPosition='center'
-                                        alt={item.title}
-                                    />
+                                    ></Image>
                                     <Hide above='xl'>
                                         <Box
                                             transform={{
@@ -165,24 +106,46 @@ export function FilterContentRecipeSearch({
                                                 pb='2px'
                                             >
                                                 <Image
-                                                    src={categoriesTagDecrypt[item.category[0]]}
+                                                    src={`https://training-api.clevertec.ru/${
+                                                        catData?.find((cat) =>
+                                                            cat.subCategories?.some(
+                                                                (sub) =>
+                                                                    sub._id ===
+                                                                    item.categoriesIds[0],
+                                                            ),
+                                                        )?.icon
+                                                    }`}
                                                     w='16px'
                                                     h='16px'
-                                                    alt='Category icon'
-                                                />
+                                                ></Image>
                                                 <Text
                                                     fontFamily='Inter'
                                                     fontWeight={400}
                                                     lineHeight='20px'
                                                     fontSize='14px'
                                                 >
-                                                    {categoriesDecrypt[item.category[0]]}
+                                                    {
+                                                        catData?.find((cat) =>
+                                                            cat.subCategories?.some(
+                                                                (sub) =>
+                                                                    sub._id ===
+                                                                    item.categoriesIds[0],
+                                                            ),
+                                                        )?.title
+                                                    }
                                                 </Text>
                                             </HStack>
                                         </Box>
                                     </Hide>
                                 </Box>
-                                <Box h={{ base: '126px', xl: '100%' }} position='relative' w='100%'>
+                                <Box
+                                    h={{ base: '126px', xl: '100%' }}
+                                    mb={{ base: '12px', xl: '0px' }}
+                                    position='relative'
+                                    w='100%'
+                                    maxW='100%'
+                                    ml={{ xl: '12px' }}
+                                >
                                     <VStack
                                         maxW='100%'
                                         w='100%'
@@ -194,6 +157,7 @@ export function FilterContentRecipeSearch({
                                         <HStack
                                             maxW='100%'
                                             h='24px'
+                                            ml={{ base: '4px', xl: '3px' }}
                                             justifyContent={{ xl: 'space-between' }}
                                             w={{ xl: '100%' }}
                                             flexWrap='wrap'
@@ -208,11 +172,18 @@ export function FilterContentRecipeSearch({
                                                     borderRadius='4px'
                                                 >
                                                     <Image
-                                                        src={categoriesTagDecrypt[item.category[0]]}
+                                                        src={`https://training-api.clevertec.ru/${
+                                                            catData?.find((cat) =>
+                                                                cat.subCategories?.some(
+                                                                    (sub) =>
+                                                                        sub._id ===
+                                                                        item.categoriesIds[0],
+                                                                ),
+                                                            )?.icon
+                                                        }`}
                                                         w='14px'
                                                         h='14px'
-                                                        alt='Category icon'
-                                                    />
+                                                    ></Image>
                                                     <Text
                                                         fontFamily='Inter'
                                                         fontSize='14px'
@@ -220,7 +191,15 @@ export function FilterContentRecipeSearch({
                                                         noOfLines={1}
                                                         overflow='hidden'
                                                     >
-                                                        {categoriesDecrypt[item.category[0]]}
+                                                        {
+                                                            catData?.find((cat) =>
+                                                                cat.subCategories?.some(
+                                                                    (sub) =>
+                                                                        sub._id ===
+                                                                        item.categoriesIds[0],
+                                                                ),
+                                                            )?.title
+                                                        }
                                                     </Text>
                                                 </HStack>
                                             </Show>
@@ -239,43 +218,10 @@ export function FilterContentRecipeSearch({
                                                 fontSize={{ base: '16px', xl: '20px' }}
                                                 textAlign='left'
                                                 noOfLines={2}
+                                                h={{ xl: '28px' }}
                                                 letterSpacing={{ xl: '0.15px' }}
                                             >
-                                                {(() => {
-                                                    const searchIndex = item.title
-                                                        .toLowerCase()
-                                                        .indexOf(searchValue.toLowerCase());
-
-                                                    if (searchIndex === -1) {
-                                                        return item.title;
-                                                    }
-
-                                                    const lastIndex =
-                                                        searchIndex + searchValue.length;
-                                                    const beforeMatch = item.title.slice(
-                                                        0,
-                                                        searchIndex,
-                                                    );
-                                                    const match = item.title.slice(
-                                                        searchIndex,
-                                                        lastIndex,
-                                                    );
-                                                    const afterMatch = item.title.slice(lastIndex);
-
-                                                    return (
-                                                        <>
-                                                            {beforeMatch}
-                                                            <span
-                                                                style={{
-                                                                    color: '#2DB100',
-                                                                }}
-                                                            >
-                                                                {match}
-                                                            </span>
-                                                            {afterMatch}
-                                                        </>
-                                                    );
-                                                })()}
+                                                {item.title}
                                             </Text>
                                         </HStack>
                                         <Show above='xl'>
@@ -287,11 +233,13 @@ export function FilterContentRecipeSearch({
                                                     lineHeight={{ base: '20px' }}
                                                     noOfLines={3}
                                                     textAlign='left'
+                                                    h={{ xl: '64px' }}
                                                 >
                                                     {item.description}
                                                 </Text>
                                             </HStack>
                                         </Show>
+
                                         <HStack
                                             position='absolute'
                                             right={{ base: '9px', xl: '20px' }}
@@ -308,7 +256,7 @@ export function FilterContentRecipeSearch({
                                                 bg='transparent'
                                             >
                                                 <HStack>
-                                                    <Icon as={FavouriteNotes} w='12px' />
+                                                    <Icon as={FavouriteNotes} w='12px'></Icon>
                                                     <Show above='xl'>
                                                         <Text
                                                             fontFamily='Inter'
@@ -321,19 +269,26 @@ export function FilterContentRecipeSearch({
                                                     </Show>
                                                 </HStack>
                                             </Button>
+
                                             <Button
                                                 w={{ base: '70px', xl: '88px' }}
                                                 h={{ base: '24px', xl: '32px' }}
                                                 bg='#000000EB'
                                                 borderRadius='6px'
-                                                onClick={() => navigate(`/the-juiciest/${item.id}`)}
+                                                onClick={() =>
+                                                    navigate(`/the-juiciest/${item._id}`)
+                                                }
+                                                data-test-id={`card-link-${index}`}
                                             >
                                                 <HStack spacing='7.5px'>
                                                     <Text
                                                         color='#FFFFFF'
                                                         fontWeight={600}
                                                         fontFamily='Inter'
-                                                        fontSize={{ base: '12px', xl: '14px' }}
+                                                        fontSize={{
+                                                            base: '12px',
+                                                            xl: '14px',
+                                                        }}
                                                         lineHeight={{ base: '16px' }}
                                                     >
                                                         Готовить
@@ -348,22 +303,6 @@ export function FilterContentRecipeSearch({
                     </Card>
                 ))}
             </Grid>
-            <Button
-                h={{ base: '40px' }}
-                w={{ base: '152px' }}
-                borderRadius='6px'
-                bgColor='#B1FF2E'
-                fontFamily='Inter'
-                fontWeight={600}
-                letterSpacing='0.3px'
-                pl={3}
-                fontSize={16}
-                mt={4}
-                _hover={{ bg: '#A0EB2D' }}
-                display={filteredRecipes.length > 0 ? '' : 'none'}
-            >
-                Загрузить ещё
-            </Button>
-        </Box>
+        </>
     );
 }

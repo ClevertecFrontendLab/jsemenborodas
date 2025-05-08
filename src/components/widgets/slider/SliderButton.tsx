@@ -33,7 +33,7 @@ export const SliderButton = ({ swiperRef }) => {
                     top='0px'
                     left='-8px'
                     borderRadius='6px'
-                    zIndex='500'
+                    zIndex='3'
                     onClick={handlePrev}
                 >
                     <Icon as={leftArrow} w={{ '2xl': '24px' }}></Icon>
@@ -58,7 +58,7 @@ export const SliderButton = ({ swiperRef }) => {
                     right='-8px'
                     borderRadius='6px'
                     position='absolute'
-                    zIndex='500'
+                    zIndex='3'
                     onClick={handleNext}
                 >
                     <Icon as={rightArrow} w={{ '2xl': '24px' }}></Icon>

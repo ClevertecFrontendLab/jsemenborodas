@@ -1,18 +1,26 @@
 import { Box, Tab, TabList, Tabs as Tabb } from '@chakra-ui/react';
 import { useLocation, useNavigate } from 'react-router';
 
-import { NavMenuData } from '~/components/entities/Data/NavMenuData';
+import { useGetCategoriesQuery } from '~/query/services/categories';
+import { SubCategory } from '~/query/types/types';
 
 export function Tabs() {
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
 
-    const selectedCategory = NavMenuData.find((item) => item.category === pathSegments[0]);
-    const selectedSubCategory = selectedCategory?.childrens.findIndex(
-        (item) => item.subCategory === pathSegments[1],
-    );
     const navigate = useNavigate();
-
+    const { data, isError } = useGetCategoriesQuery({});
+    const currentCategory = data?.find((item) => item?.category === pathSegments[0]);
+    const selectedSubCategory =
+        currentCategory &&
+        currentCategory?.subCategories?.findIndex((item) => item?.category === pathSegments[1]);
+    const handlerLink = (subcategory: SubCategory) => {
+        const path = `/${pathSegments[0]}/${subcategory?.category}`;
+        navigate(path);
+    };
+    if (isError) {
+        return null;
+    }
     return (
         <>
             <Box
@@ -56,47 +64,36 @@ export function Tabs() {
                         flexWrap='wrap'
                         borderBottom='none'
                         justifyContent='center'
-
-                        // transform={{
-                        //     base: 'translateX(-140px)',
-                        //     md: 'translateX(-136px)',
-                        //     xl: 'translateX(-56px) ',
-                        //     '2xl': 'translateX(22px)',
-                        // }}
                     >
-                        {NavMenuData.map((item) =>
-                            item.category === pathSegments[0]
-                                ? item.childrens.map((child, index) => (
-                                      <Tab
-                                          data-test-id={`tab-${pathSegments[0] === 'snacks' ? pathSegments[0] : child.subCategory}-${index}`}
-                                          onClick={() => {
-                                              const path = `/${pathSegments[0]}/${child.subCategory}`;
-                                              navigate(path);
-                                          }}
-                                          key={item.id}
-                                          fontFamily='Inter'
-                                          fontWeight={500}
-                                          fontSize={{ base: '14px', xl: '16px' }}
-                                          color='#134B00'
-                                          letterSpacing={{ xl: '0.1px' }}
-                                          sx={{
-                                              _selected: {
-                                                  color: '#2DB100',
-                                                  borderBottomColor: '#2DB100',
-                                                  height: {
-                                                      base: '30px',
-                                                      md: '32px',
-                                                      xl: '36px',
-                                                      '2xl': '40px',
-                                                  },
-                                              },
-                                          }}
-                                      >
-                                          {child.title}
-                                      </Tab>
-                                  ))
-                                : '',
-                        )}
+                        {currentCategory &&
+                            currentCategory?.subCategories?.map(
+                                (item: SubCategory, index: number) => (
+                                    <Tab
+                                        data-test-id={`tab-${pathSegments[0] === 'snacks' ? pathSegments[1] : item?.category}-${index}`}
+                                        onClick={() => handlerLink(item)}
+                                        key={item?._id}
+                                        fontFamily='Inter'
+                                        fontWeight={500}
+                                        fontSize={{ base: '14px', xl: '16px' }}
+                                        color='#134B00'
+                                        letterSpacing={{ xl: '0.1px' }}
+                                        sx={{
+                                            _selected: {
+                                                color: '#2DB100',
+                                                borderBottomColor: '#2DB100',
+                                                height: {
+                                                    base: '30px',
+                                                    md: '32px',
+                                                    xl: '36px',
+                                                    '2xl': '40px',
+                                                },
+                                            },
+                                        }}
+                                    >
+                                        {item?.title}
+                                    </Tab>
+                                ),
+                            )}
                     </TabList>
                 </Tabb>
             </Box>

@@ -1,10 +1,14 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
+import { DisplayUtil } from '~/components/shared/utils/displayUtil';
+import { scrollController } from '~/components/shared/utils/scrollController';
 import { ContentRecipe } from '~/components/widgets/contentRecipe/contentRecipe';
 import { Filter } from '~/components/widgets/Filter/Filter';
 import { JuciestOnJuciest } from '~/components/widgets/juciest/JuciestOnJuciest';
 import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
+import { useAppSelector } from '~/store/hooks';
+import { selectorIsFilterOpen } from '~/store/reducers/open';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
@@ -13,55 +17,25 @@ import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 
 interface PageMenuProps {
     isBurgerOpen: boolean;
-    isFilterHidden: boolean;
-    setIsFilterHidden: (value: boolean) => void;
 }
 
-const scrollController = {
-    disabledScroll() {
-        document.body.style.overflow = 'hidden';
-    },
-    enabledScroll() {
-        document.body.style.overflow = 'auto';
-    },
-};
-
-export function JuciestPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }: PageMenuProps) {
+export function JuciestPage({ isBurgerOpen }: PageMenuProps) {
+    const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     useEffect(() => {
-        if (isBurgerOpen || isFilterHidden === false) {
+        if (isBurgerOpen || isFilterOpen) {
             scrollController.disabledScroll();
-        } else {
-            scrollController.enabledScroll();
+            return;
         }
-    });
-    const [isSearchStarted, setIsSearchStarted] = useState(false);
-    const [searchValue, setSearchValue] = useState('');
-    const [customAllergen, setCustomAllergen] = useState<string[]>([]);
-    const [selectedItems, setSelectedItems] = useState<string[]>([]);
-    const [isDisabled, setIsDisabled] = useState(true);
-    const [_selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
-    const [_selectedSideDishTypes, setSelectedSideDishTypes] = useState<string[]>([]);
-    const [selectedFilterCategory, setSelectedFilterCategory] = useState<string[]>([]);
-    const [_selectedFilterAuthor, setSelectedFilterAuthor] = useState<string[]>([]);
-    const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
-    const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
-    const [isSuccessful, setIsSuccessful] = useState(false);
+        scrollController.enabledScroll();
+    }, [isBurgerOpen, isFilterOpen]);
+
     return (
         <>
-            <Box as='section'>
-                <Filter
-                    isFilterHidden={isFilterHidden}
-                    isCategoryMenuOpen={isCategoryMenuOpen}
-                    isAuthorMenuOpen={isAuthorMenuOpen}
-                    setIsFilterHidden={setIsFilterHidden}
-                    setSelectedMeatTypes={setSelectedMeatTypes}
-                    setSelectedSideDishTypes={setSelectedSideDishTypes}
-                    setSelectedFilterCategory={setSelectedFilterCategory}
-                    setSelectedFilterAuthor={setSelectedFilterAuthor}
-                    setIsCategoryMenuOpen={setIsCategoryMenuOpen}
-                    setIsAuthorMenuOpen={setIsAuthorMenuOpen}
-                ></Filter>
-            </Box>
+            {isFilterOpen && (
+                <Box as='section'>
+                    <Filter />
+                </Box>
+            )}
             <Box
                 as='article'
                 w='100%'
@@ -69,8 +43,8 @@ export function JuciestPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
-                filter={isBurgerOpen || isFilterHidden === false ? 'blur(4px)' : ''}
-                bg={isBurgerOpen || isFilterHidden === false ? 'rgba(0, 0, 0, 0.16)' : ''}
+                filter={isBurgerOpen || isFilterOpen ? 'blur(4px)' : ''}
+                bg={isBurgerOpen || isFilterOpen ? 'rgba(0, 0, 0, 0.16)' : ''}
             >
                 <Grid
                     templateColumns={{ xl: '256px auto 208px' }}
@@ -109,50 +83,22 @@ export function JuciestPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
                                     alignItems='center'
                                     display='flex'
                                 >
-                                    <SearchForm2
-                                        isDisabled={isDisabled}
-                                        setIsDisabled={setIsDisabled}
-                                        setIsSearchStarted={setIsSearchStarted}
-                                        searchValue={searchValue}
-                                        setSearchValue={setSearchValue}
-                                        selectedItems={selectedItems}
-                                        setSelectedItems={setSelectedItems}
-                                        customAllergen={customAllergen}
-                                        setCustomAllergen={setCustomAllergen}
-                                        isFilterHidden={isFilterHidden}
-                                        setIsFilterHidden={setIsFilterHidden}
-                                        isSuccessful={isSuccessful}
-                                        selectedFilterCategory={selectedFilterCategory}
-                                    ></SearchForm2>
+                                    <SearchForm2 />
                                     <Box
                                         mt={{ base: '34px' }}
                                         pr={{ base: '32px', xl: '0' }}
-                                        display={isSearchStarted === true ? { base: 'none' } : '""'}
+                                        display={DisplayUtil(false)}
                                     >
-                                        <JuciestOnJuciest></JuciestOnJuciest>
+                                        <JuciestOnJuciest />
+                                    </Box>
+                                    <Box as='section' display={DisplayUtil(true)}>
+                                        <ContentRecipe />
                                     </Box>
                                     <Box
                                         pr={{ base: '32px', xl: '0' }}
-                                        display={isSearchStarted === true ? { base: 'none' } : '""'}
+                                        display={DisplayUtil(false)}
                                     >
-                                        <VeganKitchen></VeganKitchen>
-                                    </Box>
-                                    <Box
-                                        w={{ xl: '100%' }}
-                                        maxW={{ xl: '1360px' }}
-                                        overflow={{ base: 'hidden', xl: 'visible' }}
-                                        px={{ base: '16px', md: '0', '2xl': '2px' }}
-                                        display={isSearchStarted === true ? { base: '""' } : 'none'}
-                                        mt={{ base: '24px', xl: '48px' }}
-                                    >
-                                        <ContentRecipe
-                                            searchValue={searchValue}
-                                            selectedItems={selectedItems}
-                                            customAllergen={customAllergen}
-                                            isDisabled={isDisabled}
-                                            isSearchStarted={isSearchStarted}
-                                            setIsSuccessful={setIsSuccessful}
-                                        ></ContentRecipe>
+                                        <VeganKitchen />
                                     </Box>
                                 </Box>
                                 <Box
@@ -169,7 +115,7 @@ export function JuciestPage({ isBurgerOpen, isFilterHidden, setIsFilterHidden }:
                                 <MetricsDesktop />
                             </Box>
                             <Box minW='208px' position='fixed' bottom='1px' pl='5px'>
-                                <AddRecipe></AddRecipe>
+                                <AddRecipe />
                             </Box>
                         </Show>
                     </GridItem>

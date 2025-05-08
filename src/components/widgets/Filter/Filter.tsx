@@ -16,250 +16,175 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useRef, useState } from 'react';
 
-import { FilterAuthorsData } from '~/components/entities/Data/FilterData/FilterAuthorsData';
-import { FilterCategoryData } from '~/components/entities/Data/FilterData/FilterCategoryData';
 import { searchFormFiltersData } from '~/components/entities/Data/searchFormFiltersData';
-import { TypeOfMeatData } from '~/components/entities/Data/TypeOfMeatData';
-import { TypeOfSideDishData } from '~/components/entities/Data/TypeOfSideDishData';
-import { ExitButtonIcon, ExitFilter, Plus } from '~/icons/Icon';
+import { ExitFilter, Plus } from '~/icons/Icon';
+import { useGetCategoriesQuery } from '~/query/services/categories';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import {
+    addAllergen,
+    addAuthor,
+    addCategory,
+    addFilter,
+    addGarnish,
+    addMeat,
+    removeAllergen,
+    removeAuthors,
+    removeCategory,
+    removeFilter,
+    removeGarnish,
+    removeMeat,
+    resetSearchState,
+    selectAllergens,
+    selectAllFilters,
+    selectAuthors,
+    selectCategories,
+    selectGarnish,
+    selectMeat,
+} from '~/store/reducers/filter';
+import { selectorIsFilterOpen, setIsFilterOpen } from '~/store/reducers/open';
+import {
+    selectEliminateAllergens,
+    setAllergens,
+    setAuthors,
+    setCategories,
+    setGarnish,
+    setIsEliminatAllergensActivated,
+    setIsSearchStarted,
+    setMeat,
+} from '~/store/reducers/search';
 
-interface FilterProps {
-    isFilterHidden: boolean;
-    setIsFilterHidden: (value: boolean) => void;
+import { authorMockData } from './assets/authorMockData';
+import { garnishMockData } from './assets/garnishMockData';
+import { meatMockData } from './assets/meatMockData';
 
-    setSelectedMeatTypes: (value: { title: string; name: string }[]) => void;
+export function Filter() {
+    const dispatch = useAppDispatch();
 
-    setSelectedSideDishTypes: (value: { title: string; name: string }[]) => void;
+    const categories = useAppSelector(selectCategories);
+    const authors = useAppSelector(selectAuthors);
+    const meat = useAppSelector(selectMeat);
+    const garnish = useAppSelector(selectGarnish);
+    const allergens = useAppSelector(selectAllergens);
+    const isEliminateAllergensOn = useAppSelector(selectEliminateAllergens);
+    const allFilters = useAppSelector(selectAllFilters);
+    const isFilterOpen = useAppSelector(selectorIsFilterOpen);
 
-    setSelectedFilterCategory: (value: { id: number; title: string; name: string }[]) => void;
+    const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState<boolean>(false);
+    const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState<boolean>(false);
+    const [isAllergenMenuOpen, setIsAllergenMenuOpen] = useState<boolean>(false);
+    const [localAllergens, setLocalAllergens] = useState<string[]>([]);
 
-    setSelectedFilterAuthor: (value: string[]) => void;
-    isCategoryMenuOpen: boolean;
-    setIsCategoryMenuOpen: (value: boolean) => void;
-    isAuthorMenuOpen: boolean;
-    setIsAuthorMenuOpen: (value: boolean) => void;
-}
-
-export function Filter({
-    isFilterHidden,
-    setIsFilterHidden,
-
-    setSelectedMeatTypes,
-
-    setSelectedSideDishTypes,
-
-    setSelectedFilterCategory,
-
-    setSelectedFilterAuthor,
-    isCategoryMenuOpen,
-    setIsCategoryMenuOpen,
-    isAuthorMenuOpen,
-    setIsAuthorMenuOpen,
-}: FilterProps) {
-    const handleFilterChange = () => {
-        setIsFilterHidden(!isFilterHidden);
-    };
-
-    const [localSelectedMeatTypes, setLocalSelectedMeatTypes] = useState<
-        { title: string; name: string }[]
-    >([]);
-    const [localSelectedSideDishTypes, setLocalSelectedSideDishTypes] = useState<
-        { title: string; name: string }[]
-    >([]);
-    const [localSelectedFilterCategory, setLocalSelectedFilterCategory] = useState<
-        { id: number; title: string; name: string }[]
-    >([]);
-    const [localSelectedFilterAuthor, setLocalSelectedFilterAuthor] = useState<string[]>([]);
-    const [_localSelectedItems, setLocalSelectedItems] = useState<string[]>([]);
-    const handleFindRecipe = () => {
-        setSelectedMeatTypes(localSelectedMeatTypes);
-        setSelectedSideDishTypes(localSelectedSideDishTypes);
-        setSelectedFilterCategory(localSelectedFilterCategory);
-        setSelectedFilterAuthor(localSelectedFilterAuthor);
-
-        navigate(`/filtered/`, {
-            state: {
-                selectedMeatTypes: localSelectedMeatTypes,
-                selectedSideDishTypes: localSelectedSideDishTypes,
-                selectedFilterCategory: localSelectedFilterCategory,
-                selectedFilterAuthor: localSelectedFilterAuthor,
-                defaultAllergen: defaultAllergen,
-            },
-        });
-        setLocalSelectedFilterAuthor([]);
-        setLocalSelectedFilterCategory([]);
-        setDefaultAllergen([]);
-        setAllFilterFilters([]);
-        setLocalSelectedMeatTypes([]);
-        setLocalSelectedSideDishTypes([]);
-        setSelectedItems([]);
-        setIsFilterHidden(true);
-    };
-
-    const toggleSideDish = (item: { title: string; name: string }) => {
-        setLocalSelectedSideDishTypes((prev) => {
-            if (prev.find((sideDish) => sideDish.name === item.name)) {
-                return prev.filter((sideDish) => sideDish.name !== item.name);
-            } else {
-                return [...prev, item];
-            }
-        });
-    };
-    const updateSelectedItems = useCallback(
-        (
-            sideDishes: { title: string; name: string }[],
-            meats: { title: string; name: string }[],
-            categories: { id: number; title: string; name: string }[],
-            authors: string[],
-            allergens: string[],
-        ) => {
-            const selectedItems = [
-                ...categories.map((category) => category.title),
-                ...authors,
-                ...meats.map((meat) => meat.title),
-                ...sideDishes.map((sideDish) => sideDish.title),
-                ...allergens,
-            ];
-            setLocalSelectedItems(Array.from(new Set(selectedItems)));
-        },
-        [setLocalSelectedItems],
-    );
-    const toggleMeat = (item: { title: string; name: string }) => {
-        setLocalSelectedMeatTypes((prev) => {
-            if (prev.find((meat) => meat.name === item.name)) {
-                return prev.filter((meat) => meat.name !== item.name);
-            } else {
-                return [...prev, item];
-            }
-        });
-    };
-
-    const handleCatygoryCheckboxChange = (category: {
-        id: number;
-        title: string;
-        name: string;
-    }) => {
-        setLocalSelectedFilterCategory((prev) => {
-            if (prev.some((item) => item.id === category.id)) {
-                return prev.filter((item) => item.id !== category.id);
-            } else {
-                return [...prev, category];
-            }
-        });
-    };
-
-    const handleAuthorCheckboxChange = (authorName: string) => {
-        setLocalSelectedFilterAuthor((prev) => {
-            if (prev.includes(authorName)) {
-                return prev.filter((item) => item !== authorName);
-            } else {
-                return [...prev, authorName];
-            }
-        });
-    };
-
-    const [allFilterFilters, setAllFilterFilters] = useState<string[]>([]);
-
-    const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
-    const toggleItemSelection = (title: string) => {
-        setSelectedItems((prevSelected) =>
-            prevSelected.includes(title)
-                ? prevSelected.filter((item) => item !== title)
-                : [...prevSelected, title],
-        );
-    };
-
-    // const handleFilterFiltersChange = (filter: string) =>
-    //     setAllFilterFilters((prev) => {
-    //         if (prev.includes(filter)) {
-    //             return prev.filter((item) => item !== filter);
-    //         } else {
-    //             return [...prev, filter];
-    //         }
-    //     });
-
-    const [isOpen, setIsOpen] = useState(true);
-    const [isListOpen, setIsListOpen] = useState(false);
-    const [defaultAllergen, setDefaultAllergen] = useState<string[]>([]);
-
-    const handleDefaultAllergenChange = (allergen: string) =>
-        setDefaultAllergen((prev) => {
-            if (prev.includes(allergen)) {
-                return prev.filter((item) => item !== allergen);
-            } else {
-                return [...prev, allergen];
-            }
-        });
-
-    const navigate = useNavigate();
+    const { data: catData } = useGetCategoriesQuery({});
 
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const handleAddAllergen = () => {
-        const value = inputRef.current?.value.trim();
-        if (value) {
-            setDefaultAllergen((prev) => {
-                if (prev.includes(value)) {
-                    return prev.filter((item) => item !== value);
-                } else {
-                    return [...prev, value];
-                }
-            });
-            setSelectedItems((prev) => {
-                if (prev.includes(value)) {
-                    return prev.filter((item) => item !== value);
-                } else {
-                    return [...prev, value];
-                }
-            });
-            if (inputRef.current) {
-                inputRef.current.value = '';
-            }
+    const handleCategories = (category: string) => {
+        if (categories?.includes(category)) {
+            dispatch(removeCategory(category));
+            return;
         }
+        dispatch(addCategory(category));
+    };
+    const handleAuthors = (author: string) => {
+        if (authors?.includes(author)) {
+            dispatch(removeAuthors(author));
+            return;
+        }
+        dispatch(addAuthor(author));
     };
 
-    useEffect(() => {
-        updateSelectedItems(
-            localSelectedSideDishTypes,
-            localSelectedMeatTypes,
-            localSelectedFilterCategory,
-            localSelectedFilterAuthor,
-            defaultAllergen,
-        );
-    }, [
-        localSelectedSideDishTypes,
-        localSelectedMeatTypes,
-        localSelectedFilterCategory,
-        localSelectedFilterAuthor,
-        defaultAllergen,
-        updateSelectedItems,
-    ]);
+    const handleMeat = (m: string) => {
+        if (meat?.includes(m)) {
+            dispatch(removeMeat(m));
+            return;
+        }
+        dispatch(addMeat(m));
+    };
+
+    const handleGarnish = (g: string) => {
+        if (garnish?.includes(g)) {
+            dispatch(removeGarnish(g));
+            return;
+        }
+        dispatch(addGarnish(g));
+    };
+
+    const handleAllergens = (allergen: string) => {
+        if (allergen === 'Томат (помидор)') {
+            allergen = 'Томат';
+        } else if (allergen === 'Клубника (ягоды)') {
+            allergen = 'Клубника';
+        }
+        if (allergens?.includes(allergen)) {
+            dispatch(removeAllergen(allergen));
+            return;
+        }
+        dispatch(addAllergen(allergen));
+        console.log(allergen);
+    };
+    const handleSwitch = () => {
+        if (isEliminateAllergensOn) {
+            setLocalAllergens(allergens ? allergens : []);
+            dispatch(setAllergens([]));
+            return;
+        }
+        dispatch(setAllergens(localAllergens));
+        setLocalAllergens([]);
+    };
+
+    const handleAllFilters = (item: string) => {
+        if (allFilters?.includes(item)) {
+            dispatch(removeFilter(item));
+            return;
+        }
+        dispatch(addFilter(item));
+    };
+
+    const resetFilters = () => {
+        dispatch(resetSearchState());
+    };
+
+    const handleFindRecipe = () => {
+        categories ? dispatch(setCategories(categories)) : '';
+        meat ? dispatch(setMeat(meat)) : '';
+        garnish ? dispatch(setGarnish(garnish)) : '';
+        authors ? dispatch(setAuthors(authors)) : '';
+        allergens ? dispatch(setAllergens(allergens)) : '';
+        dispatch(setIsSearchStarted(true));
+        dispatch(setIsFilterOpen());
+        resetFilters();
+    };
+
+    const handleEliminate = () => {
+        dispatch(setIsEliminatAllergensActivated());
+    };
+    const handleFilterChange = () => {
+        dispatch(setIsFilterOpen());
+    };
 
     return (
         <Box
-            display={isFilterHidden ? 'none' : ''}
             position='fixed'
             h='100vh'
             bg='white'
             top='0'
             right='0'
-            zIndex='9999'
+            zIndex='10'
             overflow='hidden'
             w={{ base: '344px', xl: '463px' }}
             minW={0}
-            data-test-id={isFilterHidden ? '' : 'filter-drawer'}
+            data-test-id={!isFilterOpen ? '' : 'filter-drawer'}
         >
             <Box
-                maxH='calc(100% - 100px)'
+                maxH='calc(100vh - 100px)'
+                minH='calc(100vh - 100px)'
                 overflowY='auto'
                 pt={{ xl: '16px' }}
                 pl={{ xl: '16px' }}
                 position='relative'
-                zIndex='2222'
+                zIndex='11'
                 minW={0}
             >
                 {/* Heading plus exit button */}
@@ -303,36 +228,43 @@ export function Filter({
                             data-test-id='filter-menu-button-категория'
                         >
                             <HStack p='8px 12px 7px 16px' justifyContent='space-between'>
-                                <Text
-                                    fontFamily='Inter'
-                                    fontWeight={400}
-                                    fontSize='16px'
-                                    lineHeight='24px'
-                                    color='#000000A3'
-                                >
-                                    {localSelectedFilterCategory.length > 0 ? (
-                                        <HStack flexWrap='wrap'>
-                                            {localSelectedFilterCategory.map((item) => (
-                                                <Box
-                                                    key={item.id}
-                                                    lineHeight='16px'
-                                                    fontSize='12px'
-                                                    fontWeight={500}
+                                <HStack h='auto' flexWrap='wrap'>
+                                    {categories && categories.length ? (
+                                        categories.map((cat) => (
+                                            <Box
+                                                lineHeight='16px'
+                                                fontSize='12px'
+                                                fontWeight={500}
+                                                fontFamily='Inter'
+                                                color='#2DB100'
+                                                border='1px solid #B1FF2E'
+                                                borderRadius='6px'
+                                                h='24px'
+                                                px={2}
+                                                py='2px'
+                                            >
+                                                <Text
                                                     fontFamily='Inter'
-                                                    color='#2DB100'
-                                                    border='1px solid #B1FF2E'
-                                                    borderRadius='6px'
-                                                    px={2}
-                                                    flexWrap='nowrap'
+                                                    fontWeight={400}
+                                                    fontSize='16px'
+                                                    color='#000000A3'
                                                 >
-                                                    {item.title}
-                                                </Box>
-                                            ))}
-                                        </HStack>
+                                                    {cat}
+                                                </Text>
+                                            </Box>
+                                        ))
                                     ) : (
-                                        'Категория'
+                                        <Text
+                                            fontFamily='Inter'
+                                            fontWeight={400}
+                                            fontSize='16px'
+                                            lineHeight='24px'
+                                            color='#000000A3'
+                                        >
+                                            Категория
+                                        </Text>
                                     )}
-                                </Text>
+                                </HStack>
                                 <Image
                                     src='/src/components/shared/images/icons/arrowDown.png'
                                     display={isCategoryMenuOpen ? 'none' : ''}
@@ -343,33 +275,35 @@ export function Filter({
                                 />
                             </HStack>
                         </MenuButton>
-                        <MenuList w={{ base: '308px', xl: '399px' }}>
-                            {FilterCategoryData.map((item) => (
-                                <MenuItem
-                                    key={item.id}
-                                    bg={item.id % 2 === 0 ? '#0000000F' : '#FFFFFF'}
-                                >
-                                    <Checkbox
-                                        isChecked={localSelectedFilterCategory.some(
-                                            (c) => c.id === item.id,
-                                        )}
-                                        onChange={() => {
-                                            handleCatygoryCheckboxChange(item);
-                                            toggleItemSelection(item.title);
-                                        }}
-                                    >
-                                        <Text
-                                            data-test-id={
-                                                item.name === 'vegan'
-                                                    ? 'checkbox-веганская кухня'
-                                                    : ''
-                                            }
-                                        >
-                                            {item.title}
-                                        </Text>
-                                    </Checkbox>
-                                </MenuItem>
-                            ))}
+                        <MenuList
+                            w={{ base: '308px', xl: '399px' }}
+                            h={{ base: '350px' }}
+                            overflowY='scroll'
+                        >
+                            {catData &&
+                                catData
+                                    ?.filter((cat) => cat.subCategories !== undefined)
+                                    .map((item, index) => (
+                                        <MenuItem bg={index % 2 === 0 ? '#0000000F' : '#FFFFFF'}>
+                                            <Checkbox
+                                                isChecked={categories?.includes(item.title)}
+                                                onChange={() => {
+                                                    handleCategories(item.title);
+                                                    handleAllFilters(item.title);
+                                                }}
+                                            >
+                                                <Text
+                                                    data-test-id={
+                                                        item.category === 'vegan'
+                                                            ? 'checkbox-веганская кухня'
+                                                            : ''
+                                                    }
+                                                >
+                                                    {item.title}
+                                                </Text>
+                                            </Checkbox>
+                                        </MenuItem>
+                                    ))}
                         </MenuList>
                     </Menu>
                 </Box>
@@ -391,36 +325,43 @@ export function Filter({
                             borderRadius='6px'
                         >
                             <HStack p='8px 12px 7px 16px' justifyContent='space-between'>
-                                <Text
-                                    fontFamily='Inter'
-                                    fontWeight={400}
-                                    fontSize='16px'
-                                    lineHeight='24px'
-                                    color='#000000A3'
-                                >
-                                    {localSelectedFilterAuthor.length > 0 ? (
-                                        <HStack flexWrap='wrap'>
-                                            {localSelectedFilterAuthor.map((item) => (
-                                                <Box
-                                                    key={item}
-                                                    lineHeight='16px'
-                                                    fontSize='12px'
-                                                    fontWeight={500}
+                                <HStack h='auto' flexWrap='wrap'>
+                                    {authors?.length ? (
+                                        authors.map((author) => (
+                                            <Box
+                                                lineHeight='16px'
+                                                fontSize='12px'
+                                                fontWeight={500}
+                                                fontFamily='Inter'
+                                                color='#2DB100'
+                                                border='1px solid #B1FF2E'
+                                                borderRadius='6px'
+                                                h='24px'
+                                                px={2}
+                                                py='2px'
+                                            >
+                                                <Text
                                                     fontFamily='Inter'
-                                                    color='#2DB100'
-                                                    border='1px solid #B1FF2E'
-                                                    borderRadius='6px'
-                                                    px={2}
-                                                    flexWrap='nowrap'
+                                                    fontWeight={400}
+                                                    fontSize='16px'
+                                                    color='#000000A3'
                                                 >
-                                                    {item}
-                                                </Box>
-                                            ))}
-                                        </HStack>
+                                                    {author}
+                                                </Text>
+                                            </Box>
+                                        ))
                                     ) : (
-                                        'Поиск по автору'
+                                        <Text
+                                            fontFamily='Inter'
+                                            fontWeight={400}
+                                            fontSize='16px'
+                                            lineHeight='24px'
+                                            color='#000000A3'
+                                        >
+                                            Поиск по автору
+                                        </Text>
                                     )}
-                                </Text>
+                                </HStack>
                                 <Image
                                     src='/src/components/shared/images/icons/arrowDown.png'
                                     display={isAuthorMenuOpen ? 'none' : ''}
@@ -432,22 +373,16 @@ export function Filter({
                             </HStack>
                         </MenuButton>
                         <MenuList w={{ base: '308px', xl: '399px' }}>
-                            {FilterAuthorsData.map((item) => (
+                            {authorMockData.map((item, index) => (
                                 <MenuItem
-                                    key={item.id}
-                                    bg={item.id % 2 === 0 ? '#0000000F' : '#FFFFFF'}
+                                    bg={index % 2 === 0 ? '#0000000F' : '#FFFFFF'}
+                                    onChange={() => {
+                                        handleAuthors(item.title);
+                                        handleAllFilters(item.title);
+                                    }}
                                 >
-                                    <Checkbox
-                                        isChecked={localSelectedFilterAuthor.includes(
-                                            item.authorName,
-                                        )}
-                                        value={item.authorName}
-                                        onChange={() => {
-                                            handleAuthorCheckboxChange(item.authorName);
-                                            toggleItemSelection(item.authorName);
-                                        }}
-                                    >
-                                        {item.authorName}
+                                    <Checkbox isChecked={authors?.includes(item.title)}>
+                                        {item.title}
                                     </Checkbox>
                                 </MenuItem>
                             ))}
@@ -466,19 +401,15 @@ export function Filter({
                     >
                         Тип мяса:
                     </Text>
-                    <CheckboxGroup
-                        value={localSelectedMeatTypes?.map((meat) => meat?.title) || []}
-                        onChange={() => toggleMeat}
-                    >
+                    <CheckboxGroup>
                         <VStack alignItems='flex-start'>
-                            {TypeOfMeatData.map((item) => (
+                            {meatMockData?.map((item) => (
                                 <Checkbox
-                                    key={item.name}
+                                    isChecked={meat?.includes(item.title)}
                                     onChange={() => {
-                                        toggleMeat(item);
-                                        toggleItemSelection(item.title);
+                                        handleMeat(item.title);
+                                        handleAllFilters(item.title);
                                     }}
-                                    value={item.title}
                                 >
                                     {item.title}
                                 </Checkbox>
@@ -498,23 +429,19 @@ export function Filter({
                     >
                         Тип гарнира:
                     </Text>
-                    <CheckboxGroup
-                        value={localSelectedSideDishTypes?.map((sideDish) => sideDish?.title) || []}
-                        onChange={() => toggleSideDish}
-                    >
+                    <CheckboxGroup>
                         <VStack alignItems='flex-start'>
-                            {TypeOfSideDishData.map((item) => (
+                            {garnishMockData.map((item) => (
                                 <Checkbox
-                                    key={item.name}
                                     onChange={() => {
-                                        toggleSideDish(item);
-                                        toggleItemSelection(item.title);
+                                        handleGarnish(item.title);
+                                        handleAllFilters(item.title);
                                     }}
-                                    value={item.title}
+                                    isChecked={garnish?.includes(item.title)}
                                 >
                                     <Text
                                         data-test-id={
-                                            item.name === 'potatoes' ? 'checkbox-картошка' : ''
+                                            item.title === 'Картошка' ? 'checkbox-картошка' : ''
                                         }
                                     >
                                         {item.title}
@@ -531,14 +458,18 @@ export function Filter({
                             Исключить аллергены
                         </Text>
                         <Switch
-                            onChange={() => setIsOpen(!isOpen)}
+                            isChecked={isEliminateAllergensOn}
+                            onChange={() => {
+                                handleEliminate();
+                                handleSwitch();
+                            }}
                             data-test-id='allergens-switcher-filter'
                         />
                     </HStack>
                     <Menu
                         closeOnSelect={false}
-                        onOpen={() => setIsListOpen(true)}
-                        onClose={() => setIsListOpen(false)}
+                        onOpen={() => setIsAllergenMenuOpen(true)}
+                        onClose={() => setIsAllergenMenuOpen(false)}
                     >
                         <MenuButton
                             w='100%'
@@ -547,22 +478,15 @@ export function Filter({
                             p='8px 12px 8px 16px'
                             borderRadius='6px'
                             mt='14px'
-                            disabled={isOpen}
+                            disabled={!isEliminateAllergensOn}
                             data-test-id='allergens-menu-button-filter'
                         >
-                            <HStack justifyContent='space-between'>
-                                {selectedItems.length > 0 ? (
-                                    <HStack
-                                        p={2}
-                                        overflow='hidden'
-                                        flexWrap='wrap'
-                                        position='relative'
-                                        pr='64px'
-                                    >
-                                        {/* Здесь */}
-                                        {selectedItems.map((item) => (
+                            <HStack justifyContent='space-between' h='auto'>
+                                <HStack flexWrap='wrap'>
+                                    {allFilters && allFilters.length ? (
+                                        allFilters.map((item) => (
                                             <Box
-                                                key={item}
+                                                data-test-id='filter-tag'
                                                 lineHeight='16px'
                                                 fontSize='12px'
                                                 fontWeight={500}
@@ -572,49 +496,55 @@ export function Filter({
                                                 borderRadius='6px'
                                                 px={2}
                                             >
-                                                <HStack>
-                                                    <Text data-test-id='filter-tag'>{item}</Text>
-                                                    <Icon as={ExitButtonIcon} w='10px' h='10px' />
-                                                </HStack>
+                                                {item}
                                             </Box>
-                                        ))}
-                                    </HStack>
-                                ) : (
-                                    <Text
-                                        color='#000000A3'
-                                        fontFamily='Inter'
-                                        fontWeight={400}
-                                        fontSize='16px'
-                                        lineHeight='24px'
-                                    >
-                                        Выберите из списка аллергенов...
-                                    </Text>
-                                )}
+                                        ))
+                                    ) : (
+                                        <Text
+                                            color='#000000A3'
+                                            fontFamily='Inter'
+                                            fontWeight={400}
+                                            fontSize='16px'
+                                            lineHeight='24px'
+                                        >
+                                            Выберите из списка аллергенов...
+                                        </Text>
+                                    )}
+                                </HStack>
                                 <Image
                                     src='/src/components/shared/images/icons/arrowDown.png'
-                                    display={isListOpen ? 'none' : ''}
+                                    display={isAllergenMenuOpen ? 'none' : ''}
                                 />
                                 <Image
                                     src='/src/components/shared/images/icons/arrowUp.png'
-                                    display={isListOpen ? '' : 'none'}
+                                    display={isAllergenMenuOpen ? '' : 'none'}
                                 />
                             </HStack>
                         </MenuButton>
                         <MenuList borderRadius={0} p={0} w='269px'>
                             {searchFormFiltersData.map((item, index) => (
-                                <MenuItem
-                                    key={item.id}
-                                    bg={item.id % 2 === 0 ? '#0000000F' : '#FFFFFF'}
-                                >
+                                <MenuItem bg={index % 2 === 0 ? '#0000000F' : '#FFFFFF'}>
                                     <Checkbox
-                                        isChecked={defaultAllergen.includes(item.displayTitle)}
+                                        w='100%'
+                                        isChecked={
+                                            allergens?.includes(item.title) ||
+                                            allergens?.includes(item.displayTitle)
+                                                ? true
+                                                : false
+                                        }
                                         onChange={() => {
-                                            handleDefaultAllergenChange(item.displayTitle);
-                                            toggleItemSelection(item.displayTitle);
+                                            handleAllergens(item.title);
+                                            if (item.title === 'Томат (помидор)') {
+                                                handleAllFilters('Томат');
+                                            } else if (item.title === 'Клубника (ягоды)') {
+                                                handleAllFilters('Клубника');
+                                            } else {
+                                                handleAllFilters(item.title);
+                                            }
                                         }}
                                     >
                                         <Text
-                                            data-test-id={isFilterHidden ? '' : `allergen-${index}`}
+                                            data-test-id={!isFilterOpen ? '' : `allergen-${index}`}
                                         >
                                             {item.title}
                                         </Text>
@@ -625,11 +555,16 @@ export function Filter({
                                 <Input
                                     my='8px'
                                     w='205px'
-                                    data-test-id={isFilterHidden ? '' : 'add-other-allergen'}
+                                    data-test-id={!isFilterOpen ? '' : 'add-other-allergen'}
                                     ref={inputRef}
                                     onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            handleAddAllergen();
+                                        if (
+                                            e.key === 'Enter' &&
+                                            inputRef.current &&
+                                            inputRef.current.value.length
+                                        ) {
+                                            handleAllergens(inputRef.current.value);
+                                            handleAllFilters(inputRef.current.value);
                                         }
                                     }}
                                 />
@@ -639,8 +574,13 @@ export function Filter({
                                     shadow='none'
                                     _hover={{ bg: 'transparent' }}
                                     p={0}
-                                    onClick={handleAddAllergen}
-                                    data-test-id={isFilterHidden ? '' : 'add-allergen-button'}
+                                    onClick={() => {
+                                        if (inputRef.current && inputRef.current.value.length) {
+                                            handleAllergens(inputRef.current.value);
+                                            handleAllFilters(inputRef.current.value);
+                                        }
+                                    }}
+                                    data-test-id={!isFilterOpen ? '' : 'add-allergen-button'}
                                 >
                                     <Icon as={Plus} />
                                 </Button>
@@ -652,25 +592,25 @@ export function Filter({
                 {/* Tags */}
                 <Box pl='16px' pr='20px' position='fixed' bottom='111px' bg='white'>
                     <HStack flexWrap='wrap' spacing='14px'>
-                        {allFilterFilters.map((item) => (
-                            <Box
-                                lineHeight='16px'
-                                fontSize='14px'
-                                fontWeight={500}
-                                fontFamily='Inter'
-                                color='#2DB100'
-                                border='1px solid #B1FF2E'
-                                bg='#EAFFC7'
-                                borderRadius='6px'
-                                px={2}
-                                py={1}
-                            >
-                                <HStack>
-                                    <Text>{item}</Text>
-                                    <Icon as={ExitButtonIcon} w='10px' h='10px' />
-                                </HStack>
-                            </Box>
-                        ))}
+                        {/* {allFilterFilters.map((item) => ( */}
+                        {/* <Box
+                            lineHeight='16px'
+                            fontSize='14px'
+                            fontWeight={500}
+                            fontFamily='Inter'
+                            color='#2DB100'
+                            border='1px solid #B1FF2E'
+                            bg='#EAFFC7'
+                            borderRadius='6px'
+                            px={2}
+                            py={1}
+                        > */}
+                        {/* <HStack>
+                                {/* <Text>{item}</Text> */}
+                        {/* <Icon as={ExitButtonIcon} w='10px' h='10px' /> */}
+                        {/* </HStack> */}
+                        {/* </Box> */}
+                        {/* ))} */}
                     </HStack>
                 </Box>
                 {/* Buttons */}
@@ -693,15 +633,9 @@ export function Filter({
                             border='1px solid #0000007A'
                             bg='transparent'
                             onClick={() => {
-                                setLocalSelectedFilterAuthor([]);
-                                setLocalSelectedFilterCategory([]);
-                                setDefaultAllergen([]);
-                                setAllFilterFilters([]);
-                                setLocalSelectedMeatTypes([]);
-                                setLocalSelectedSideDishTypes([]);
-                                setSelectedItems([]);
+                                resetFilters();
                             }}
-                            data-test-id={isFilterHidden ? '' : 'clear-filter-button'}
+                            data-test-id={!isFilterOpen ? '' : 'clear-filter-button'}
                         >
                             <Text
                                 color='#000000CC'
@@ -722,15 +656,9 @@ export function Filter({
                             border='1px solid #00000014'
                             bg='#000000EB'
                             _hover={{ bg: '#000000EB' }}
-                            isDisabled={
-                                localSelectedFilterCategory.length === 0 &&
-                                localSelectedFilterAuthor.length === 0 &&
-                                localSelectedMeatTypes.length === 0 &&
-                                localSelectedSideDishTypes.length === 0 &&
-                                defaultAllergen.length === 0
-                            }
                             data-test-id='find-recipe-button'
                             onClick={handleFindRecipe}
+                            isDisabled={!allFilters?.length}
                             sx={{
                                 _disabled: {
                                     bg: '#0000003D',

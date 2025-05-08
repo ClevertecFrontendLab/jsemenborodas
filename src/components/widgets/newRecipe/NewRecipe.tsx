@@ -42,7 +42,7 @@ export function NewRecipe() {
                             top='0px'
                             left='-8px'
                             borderRadius='6px'
-                            zIndex='500'
+                            zIndex='3'
                         >
                             <Icon as={leftArrow} w={{ '2xl': '24px' }}></Icon>
                         </Button>
@@ -54,7 +54,7 @@ export function NewRecipe() {
                             right='-8px'
                             borderRadius='6px'
                             position='absolute'
-                            zIndex='500'
+                            zIndex='3'
                         >
                             <Icon as={rightArrow} w={{ '2xl': '24px' }}></Icon>
                         </Button>
