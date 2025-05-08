@@ -1,6 +1,8 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
+import { DisplayUtil } from '~/components/shared/utils/displayUtil';
+import { scrollController } from '~/components/shared/utils/scrollController';
 import { ContentRecipe } from '~/components/widgets/contentRecipe/contentRecipe';
 import { ContentRecipeDefault } from '~/components/widgets/contentRecipe/contentRecipeDefault';
 import { Filter } from '~/components/widgets/Filter/Filter';
@@ -8,7 +10,6 @@ import { Tabs } from '~/components/widgets/tabs/Tabs';
 import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
 import { useAppSelector } from '~/store/hooks';
 import { selectorIsFilterOpen } from '~/store/reducers/open';
-import { selectIsSearchStarted, selectIsSearchSuccessful } from '~/store/reducers/search';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
@@ -17,35 +18,23 @@ import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 
 interface PageMenuProps {
     isBurgerOpen: boolean;
-    isFilterHidden: boolean;
 }
 
-const scrollController = {
-    disabledScroll() {
-        document.body.style.overflow = 'hidden';
-    },
-    enabledScroll() {
-        document.body.style.overflow = 'auto';
-    },
-};
-
-export function VeganKitchenPage({ isBurgerOpen, isFilterHidden }: PageMenuProps) {
-    const isSearchStarted = useAppSelector(selectIsSearchStarted);
-    const isSearchSuccessful = useAppSelector(selectIsSearchSuccessful);
+export function VeganKitchenPage({ isBurgerOpen }: PageMenuProps) {
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     useEffect(() => {
         if (isBurgerOpen || isFilterOpen) {
             scrollController.disabledScroll();
-        } else {
-            scrollController.enabledScroll();
+            return;
         }
+        scrollController.enabledScroll();
     }, [isBurgerOpen, isFilterOpen]);
 
     return (
         <>
             {isFilterOpen && (
                 <Box as='section'>
-                    <Filter></Filter>
+                    <Filter />
                 </Box>
             )}
             <Box
@@ -55,8 +44,8 @@ export function VeganKitchenPage({ isBurgerOpen, isFilterHidden }: PageMenuProps
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
-                filter={isBurgerOpen || isFilterHidden === false ? 'blur(2px)' : ''}
-                bg={isBurgerOpen || isFilterHidden === false ? 'rgba(0, 0, 0, 0.16)' : ''}
+                filter={isBurgerOpen || isFilterOpen === false ? 'blur(2px)' : ''}
+                bg={isBurgerOpen || isFilterOpen === false ? 'rgba(0, 0, 0, 0.16)' : ''}
             >
                 <Grid
                     templateColumns={{ xl: '256px auto 208px' }}
@@ -91,7 +80,7 @@ export function VeganKitchenPage({ isBurgerOpen, isFilterHidden }: PageMenuProps
                                         px={{ base: '16px', md: '20px', xl: '0px' }}
                                         pt={{ md: '2px', xl: '0px' }}
                                     >
-                                        <SearchForm2></SearchForm2>
+                                        <SearchForm2 />
                                     </Box>
 
                                     <Box
@@ -99,13 +88,9 @@ export function VeganKitchenPage({ isBurgerOpen, isFilterHidden }: PageMenuProps
                                         maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
                                         h={{ base: '30px' }}
                                         mb='64px'
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: 'none' }
-                                                : '""'
-                                        }
+                                        display={DisplayUtil(false)}
                                     >
-                                        <Tabs></Tabs>
+                                        <Tabs />
                                     </Box>
                                     <Box
                                         as='section'
@@ -114,38 +99,26 @@ export function VeganKitchenPage({ isBurgerOpen, isFilterHidden }: PageMenuProps
                                         alignItems='center'
                                         mt={{ base: '24px', md: '25px', xl: '30px', '2xl': '24px' }}
                                         pr={{ base: '16px', md: '18px', xl: 0 }}
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: 'none' }
-                                                : 'flex'
-                                        }
+                                        display={DisplayUtil(false)}
                                     >
-                                        <ContentRecipeDefault></ContentRecipeDefault>
+                                        <ContentRecipeDefault />
                                     </Box>
                                     <Box
                                         pl={{ base: '16px', xl: 0 }}
                                         pr={{ base: '16px', xl: '0' }}
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: 'none' }
-                                                : '""'
-                                        }
+                                        display={DisplayUtil(false)}
                                     >
-                                        <VeganKitchen></VeganKitchen>
+                                        <VeganKitchen />
                                     </Box>
                                     <Box
                                         w={{ xl: '100%' }}
                                         maxW={{ xl: '1360px' }}
                                         overflow={{ base: 'hidden', xl: 'visible' }}
                                         px={{ base: '16px', md: '0', '2xl': '2px' }}
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: '""' }
-                                                : 'none'
-                                        }
+                                        display={DisplayUtil(true)}
                                         mt={{ base: '24px', xl: '48px' }}
                                     >
-                                        <ContentRecipe></ContentRecipe>
+                                        <ContentRecipe />
                                     </Box>
                                 </Box>
                                 <Box
@@ -162,7 +135,7 @@ export function VeganKitchenPage({ isBurgerOpen, isFilterHidden }: PageMenuProps
                                 <MetricsDesktop />
                             </Box>
                             <Box minW='208px' position='fixed' bottom='1px' pl='5px'>
-                                <AddRecipe></AddRecipe>
+                                <AddRecipe />
                             </Box>
                         </Show>
                     </GridItem>

@@ -28,7 +28,6 @@ export function AlertNote() {
 
     useEffect(() => {
         if (error) {
-            localStorage.setItem('Error', error);
             const timer = setTimeout(() => {
                 dispatch(setAppError(null));
                 localStorage.removeItem('Error');
@@ -49,7 +48,7 @@ export function AlertNote() {
                 bg='#E53E3E'
                 w={{ base: '328px', xl: '400px' }}
                 h={{ base: '72px' }}
-                zIndex={100000990}
+                zIndex={11}
                 data-test-id='error-notification'
             >
                 <AlertIcon color='white' />

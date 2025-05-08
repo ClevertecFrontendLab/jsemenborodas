@@ -1,25 +1,32 @@
 import { Box, Button } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipeByLikesQuery } from '~/query/services/recipesnew';
 import { recipeRequest } from '~/query/types/types';
-import { setAppError } from '~/store/app-slice';
-import { useAppDispatch } from '~/store/hooks';
 
 import { Loader } from '../loader/Loader';
 import { JuciestCards } from './JuciestCards';
 
 export function JuciestOnJuciest() {
-    const dispatch = useAppDispatch();
     const [pages, setPages] = useState<number[]>([1]);
     const [showLoader, setShowLoader] = useState(true);
-
+    const [isButtonLoading, setIsButtonLoading] = useState<boolean>(false);
     const { data, isError, isLoading, isFetching } = useGetRecipeByLikesQuery({
         limit: 8,
         page: pages[pages.length - 1],
     }) as { data: recipeRequest; isError: boolean; isLoading: boolean; isFetching: boolean };
 
+    useEffect(() => {
+        if (isLoading || isFetching) {
+            setIsButtonLoading(true);
+        } else {
+            const timer = setTimeout(() => {
+                setIsButtonLoading(false);
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [isLoading, isFetching]);
     const { data: catData } = useGetCategoriesQuery({});
 
     if (showLoader) {
@@ -32,8 +39,6 @@ export function JuciestOnJuciest() {
     }
 
     if (isError) {
-        dispatch(setAppError('Error'));
-        localStorage.setItem('Error', 'Error');
         return null;
     }
 
@@ -54,11 +59,14 @@ export function JuciestOnJuciest() {
                 mt={4}
                 onClick={() => setPages((prev) => [...prev, prev.length + 1])}
                 display={pages.length >= data?.meta?.totalPages ? 'none' : 'block'}
-                isLoading={isFetching}
+                isDisabled={isButtonLoading}
                 mx='auto'
-                loadingText='Загрузка...'
+                isLoading={isButtonLoading}
+                loadingText='Загрузка'
+                spinner={<Box></Box>}
+                whiteSpace='nowrap'
             >
-                Загрузка
+                Загрузить ещё
             </Button>
         </Box>
     );

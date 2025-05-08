@@ -1,6 +1,8 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
+import { DisplayUtil } from '~/components/shared/utils/displayUtil';
+import { scrollController } from '~/components/shared/utils/scrollController';
 import { ContentRecipe } from '~/components/widgets/contentRecipe/contentRecipe';
 import { ContentRecipeDefault } from '~/components/widgets/contentRecipe/contentRecipeDefault';
 import { Filter } from '~/components/widgets/Filter/Filter';
@@ -9,7 +11,6 @@ import { Tabs } from '~/components/widgets/tabs/Tabs';
 import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
 import { useAppSelector } from '~/store/hooks';
 import { selectorIsFilterOpen } from '~/store/reducers/open';
-import { selectIsSearchStarted, selectIsSearchSuccessful } from '~/store/reducers/search';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
@@ -20,32 +21,20 @@ interface PageMenuProps {
     isBurgerOpen: boolean;
 }
 
-const scrollController = {
-    disabledScroll() {
-        document.body.style.overflow = 'hidden';
-    },
-    enabledScroll() {
-        document.body.style.overflow = 'auto';
-    },
-};
-
 export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
-    const isSearchStarted = useAppSelector(selectIsSearchStarted);
-    const isSearchSuccessful = useAppSelector(selectIsSearchSuccessful);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     useEffect(() => {
         if (isBurgerOpen || isFilterOpen) {
             scrollController.disabledScroll();
-        } else {
-            scrollController.enabledScroll();
+            return;
         }
+        scrollController.enabledScroll();
     }, [isBurgerOpen, isFilterOpen]);
-
     return (
         <>
             {isFilterOpen && (
                 <Box as='section'>
-                    <Filter></Filter>
+                    <Filter />
                 </Box>
             )}
             <Box
@@ -55,8 +44,8 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
-                filter={isBurgerOpen === true ? 'blur(4px)' : ''}
-                bg={isBurgerOpen === true ? 'rgba(0, 0, 0, 0.16)' : ''}
+                filter={isBurgerOpen ? 'blur(4px)' : ''}
+                bg={isBurgerOpen ? 'rgba(0, 0, 0, 0.16)' : ''}
             >
                 <Grid
                     templateColumns={{ xl: '256px auto 208px' }}
@@ -88,7 +77,7 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                                 minW={{ xl: '880px' }}
                             >
                                 <Box as='section' px={{ base: '0px', md: '0px', xl: '0' }}>
-                                    <SearchForm2></SearchForm2>
+                                    <SearchForm2 />
                                 </Box>
                                 <Box
                                     w={{ xl: '100%' }}
@@ -100,13 +89,9 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                                         w={{ xl: '100%' }}
                                         maxW={{ xl: 'calc(100vw - 360px - 208px - 24px)' }}
                                         h={{ base: 'auto' }}
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: 'none' }
-                                                : '""'
-                                        }
+                                        display={DisplayUtil(false)}
                                     >
-                                        <Tabs></Tabs>
+                                        <Tabs />
                                     </Box>
 
                                     <Box
@@ -114,25 +99,17 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                                         maxW={{ xl: '1360px' }}
                                         overflow={{ base: 'hidden', xl: 'visible' }}
                                         px={{ base: '16px', md: '0', '2xl': '2px' }}
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: 'none' }
-                                                : '""'
-                                        }
+                                        display={DisplayUtil(false)}
                                         mt={{ base: '24px', xl: '48px' }}
                                     >
-                                        <ContentRecipeDefault></ContentRecipeDefault>
+                                        <ContentRecipeDefault />
                                     </Box>
                                     <Box
                                         w={{ xl: '100%' }}
                                         maxW={{ xl: '1360px' }}
                                         overflow={{ base: 'hidden', xl: 'visible' }}
                                         px={{ base: '16px', md: '0', '2xl': '2px' }}
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: '""' }
-                                                : 'none'
-                                        }
+                                        display={DisplayUtil(true)}
                                         mt={{ base: '24px', xl: '48px' }}
                                     ></Box>
                                     <Box
@@ -142,26 +119,15 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                                             xl: 'hidden',
                                             '2xl': 'visible',
                                         }}
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: 'none' }
-                                                : '""'
-                                        }
+                                        display={DisplayUtil(false)}
                                     >
-                                        <Slider></Slider>
+                                        <Slider />
                                     </Box>
-                                    <Box
-                                        as='section'
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: '""' }
-                                                : 'none'
-                                        }
-                                    >
-                                        <ContentRecipe></ContentRecipe>
+                                    <Box as='section' display={DisplayUtil(true)}>
+                                        <ContentRecipe />
                                     </Box>
                                     <Box as='section' mt='120px'>
-                                        <VeganKitchen></VeganKitchen>
+                                        <VeganKitchen />
                                     </Box>
                                 </Box>
                             </VStack>
@@ -173,7 +139,7 @@ export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
                                 <MetricsDesktop />
                             </Box>
                             <Box minW='208px' position='fixed' bottom='1px' pl='5px'>
-                                <AddRecipe></AddRecipe>
+                                <AddRecipe />
                             </Box>
                         </Show>
                     </GridItem>

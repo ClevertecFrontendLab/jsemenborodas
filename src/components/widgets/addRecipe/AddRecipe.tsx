@@ -28,7 +28,7 @@ export function AddRecipe() {
                                     h='24px'
                                     color='red'
                                     transform='translateY(50%)'
-                                    zIndex='9999'
+                                    zIndex='11'
                                 ></Image>
                             </VStack>
                         </Box>

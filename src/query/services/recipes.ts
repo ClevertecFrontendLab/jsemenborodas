@@ -1,10 +1,12 @@
-import { ApiEndpoints } from '~/query/constants/api.ts';
 import { ApiGroupNames } from '~/query/constants/api-group-names.ts';
 import { EndpointNames } from '~/query/constants/endpoint-names.ts';
 import { Tags } from '~/query/constants/tags.ts';
 import { apiSlice } from '~/query/create-api.ts';
+import { setAppError } from '~/store/app-slice';
 
-import { recipe, recipeRequest } from '../types/types';
+import { ApiErrorResponce, recipe, recipeRequest } from '../types/types';
+import { GetError } from './utils/errorUtil';
+import { GetRicepeParam } from './utils/recipeUtils';
 
 export interface RecipeArguments {
     page?: number;
@@ -29,21 +31,7 @@ export const recipeApiSlice = apiSlice
         endpoints: (builder) => ({
             getRecipes: builder.query<RecipeResponce, RecipeArguments>({
                 query: (data = {}) => {
-                    const params: Record<string, string | number | string[] | undefined> = {};
-                    let url: string = ApiEndpoints.TEST;
-                    if (data.page !== undefined) params.page = data.page;
-                    if (data.limit !== undefined) params.limit = data.limit;
-                    if (data.allergens !== undefined) params.allergens = data.allergens;
-                    if (data.searchString !== undefined) params.searchString = data.searchString;
-                    if (data.meat !== undefined) params.meat = data.meat;
-                    if (data.garnish !== undefined) params.garnish = data.garnish;
-                    if (data.subcategoriesIds !== undefined)
-                        params.subcategoriesIds = data.subcategoriesIds.join(',');
-                    if (data.sortBy !== undefined) params.sortBy = data.sortBy;
-                    if (data.sortOrder !== undefined) params.sortOrder = data.sortOrder;
-                    if (data.id !== undefined) {
-                        url = `${ApiEndpoints.RECIPES}${data.id}`;
-                    }
+                    const { params, url } = GetRicepeParam(data);
                     return {
                         url: url,
                         params: Object.keys(params).length > 0 ? params : undefined,
@@ -53,6 +41,15 @@ export const recipeApiSlice = apiSlice
                     };
                 },
                 providesTags: [Tags.RECIPES],
+                async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                    try {
+                        await queryFulfilled;
+                    } catch (error) {
+                        const errorProp = error as ApiErrorResponce;
+                        dispatch(setAppError(GetError(errorProp)));
+                    }
+                },
+                keepUnusedDataFor: Infinity,
             }),
         }),
     });

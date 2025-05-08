@@ -6,7 +6,7 @@ export function ComponentLoader() {
     });
     return (
         <>
-            <Center zIndex={999999} position='relative'>
+            <Center zIndex={11} position='relative'>
                 {' '}
                 <Box
                     data-test-id='loader-search-block'
@@ -23,7 +23,7 @@ export function ComponentLoader() {
                 <Spinner
                     w={{ base: '24px' }}
                     h={{ base: '24px' }}
-                    zIndex={99999999}
+                    zIndex={11}
                     position='absolute'
                 ></Spinner>
             </Center>

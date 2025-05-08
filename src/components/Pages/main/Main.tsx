@@ -1,6 +1,8 @@
 import { Box, Grid, GridItem, HStack, Show, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
+import { DisplayUtil } from '~/components/shared/utils/displayUtil';
+import { scrollController } from '~/components/shared/utils/scrollController';
 import { ContentRecipe } from '~/components/widgets/contentRecipe/contentRecipe';
 import { Filter } from '~/components/widgets/Filter/Filter';
 import { Juciest } from '~/components/widgets/juciest/Juciest';
@@ -18,35 +20,25 @@ import { VeganKitchen } from '../../widgets/veganKitchen/veganKitchen';
 
 interface PageMenuProps {
     isBurgerOpen: boolean;
-    isFilterHidden: boolean;
 }
 
-const scrollController = {
-    disabledScroll() {
-        document.body.style.overflow = 'hidden';
-    },
-    enabledScroll() {
-        document.body.style.overflow = 'auto';
-    },
-};
-
-export function Main({ isBurgerOpen, isFilterHidden }: PageMenuProps) {
+export function Main({ isBurgerOpen }: PageMenuProps) {
     const isSearchStarted = useAppSelector(selectIsSearchStarted);
     const isSearchSuccessful = useAppSelector(selectIsSearchSuccessful);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     useEffect(() => {
         if (isBurgerOpen || isFilterOpen) {
             scrollController.disabledScroll();
-        } else {
-            scrollController.enabledScroll();
+            return;
         }
+        scrollController.enabledScroll();
     }, [isBurgerOpen, isFilterOpen]);
 
     return (
         <>
             {isFilterOpen && (
                 <Box as='section'>
-                    <Filter></Filter>
+                    <Filter />
                 </Box>
             )}
 
@@ -57,8 +49,8 @@ export function Main({ isBurgerOpen, isFilterHidden }: PageMenuProps) {
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
-                filter={isBurgerOpen || isFilterHidden === false ? 'blur(4px)' : ''}
-                bg={isBurgerOpen || isFilterHidden === false ? 'rgba(0, 0, 0, 0.16)' : ''}
+                filter={isBurgerOpen || isFilterOpen ? 'blur(4px)' : ''}
+                bg={isBurgerOpen || isFilterOpen ? 'rgba(0, 0, 0, 0.16)' : ''}
             >
                 <Grid
                     templateColumns={{ xl: '256px auto 208px' }}
@@ -98,7 +90,7 @@ export function Main({ isBurgerOpen, isFilterHidden }: PageMenuProps) {
                                             : { base: '0px' }
                                     }
                                 >
-                                    <SearchForm2></SearchForm2>
+                                    <SearchForm2 />
                                 </Box>
 
                                 <Box
@@ -114,54 +106,34 @@ export function Main({ isBurgerOpen, isFilterHidden }: PageMenuProps) {
                                             xl: 'hidden',
                                             '2xl': 'visible',
                                         }}
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: 'none' }
-                                                : '""'
-                                        }
+                                        display={DisplayUtil(false)}
                                     >
-                                        {/* <NewRecipe></NewRecipe> */}
-                                        <Slider></Slider>
+                                        <Slider />
                                     </Box>
                                     <Box
                                         as='section'
                                         overflow={{ base: 'hidden', xl: 'visible' }}
                                         mt={{ xl: '24px', '2xl': '10px' }}
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: 'none' }
-                                                : '""'
-                                        }
+                                        display={DisplayUtil(false)}
                                     >
-                                        <Juciest></Juciest>
+                                        <Juciest />
                                     </Box>
                                     <Box
                                         as='section'
                                         overflow='hidden'
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: 'none' }
-                                                : '""'
-                                        }
+                                        display={DisplayUtil(false)}
                                     >
                                         <CookBlog isBurgerOpen={isBurgerOpen}></CookBlog>
                                     </Box>
-                                    <Box
-                                        as='section'
-                                        display={
-                                            isSearchStarted && isSearchSuccessful === true
-                                                ? { base: '""' }
-                                                : 'none'
-                                        }
-                                    >
-                                        <ContentRecipe></ContentRecipe>
+                                    <Box as='section' display={DisplayUtil(true)}>
+                                        <ContentRecipe />
                                     </Box>
                                     <Box
                                         as='section'
                                         overflow='hidden'
                                         pr={{ base: '32px', xl: '0' }}
                                     >
-                                        <VeganKitchen></VeganKitchen>
+                                        <VeganKitchen />
                                     </Box>
                                 </Box>
                             </VStack>
@@ -173,7 +145,7 @@ export function Main({ isBurgerOpen, isFilterHidden }: PageMenuProps) {
                                 <MetricsDesktop />
                             </Box>
                             <Box minW='208px' position='fixed' bottom='1px' pl='5px'>
-                                <AddRecipe></AddRecipe>
+                                <AddRecipe />
                             </Box>
                         </Show>
                     </GridItem>

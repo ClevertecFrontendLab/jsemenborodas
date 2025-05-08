@@ -3,15 +3,3 @@ body {
     padding: 0;
     min-height: 100vh;
 }
-html,
-body {
-    position: static !important; /* Отключаем любое позиционирование */
-    z-index: auto !important; /* Сбрасываем z-index */
-    pointer-events: auto !important; /* Разрешаем клики "сквозь" body */
-    overflow: auto !important;
-}
-
-/* Включаем pointer-events для дочерних элементов */
-body * {
-    pointer-events: auto;
-}

@@ -3,8 +3,10 @@ import { ApiGroupNames } from '~/query/constants/api-group-names.ts';
 import { EndpointNames } from '~/query/constants/endpoint-names.ts';
 import { Tags } from '~/query/constants/tags.ts';
 import { apiSlice } from '~/query/create-api.ts';
+import { setAppError } from '~/store/app-slice';
 
-import { recipe, recipeRequest } from '../types/types';
+import { ApiErrorResponce, recipe, recipeRequest } from '../types/types';
+import { GetError } from './utils/errorUtil';
 
 interface CategoriesProps {
     _id?: string;
@@ -31,6 +33,16 @@ export const categoryApiSlice = apiSlice
                     name: EndpointNames.GET_RECIPES,
                 }),
                 providesTags: [Tags.RECIPES],
+                async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                    try {
+                        await queryFulfilled;
+                    } catch (error) {
+                        const errorProp = error as ApiErrorResponce;
+                        console.log('error');
+                        dispatch(setAppError(GetError(errorProp)));
+                    }
+                },
+                keepUnusedDataFor: Infinity,
             }),
             getRecipeByLikes: builder.query<recipeRequest, CategoriesProps>({
                 query: (params = {}) => ({
@@ -46,6 +58,15 @@ export const categoryApiSlice = apiSlice
                     name: EndpointNames.GET_RECIPES,
                 }),
                 providesTags: [Tags.RECIPES],
+                async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                    try {
+                        await queryFulfilled;
+                    } catch (error) {
+                        const errorProp = error as ApiErrorResponce;
+                        dispatch(setAppError(GetError(errorProp)));
+                    }
+                },
+                keepUnusedDataFor: Infinity,
             }),
             getRecipeByCreateDate: builder.query<recipeRequest, CategoriesProps>({
                 query: (params = {}) => ({
@@ -61,6 +82,15 @@ export const categoryApiSlice = apiSlice
                     name: EndpointNames.GET_RECIPES,
                 }),
                 providesTags: [Tags.RECIPES],
+                async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                    try {
+                        await queryFulfilled;
+                    } catch (error) {
+                        const errorProp = error as ApiErrorResponce;
+                        dispatch(setAppError(GetError(errorProp)));
+                    }
+                },
+                keepUnusedDataFor: Infinity,
             }),
         }),
     });

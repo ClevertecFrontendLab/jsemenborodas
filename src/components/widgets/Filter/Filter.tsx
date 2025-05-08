@@ -23,26 +23,25 @@ import { ExitFilter, Plus } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
-    addAllergenOnFilter,
-    addAuthorOnFilter,
-    addCategoryOnFilter,
-    addFilterOnFilter,
-    addGarnishOnFilter,
-    addMeatOnFilter,
-    removeAllergenOnFilter,
-    removeAuthorsOnFilter,
-    removeCategoryOnFilter,
-    removeFilterOnFilter,
-    removeGarnishOnFilter,
-    removeMeatOnFilter,
-    resetSearchStateOnFilter,
-    selectAllergensOnFilter,
-    selectAllFiltersOnFilter,
-    selectAuthorsOnFilter,
-    selectCategoriesOnFilter,
-    selectGarnishOnFilter,
-    selectMeatOnFilter,
-    setAllergensOnFilter,
+    addAllergen,
+    addAuthor,
+    addCategory,
+    addFilter,
+    addGarnish,
+    addMeat,
+    removeAllergen,
+    removeAuthors,
+    removeCategory,
+    removeFilter,
+    removeGarnish,
+    removeMeat,
+    resetSearchState,
+    selectAllergens,
+    selectAllFilters,
+    selectAuthors,
+    selectCategories,
+    selectGarnish,
+    selectMeat,
 } from '~/store/reducers/filter';
 import { selectorIsFilterOpen, setIsFilterOpen } from '~/store/reducers/open';
 import {
@@ -63,13 +62,13 @@ import { meatMockData } from './assets/meatMockData';
 export function Filter() {
     const dispatch = useAppDispatch();
 
-    const categories = useAppSelector(selectCategoriesOnFilter);
-    const authors = useAppSelector(selectAuthorsOnFilter);
-    const meat = useAppSelector(selectMeatOnFilter);
-    const garnish = useAppSelector(selectGarnishOnFilter);
-    const allergens = useAppSelector(selectAllergensOnFilter);
+    const categories = useAppSelector(selectCategories);
+    const authors = useAppSelector(selectAuthors);
+    const meat = useAppSelector(selectMeat);
+    const garnish = useAppSelector(selectGarnish);
+    const allergens = useAppSelector(selectAllergens);
     const isEliminateAllergensOn = useAppSelector(selectEliminateAllergens);
-    const allFilters = useAppSelector(selectAllFiltersOnFilter);
+    const allFilters = useAppSelector(selectAllFilters);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
 
     const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState<boolean>(false);
@@ -77,43 +76,39 @@ export function Filter() {
     const [isAllergenMenuOpen, setIsAllergenMenuOpen] = useState<boolean>(false);
     const [localAllergens, setLocalAllergens] = useState<string[]>([]);
 
-    // const [allFilters, setAllFilters] = useState<string[]>([]);
-
     const { data: catData } = useGetCategoriesQuery({});
 
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleCategories = (category: string) => {
         if (categories?.includes(category)) {
-            dispatch(removeCategoryOnFilter(category));
-            console.log(categories);
-        } else {
-            dispatch(addCategoryOnFilter(category));
-            console.log(categories);
+            dispatch(removeCategory(category));
+            return;
         }
+        dispatch(addCategory(category));
     };
     const handleAuthors = (author: string) => {
         if (authors?.includes(author)) {
-            dispatch(removeAuthorsOnFilter(author));
-        } else {
-            dispatch(addAuthorOnFilter(author));
+            dispatch(removeAuthors(author));
+            return;
         }
+        dispatch(addAuthor(author));
     };
 
     const handleMeat = (m: string) => {
         if (meat?.includes(m)) {
-            dispatch(removeMeatOnFilter(m));
-        } else {
-            dispatch(addMeatOnFilter(m));
+            dispatch(removeMeat(m));
+            return;
         }
+        dispatch(addMeat(m));
     };
 
     const handleGarnish = (g: string) => {
         if (garnish?.includes(g)) {
-            dispatch(removeGarnishOnFilter(g));
-        } else {
-            dispatch(addGarnishOnFilter(g));
+            dispatch(removeGarnish(g));
+            return;
         }
+        dispatch(addGarnish(g));
     };
 
     const handleAllergens = (allergen: string) => {
@@ -123,36 +118,32 @@ export function Filter() {
             allergen = 'Клубника';
         }
         if (allergens?.includes(allergen)) {
-            dispatch(removeAllergenOnFilter(allergen));
-        } else {
-            dispatch(addAllergenOnFilter(allergen));
-            console.log(allergen);
+            dispatch(removeAllergen(allergen));
+            return;
         }
+        dispatch(addAllergen(allergen));
+        console.log(allergen);
     };
     const handleSwitch = () => {
         if (isEliminateAllergensOn) {
             setLocalAllergens(allergens ? allergens : []);
-            dispatch(setAllergensOnFilter([]));
-            console.log('allergen placed:');
-            console.log(allergens);
-        } else {
-            dispatch(setAllergensOnFilter(localAllergens));
-            setLocalAllergens([]);
-            console.log('allergenssetted:');
-            console.log(allergens);
+            dispatch(setAllergens([]));
+            return;
         }
+        dispatch(setAllergens(localAllergens));
+        setLocalAllergens([]);
     };
 
     const handleAllFilters = (item: string) => {
         if (allFilters?.includes(item)) {
-            dispatch(removeFilterOnFilter(item));
-        } else {
-            dispatch(addFilterOnFilter(item));
+            dispatch(removeFilter(item));
+            return;
         }
+        dispatch(addFilter(item));
     };
 
     const resetFilters = () => {
-        dispatch(resetSearchStateOnFilter());
+        dispatch(resetSearchState());
     };
 
     const handleFindRecipe = () => {
@@ -173,12 +164,6 @@ export function Filter() {
         dispatch(setIsFilterOpen());
     };
 
-    // if (categories?.length) {
-    //     categories.map((cat) => handleAllFilters(cat));
-    // } else if(authors?.length) {
-    //     authors?.length
-    // }
-
     return (
         <Box
             position='fixed'
@@ -186,7 +171,7 @@ export function Filter() {
             bg='white'
             top='0'
             right='0'
-            zIndex='9999'
+            zIndex='10'
             overflow='hidden'
             w={{ base: '344px', xl: '463px' }}
             minW={0}
@@ -199,7 +184,7 @@ export function Filter() {
                 pt={{ xl: '16px' }}
                 pl={{ xl: '16px' }}
                 position='relative'
-                zIndex='2222'
+                zIndex='11'
                 minW={0}
             >
                 {/* Heading plus exit button */}
@@ -234,7 +219,6 @@ export function Filter() {
                         closeOnSelect={false}
                         onOpen={() => setIsCategoryMenuOpen(true)}
                         onClose={() => setIsCategoryMenuOpen(false)}
-                        // onClose={() => setIsCategoryMenuOpen(false)}
                     >
                         <MenuButton
                             textAlign='left'
@@ -397,14 +381,7 @@ export function Filter() {
                                         handleAllFilters(item.title);
                                     }}
                                 >
-                                    <Checkbox
-                                        isChecked={authors?.includes(item.title)}
-                                        // value={item.authorName}
-                                        // onChange={() => {
-                                        //     handleAuthorCheckboxChange(item.authorName);
-                                        //     toggleItemSelection(item.authorName);
-                                        // }}
-                                    >
+                                    <Checkbox isChecked={authors?.includes(item.title)}>
                                         {item.title}
                                     </Checkbox>
                                 </MenuItem>
@@ -424,10 +401,7 @@ export function Filter() {
                     >
                         Тип мяса:
                     </Text>
-                    <CheckboxGroup
-                    // value={localSelectedMeatTypes?.map((meat) => meat?.title) || []}
-                    // onChange={() => toggleMeat}
-                    >
+                    <CheckboxGroup>
                         <VStack alignItems='flex-start'>
                             {meatMockData?.map((item) => (
                                 <Checkbox
@@ -509,7 +483,7 @@ export function Filter() {
                         >
                             <HStack justifyContent='space-between' h='auto'>
                                 <HStack flexWrap='wrap'>
-                                    {allFilters && allFilters.length > 0 ? (
+                                    {allFilters && allFilters.length ? (
                                         allFilters.map((item) => (
                                             <Box
                                                 data-test-id='filter-tag'
@@ -661,15 +635,6 @@ export function Filter() {
                             onClick={() => {
                                 resetFilters();
                             }}
-                            // onClick={() => {
-                            //     setLocalSelectedFilterAuthor([]);
-                            //     setLocalSelectedFilterCategory([]);
-                            //     setDefaultAllergen([]);
-                            //     setAllFilterFilters([]);
-                            //     setLocalSelectedMeatTypes([]);
-                            //     setLocalSelectedSideDishTypes([]);
-                            //     setSelectedItems([]);
-                            // }}
                             data-test-id={!isFilterOpen ? '' : 'clear-filter-button'}
                         >
                             <Text
@@ -691,13 +656,6 @@ export function Filter() {
                             border='1px solid #00000014'
                             bg='#000000EB'
                             _hover={{ bg: '#000000EB' }}
-                            // isDisabled={
-                            //     localSelectedFilterCategory.length === 0 &&
-                            //     localSelectedFilterAuthor.length === 0 &&
-                            //     localSelectedMeatTypes.length === 0 &&
-                            //     localSelectedSideDishTypes.length === 0 &&
-                            //     defaultAllergen.length === 0
-                            // }
                             data-test-id='find-recipe-button'
                             onClick={handleFindRecipe}
                             isDisabled={!allFilters?.length}

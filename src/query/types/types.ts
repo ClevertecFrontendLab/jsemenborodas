@@ -61,3 +61,19 @@ export interface recipeRequest {
         totalPages: number;
     };
 }
+export type Error = {
+    error: string;
+    message: string;
+    statusCode: number;
+};
+
+export type ApiError = {
+    data: Error;
+    status?: number;
+};
+
+export type ApiErrorResponce = {
+    error: ApiError;
+    isUnhandledError: boolean;
+    meta: { request: string[]; response: string[] };
+};

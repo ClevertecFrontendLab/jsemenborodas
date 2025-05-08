@@ -1,6 +1,7 @@
 import { Box, Grid, GridItem, Show } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
+import { scrollController } from '~/components/shared/utils/scrollController';
 import { ErrorComponent } from '~/components/widgets/error/Error';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
@@ -11,23 +12,14 @@ interface PageMenuProps {
     isBurgerOpen: boolean;
 }
 
-const scrollController = {
-    disabledScroll() {
-        document.body.style.overflow = 'hidden';
-    },
-    enabledScroll() {
-        document.body.style.overflow = 'auto';
-    },
-};
-
 export function ErrorPage({ isBurgerOpen }: PageMenuProps) {
     useEffect(() => {
-        if (isBurgerOpen === true) {
+        if (isBurgerOpen) {
             scrollController.disabledScroll();
-        } else {
-            scrollController.enabledScroll();
+            return;
         }
-    });
+        scrollController.enabledScroll();
+    }, [isBurgerOpen]);
     return (
         <>
             <Box
@@ -37,8 +29,8 @@ export function ErrorPage({ isBurgerOpen }: PageMenuProps) {
                 p={0}
                 mt={{ base: '64px', sm: '62px', xl: '80px' }}
                 position='relative'
-                filter={isBurgerOpen === true ? 'blur(4px)' : ''}
-                bg={isBurgerOpen === true ? 'rgba(0, 0, 0, 0.16)' : ''}
+                filter={isBurgerOpen ? 'blur(4px)' : ''}
+                bg={isBurgerOpen ? 'rgba(0, 0, 0, 0.16)' : ''}
             >
                 <Grid
                     templateColumns={{ xl: '256px auto 208px' }}
@@ -61,7 +53,7 @@ export function ErrorPage({ isBurgerOpen }: PageMenuProps) {
                             xl: 'calc(100vh - 80px)',
                         }}
                     >
-                        <ErrorComponent></ErrorComponent>
+                        <ErrorComponent />
                     </GridItem>
                     <GridItem>
                         <Show above='xl'>
@@ -69,7 +61,7 @@ export function ErrorPage({ isBurgerOpen }: PageMenuProps) {
                                 <MetricsDesktop />
                             </Box>
                             <Box minW='208px' position='fixed' bottom='1px' pl='5px'>
-                                <AddRecipe></AddRecipe>
+                                <AddRecipe />
                             </Box>
                         </Show>
                     </GridItem>

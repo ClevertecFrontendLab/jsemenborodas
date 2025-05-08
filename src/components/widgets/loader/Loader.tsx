@@ -9,7 +9,7 @@ export function Loader() {
         <>
             <Box
                 position='fixed'
-                zIndex={9999999}
+                zIndex={11}
                 bgColor='#00000029'
                 style={{
                     backdropFilter: 'blur(4px)',
@@ -21,7 +21,7 @@ export function Loader() {
                 left={0}
                 data-test-id='app-loader'
             >
-                <AbsoluteCenter zIndex={999999}>
+                <AbsoluteCenter zIndex={11}>
                     <Box
                         minW={sizes}
                         maxW={sizes}
@@ -37,7 +37,7 @@ export function Loader() {
                         <Spinner
                             w={{ base: '24px', md: '37px' }}
                             h={{ base: '24px', md: '37px' }}
-                            zIndex={99999999}
+                            zIndex={11}
                         ></Spinner>
                     </AbsoluteCenter>
                 </AbsoluteCenter>
