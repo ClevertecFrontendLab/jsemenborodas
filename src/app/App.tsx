@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router';
 
 import { Footer } from '~/components/widgets/footer/Footer';
 import { Header } from '~/components/widgets/header/Header';
+import { Loader } from '~/components/widgets/loader/Loader';
 
 import { AppRoutes } from '../components/routes/Routes';
 import { theme } from './theme';
@@ -21,6 +22,7 @@ function App() {
                         maxW={{ xl: 'calc(100vw)' }}
                         overflow='hidden'
                     >
+                        <Loader />
                         <GridItem>
                             <Header
                                 isBurgerOpen={isBurgerOpen}

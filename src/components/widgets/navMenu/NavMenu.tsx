@@ -11,31 +11,28 @@ import {
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { Category } from '~/query/types/types';
+import { setAppLoader } from '~/store/app-slice';
+import { useAppDispatch } from '~/store/hooks';
 
 import exiticon from '../../../someimages//exitIcon.png';
-import { Loader } from '../loader/Loader';
 export function NavMenu() {
     const location = useLocation();
+    const dispatch = useAppDispatch();
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    const [loader, setLoader] = useState<boolean>(true);
     const navigate = useNavigate();
-    const { data, isError, isLoading, error, isFetching } = useGetCategoriesQuery({});
+    const { data, isError, isLoading, error } = useGetCategoriesQuery({});
     const mockData = localStorage.getItem('navMenu');
-
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
     useEffect(() => {
-        if (!isLoading && !isFetching) {
-            setLoader(false);
+        if (!isLoading) {
+            dispatch(setAppLoader(false));
         }
-    }, [isLoading, isFetching]);
-    if (loader) {
-        return <Loader />;
-    }
+    }, [dispatch, isLoading]);
     if (mockData === null && data) {
         localStorage.setItem('navMenu', JSON.stringify(filteredData));
     }

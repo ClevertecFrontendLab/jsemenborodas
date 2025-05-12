@@ -5,12 +5,11 @@ import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipeByLikesQuery } from '~/query/services/recipesnew';
 import { recipeRequest } from '~/query/types/types';
 
-import { Loader } from '../loader/Loader';
+// import { Loader } from '../loader/Loader';
 import { JuciestCards } from './JuciestCards';
 
 export function JuciestOnJuciest() {
     const [pages, setPages] = useState<number[]>([1]);
-    const [showLoader, setShowLoader] = useState(true);
     const [isButtonLoading, setIsButtonLoading] = useState<boolean>(false);
     const { data, isError, isLoading, isFetching } = useGetRecipeByLikesQuery({
         limit: 8,
@@ -21,22 +20,10 @@ export function JuciestOnJuciest() {
         if (isLoading || isFetching) {
             setIsButtonLoading(true);
         } else {
-            const timer = setTimeout(() => {
-                setIsButtonLoading(false);
-            }, 500);
-            return () => clearTimeout(timer);
+            setIsButtonLoading(false);
         }
     }, [isLoading, isFetching]);
     const { data: catData } = useGetCategoriesQuery({});
-
-    if (showLoader) {
-        setTimeout(() => setShowLoader(false), 1000);
-        return <Loader />;
-    }
-
-    if (isLoading || isFetching) {
-        return <Loader />;
-    }
 
     if (isError) {
         return null;

@@ -11,38 +11,43 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { Breadcrumbs } from '~/components/features/BreadCrumb/BreadCrumbs';
 import { Burger, OpenBurger } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { Category } from '~/query/types/types';
+import { setAppLoader } from '~/store/app-slice';
+import { useAppDispatch } from '~/store/hooks';
 
 import exiticon from '../../../someimages/exitIcon.png';
-import { Loader } from '../loader/Loader';
 interface BurgerMenuProps {
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
+    const location = useLocation();
+    const pathNames = location.pathname.split('/').filter((x) => x);
+    const dispatch = useAppDispatch();
     const toggleMenu = () => {
         setIsOpen((prev) => !prev);
     };
-
-    const location = useLocation();
-    const pathNames = location.pathname.split('/').filter((x) => x);
-
     const isDesktop = useBreakpointValue({ base: false, xl: true });
     const navigate = useNavigate();
     const dataId = useBreakpointValue({
         base: 'vegan-cuisine',
         xl: '',
     });
-    const { data, isError, isLoading, isFetching } = useGetCategoriesQuery({});
+    const { data, isError, isLoading } = useGetCategoriesQuery({});
 
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
-
+    useEffect(() => {
+        if (!isLoading) {
+            dispatch(setAppLoader(false));
+        }
+    }, [dispatch, isLoading]);
     let resultData;
 
     if (isError && filteredData) {
@@ -57,9 +62,9 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
         localStorage.setItem('navMenu', JSON.stringify(filteredData));
     }
 
-    if (isLoading || isFetching) {
-        return <Loader />;
-    }
+    // if (isLoading || isFetching) {
+    //     return <Loader />;
+    // }
     return (
         <>
             <Box onClick={toggleMenu} zIndex='11'>

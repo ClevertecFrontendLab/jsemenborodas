@@ -23,7 +23,7 @@ import { setAppError } from '~/store/app-slice';
 import { useAppDispatch } from '~/store/hooks';
 
 import { Metrics } from '../../features/Metrics/Metrics';
-import { Loader } from '../loader/Loader';
+// import { Loader } from '../loader/Loader';
 
 export function VeganKitchen() {
     const dispatch = useAppDispatch();
@@ -85,7 +85,7 @@ export function VeganKitchen() {
         }
     }, [isRecipesLoading, isCategoryLoading]);
     if (loader) {
-        return <Loader />;
+        // return <Loader />;
     }
     if (isCategoryError || isRecipeError) {
         dispatch(setAppError('Error'));

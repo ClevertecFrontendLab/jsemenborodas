@@ -19,28 +19,21 @@ import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipesQuery } from '~/query/services/recipes';
 import { recipeRequest } from '~/query/types/types';
 
-import { Loader } from '../loader/Loader';
+// import { Loader } from '../loader/Loader';
 
 interface pageProps {
     page: number;
 }
 
 export function JuciestCards({ page }: pageProps) {
-    const { data, isError, isLoading, isFetching } = useGetRecipesQuery({
+    const { data, isError } = useGetRecipesQuery({
         sortBy: 'likes',
         sortOrder: 'desc',
         limit: 8,
         page: page,
     }) as { data: recipeRequest; isError: boolean; isLoading: boolean; isFetching: boolean };
-    const {
-        data: catData,
-        isLoading: catLoad,
-        isFetching: catFetching,
-    } = useGetCategoriesQuery({});
+    const { data: catData } = useGetCategoriesQuery({});
     const navigate = useNavigate();
-    if (isLoading || catLoad || catFetching || isFetching) {
-        return <Loader />;
-    }
     if (isError) {
         return null;
     }

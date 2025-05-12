@@ -35,7 +35,7 @@ import { recipe } from '~/query/types/types';
 import BookMarks from '../../shared/images/icons/bookmarks.png';
 import BsAlarm from '../../shared/images/icons/BsAlarm.png';
 import LoveSmile from '../../shared/images/icons/loveSmile.png';
-import { Loader } from '../loader/Loader';
+// import { Loader } from '../loader/Loader';
 export function CurrentRecipe() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -48,15 +48,14 @@ export function CurrentRecipe() {
         const valueNumber = parseInt(valueString, 10);
         setInputValue(valueNumber);
     };
-    const { data, isError, isLoading } = useGetRecipesQuery({ id: recipeId }) as {
+    const { data, isError } = useGetRecipesQuery({ id: recipeId }) as {
         data: recipe;
         isError: boolean;
-        isLoading: boolean;
     };
     const { data: catData } = useGetCategoriesQuery({});
-    if (isLoading) {
-        return <Loader />;
-    }
+    // if (isLoading) {
+    //     return <Loader />;
+    // }
     if (isError) {
         navigate(-1);
         localStorage.setItem('Error', 'Error');
