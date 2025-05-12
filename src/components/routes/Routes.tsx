@@ -6,10 +6,10 @@ import { useGetCategoriesQuery } from '~/query/services/categories';
 import { DefaultPage } from '../Pages/defaultPage/DefaultPage';
 import { ErrorPage } from '../Pages/errorPage/ErrorPage';
 import { JuciestPage } from '../Pages/juciest/JuciestPage';
+import { LoginPage } from '../Pages/loginPage/loginPage';
 import { Main } from '../Pages/main/Main';
 import { RecipePage } from '../Pages/RecipePage/RecipePage';
 import { VeganKitchenPage } from '../Pages/veganKitchen/VeganKitchenPage';
-import { AlertNote } from '../widgets/alert/AlertNote';
 
 interface RoutesMenuProps {
     isBurgerOpen: boolean;
@@ -25,7 +25,6 @@ export function AppRoutes({ isBurgerOpen }: RoutesMenuProps) {
 
     return (
         <>
-            <AlertNote />
             <RouterRoutes>
                 {categoriesAll?.map((cat) => {
                     const subCategories = cat.subCategories || [];
@@ -62,6 +61,7 @@ export function AppRoutes({ isBurgerOpen }: RoutesMenuProps) {
                 <Route path='/:/:/:/*' element={<RecipePage isBurgerOpen={isBurgerOpen} />} />
                 <Route path='/not-found/*' element={<ErrorPage isBurgerOpen={isBurgerOpen} />} />
                 <Route path='*' element={<Navigate to='/not-found/' replace />} />
+                <Route path='/login' element={<LoginPage />} />
             </RouterRoutes>
         </>
     );

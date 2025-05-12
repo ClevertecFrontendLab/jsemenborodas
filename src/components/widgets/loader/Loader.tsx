@@ -11,14 +11,11 @@ export function Loader() {
     });
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const isLoadingStatus = useSelector(userLoadingSelector);
-    console.log(isLoadingStatus);
     useEffect(() => {
         if (!isLoadingStatus) {
             setIsLoading(false);
-            console.log('false');
             return;
         }
-        console.log('true');
         return;
     }, [isLoadingStatus]);
     if (!isLoading) {

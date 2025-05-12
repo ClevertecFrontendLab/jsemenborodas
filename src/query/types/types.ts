@@ -77,3 +77,16 @@ export type ApiErrorResponce = {
     isUnhandledError: boolean;
     meta: { request: string[]; response: string[] };
 };
+
+export type AuthRequest = {
+    login: string;
+    password: string;
+};
+
+export type AuthErrorData = {
+    error: string;
+    message: string;
+    statusCode: number;
+};
+
+export type AuthError = { status: number; data: AuthErrorData };
