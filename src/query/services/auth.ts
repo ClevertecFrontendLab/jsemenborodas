@@ -4,7 +4,7 @@ import { EndpointNames } from '~/query/constants/endpoint-names.ts';
 import { Tags } from '~/query/constants/tags.ts';
 import { apiSlice } from '~/query/create-api.ts';
 
-import { AuthRequest } from '../types/types';
+import { AuthRequest, RegisterRequest } from '../types/types';
 
 export const authApiSlice = apiSlice
     .enhanceEndpoints({
@@ -22,7 +22,17 @@ export const authApiSlice = apiSlice
                 }),
                 invalidatesTags: [Tags.AUTH],
             }),
+            RegisterUser: builder.mutation<void, RegisterRequest>({
+                query: (registerRequest) => ({
+                    url: ApiEndpoints.REGISTER,
+                    method: 'POST',
+                    body: registerRequest,
+                    apiGroupName: ApiGroupNames.AUTH,
+                    name: EndpointNames.GET_AUTH,
+                }),
+                invalidatesTags: [Tags.AUTH],
+            }),
         }),
     });
 
-export const { useGetAuthMutation } = authApiSlice;
+export const { useGetAuthMutation, useRegisterUserMutation } = authApiSlice;

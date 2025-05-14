@@ -16,7 +16,7 @@ export function Layout() {
 
     useEffect(() => {
         const pathNames = location.pathname.split('/').filter((x) => x);
-        if (pathNames[0] === 'login') {
+        if (pathNames[0] === 'login' || pathNames[0] === 'register') {
             setIsDisplay(false);
         }
     }, [location.pathname]);

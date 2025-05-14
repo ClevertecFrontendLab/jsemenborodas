@@ -6,6 +6,7 @@ import appReducer, { appSlice } from './app-slice';
 import filterReducer, { filterSlice } from './reducers/filter';
 import openReducer, { openSlice } from './reducers/open';
 import searchReducer, { searchSlice } from './reducers/search';
+import userReducer, { userSlice } from './reducers/user';
 const isProduction = false;
 const rootReducer = combineReducers({
     [appSlice.name]: appReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     [searchSlice.name]: searchReducer,
     [openSlice.name]: openReducer,
     [filterSlice.name]: filterReducer,
+    [userSlice.name]: userReducer,
 });
 
 export type ApplicationState = ReturnType<typeof rootReducer>;

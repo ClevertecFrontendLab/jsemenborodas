@@ -90,3 +90,11 @@ export type AuthErrorData = {
 };
 
 export type AuthError = { status: number; data: AuthErrorData };
+
+export type RegisterRequest = {
+    email: string;
+    login: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+};

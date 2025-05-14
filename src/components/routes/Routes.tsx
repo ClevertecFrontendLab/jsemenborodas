@@ -9,6 +9,7 @@ import { JuciestPage } from '../Pages/juciest/JuciestPage';
 import { LoginPage } from '../Pages/loginPage/loginPage';
 import { Main } from '../Pages/main/Main';
 import { RecipePage } from '../Pages/RecipePage/RecipePage';
+import { RegisterPage } from '../Pages/registerPage/RegisterPage';
 import { VeganKitchenPage } from '../Pages/veganKitchen/VeganKitchenPage';
 
 interface RoutesMenuProps {
@@ -62,6 +63,7 @@ export function AppRoutes({ isBurgerOpen }: RoutesMenuProps) {
                 <Route path='/not-found/*' element={<ErrorPage isBurgerOpen={isBurgerOpen} />} />
                 <Route path='*' element={<Navigate to='/not-found/' replace />} />
                 <Route path='/login' element={<LoginPage />} />
+                <Route path='/register' element={<RegisterPage />} />
             </RouterRoutes>
         </>
     );

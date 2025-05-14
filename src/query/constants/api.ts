@@ -4,4 +4,5 @@ export enum ApiEndpoints {
     RECIPES = '/recipe/',
     TEST = '/recipe',
     AUTH = '/auth/login',
+    REGISTER = '/auth/signup',
 }

@@ -1,11 +1,27 @@
 import { Tab, TabList, Tabs } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 export function LoginFormTabs() {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const [indexOfTab, setIndexOfTab] = useState<number>(0);
+
+    useEffect(() => {
+        const pathSegments = location.pathname.split('/').filter(Boolean);
+        if (pathSegments[0] === 'register') {
+            setIndexOfTab(1);
+            return;
+        }
+        setIndexOfTab(0);
+    }, [location.pathname]);
     return (
         <Tabs
             isLazy
             mt={{ sm: '16px', xl: '40px' }}
             mr={{ xl: '0px', '2xl': 0 }}
             ml={{ '2xl': '12px' }}
+            index={indexOfTab}
         >
             <TabList
                 gap='16px'
@@ -27,6 +43,7 @@ export function LoginFormTabs() {
                             color: 'rgba(32, 126, 0, 1)',
                         },
                     }}
+                    onClick={() => navigate('/login')}
                 >
                     Вход на сайт
                 </Tab>
@@ -44,6 +61,7 @@ export function LoginFormTabs() {
                             color: 'rgba(32, 126, 0, 1)',
                         },
                     }}
+                    onClick={() => navigate('/register')}
                 >
                     Регистрация
                 </Tab>
