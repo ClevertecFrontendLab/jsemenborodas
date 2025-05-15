@@ -46,6 +46,7 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
             window.removeEventListener('resize', handleResize);
         };
     }, [setIsBurgerOpen]);
+
     return (
         <Box
             as='header'

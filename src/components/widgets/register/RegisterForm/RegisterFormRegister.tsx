@@ -4,8 +4,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperType } from 'swiper/types';
 
 import { useRegisterUserMutation } from '~/query/services/auth';
-import { setAppLoader } from '~/store/app-slice';
+import { AuthError } from '~/query/types/types';
+import { setAppError, setAppLoader } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { toggleIsVerifyOpen } from '~/store/reducers/authModals';
 import {
     progressSelect,
     userEmailSelect,
@@ -37,17 +39,34 @@ export function RegisterFormRegister() {
     const dispatch = useAppDispatch();
     const handleOnSubmit = async () => {
         if (Object.values(progressBar).filter((i) => i === true).length === 6) {
+            dispatch(setAppLoader(true));
+
             try {
-                dispatch(setAppLoader(true));
-                await getRegister({
+                const response = await getRegister({
                     email: email,
                     login: login,
                     password: password,
                     firstName: firstName,
                     lastName: lastName,
                 });
-            } catch (error) {
-                console.log(error);
+                if ('error' in response) {
+                    const AuthentificationError = response.error as AuthError;
+                    const ErrorData = AuthentificationError.data;
+                    const ErrorStatusCode = ErrorData.statusCode;
+
+                    if (ErrorStatusCode === 400) {
+                        dispatch(setAppError(ErrorData.message));
+                    } else if (ErrorStatusCode > 500) {
+                        dispatch(setAppError('Error'));
+                    }
+                } else {
+                    console.log(response);
+                    if ('data' in response) {
+                        dispatch(toggleIsVerifyOpen());
+                    }
+                }
+            } catch (_error) {
+                dispatch(setAppError('Error'));
             } finally {
                 dispatch(setAppLoader(false));
             }

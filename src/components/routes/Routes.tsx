@@ -12,6 +12,7 @@ import { Main } from '../Pages/main/Main';
 import { RecipePage } from '../Pages/RecipePage/RecipePage';
 import { RegisterPage } from '../Pages/registerPage/RegisterPage';
 import { VeganKitchenPage } from '../Pages/veganKitchen/VeganKitchenPage';
+import { VerificationPage } from '../Pages/verificationPage/VerificationPage';
 
 interface RoutesMenuProps {
     isBurgerOpen: boolean;
@@ -67,6 +68,7 @@ export function AppRoutes({ isBurgerOpen }: RoutesMenuProps) {
                 <Route path='*' element={<Navigate to='/not-found/' replace />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/register' element={<RegisterPage />} />
+                <Route path='/verification' element={<VerificationPage />} />
             </RouterRoutes>
         </>
     );

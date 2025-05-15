@@ -34,11 +34,15 @@ export function NavMenu() {
         }
     }, [dispatch, isLoading]);
     if (mockData === null && data) {
-        localStorage.setItem('navMenu', JSON.stringify(filteredData));
+        localStorage.setItem('navMenu', JSON.stringify(filteredData || []));
     }
     let resultData;
-    if (mockData && data) {
-        resultData = JSON.parse(mockData);
+    if (mockData && mockData !== 'undefined') {
+        try {
+            resultData = JSON.parse(mockData);
+        } catch (_error) {
+            resultData = null;
+        }
     }
     if (isError) {
         return null;

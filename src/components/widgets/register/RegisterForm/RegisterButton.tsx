@@ -13,6 +13,7 @@ type RegisterButtonProps = {
 export function RegisterButton({ onClick, step }: RegisterButtonProps) {
     const progressBar = useAppSelector(progressSelect);
     const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
+
     const dispatch = useAppDispatch();
     useEffect(() => {
         if (isFirstMount) {

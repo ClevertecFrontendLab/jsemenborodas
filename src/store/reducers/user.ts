@@ -79,6 +79,20 @@ export const userSlice = createSlice({
             state.repeatPassword = payload;
             state.progress.isRepeatValid = state.repeatPassword === state.password;
         },
+        resetAllUserState(state) {
+            state.email = '';
+            state.firstName = '';
+            state.lastName = '';
+            state.login = '';
+            state.password = '';
+            state.repeatPassword = '';
+            state.progress.isEmailValid = false;
+            state.progress.isFirstNameValid = false;
+            state.progress.isLastNameValid = false;
+            state.progress.isLoginValid = false;
+            state.progress.isPasswordValid = false;
+            state.progress.isRepeatValid = false;
+        },
     },
 });
 
@@ -90,7 +104,14 @@ export const userPasswordSelect = (state: { user: UserState }) => state.user.pas
 export const userRepeatPasswordSelect = (state: { user: UserState }) => state.user.repeatPassword;
 export const progressSelect = (state: { user: UserState }) => state.user.progress;
 
-export const { setEmail, setFirstName, setLastName, setLogin, setPassword, setRepeatPassword } =
-    userSlice.actions;
+export const {
+    setEmail,
+    setFirstName,
+    setLastName,
+    setLogin,
+    setPassword,
+    setRepeatPassword,
+    resetAllUserState,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -16,6 +16,7 @@ import { useGetAuthMutation } from '~/query/services/auth';
 import { AuthError } from '~/query/types/types';
 import { setAppError, setAppLoader, userLoadingSelector } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { toggleIsAlertOpen } from '~/store/reducers/authModals';
 
 import { Loader } from '../../loader/Loader';
 import ShowPassword from './assets/ShowPassword.png';
@@ -73,7 +74,6 @@ export function LoginFormLogin() {
     };
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('Загрузка начата');
         if (checkData()) {
             try {
                 dispatch(setAppLoader(true));
@@ -88,12 +88,11 @@ export function LoginFormLogin() {
                 } else if (ErrorStatusCode === 403) {
                     dispatch(setAppError('EmailNotVerified'));
                 } else if (ErrorStatusCode >= 500) {
-                    console.log(ErrorStatusCode);
+                    dispatch(setAppError('ServerError'));
+                    dispatch(toggleIsAlertOpen());
                 }
-                console.log('Загрузка закончена');
             } finally {
                 dispatch(setAppLoader(false));
-                console.log(isLoading);
             }
         }
     };

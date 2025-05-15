@@ -98,3 +98,8 @@ export type RegisterRequest = {
     firstName: string;
     lastName: string;
 };
+
+export type ResponceMessage = {
+    message: string;
+    statusText: string;
+};

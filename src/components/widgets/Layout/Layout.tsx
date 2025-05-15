@@ -18,7 +18,10 @@ export function Layout() {
         const pathNames = location.pathname.split('/').filter((x) => x);
         if (pathNames[0] === 'login' || pathNames[0] === 'register') {
             setIsDisplay(false);
+            return;
         }
+
+        setIsDisplay(true);
     }, [location.pathname]);
     return (
         <Grid
@@ -28,6 +31,7 @@ export function Layout() {
             overflow='hidden'
         >
             <Loader />
+
             <AlertNote />
             {isDisplay && (
                 <GridItem>
