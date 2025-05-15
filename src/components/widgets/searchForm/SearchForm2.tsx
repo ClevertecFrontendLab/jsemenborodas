@@ -104,7 +104,7 @@ export function SearchForm2() {
         if ((searchRef.current && searchRef?.current?.value?.length >= 2) || allergens?.length) {
             dispatch(setSearchString(searchRef?.current?.value));
             dispatch(setIsSearchStarted(true));
-            console.log(categories);
+
             categories?.length ? setCategories(categories) : '';
             authors?.length ? setCategories(authors) : '';
             meat?.length ? setCategories(meat) : '';
@@ -442,6 +442,7 @@ export function SearchForm2() {
                                                                 ? '#0000000F'
                                                                 : '#FFFFFF'
                                                         }
+                                                        key={`${item.id}_${index}_${item.title}`}
                                                     >
                                                         <Checkbox
                                                             w='100%'

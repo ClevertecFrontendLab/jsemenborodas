@@ -93,7 +93,7 @@ export function Slider() {
                         'data' in data &&
                         filteredData &&
                         filteredData.map((item: recipe, index: number) => (
-                            <HStack bg='red' w='20px' minW='0'>
+                            <HStack bg='red' w='20px' minW='0' key='swiper-slides'>
                                 <SwiperSlide
                                     data-test-id={`carousel-card-${index}`}
                                     style={{
@@ -101,6 +101,7 @@ export function Slider() {
                                         minWidth: width,
                                         maxWidth: width,
                                     }}
+                                    key={`swiper-slide-${item._id}`}
                                 >
                                     <VStack
                                         h={{ base: '220px', xl: '402px', '2xl': '414px' }}

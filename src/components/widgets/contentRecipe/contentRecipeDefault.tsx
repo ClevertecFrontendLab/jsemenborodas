@@ -79,6 +79,7 @@ export function ContentRecipeDefault() {
                                 overflow='hidden'
                                 minW={{ xl: '880px', '2xl': '0' }}
                                 data-test-id={isSearchStarted ? '' : `food-card-${index}`}
+                                key={`content-recipe-${item._id}`}
                             >
                                 <CardBody p={0} maxH={{ xl: '244px' }} w='100%' maxW='100%'>
                                     <HStack h='100%' maxW='100%'>

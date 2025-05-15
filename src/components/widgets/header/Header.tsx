@@ -1,4 +1,4 @@
-import { Box, Card, CardHeader, Heading, Hide, HStack, Icon, Show } from '@chakra-ui/react';
+import { Box, Card, CardHeader, Hide, HStack, Icon, Show } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
@@ -100,7 +100,8 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
                             </Box>
                         </Hide>
                         <Show above='xl'>
-                            <Heading
+                            <Box
+                                as='span'
                                 fontSize={16}
                                 lineHeight={6}
                                 fontWeight='400'
@@ -108,7 +109,7 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
                                 fontFamily='Inter'
                             >
                                 <Breadcrumbs />
-                            </Heading>
+                            </Box>
                         </Show>
                     </HStack>
                     <Box

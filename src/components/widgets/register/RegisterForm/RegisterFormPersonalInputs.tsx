@@ -80,7 +80,6 @@ export function RegisterFormPersonalInputs() {
         if (value.length && value.length <= 50) {
             const isMatchByLetters = firstLetterRegExp.test(value);
             const isMatchByAll = allRegExp.test(value);
-            console.log(isMatchByAll);
             if (isMatchByAll && isMatchByLetters) {
                 setSubNameError('');
                 setIsSubNameValid(true);

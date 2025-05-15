@@ -181,6 +181,7 @@ export function VeganKitchen() {
                                     <GridItem
                                         h={{ base: '168px', xl: '180px', '2xl': '194px' }}
                                         minWidth='0'
+                                        key={`five-recipes-${item._id}`}
                                     >
                                         <Card
                                             h='100%'
@@ -352,6 +353,7 @@ export function VeganKitchen() {
                                                 maxW='100%'
                                                 boxShadow='none'
                                                 bg='transparent'
+                                                key={`fiveRecipes-${item._id}`}
                                             >
                                                 <CardBody
                                                     p={{ base: '16px 0px 0px 12px' }}

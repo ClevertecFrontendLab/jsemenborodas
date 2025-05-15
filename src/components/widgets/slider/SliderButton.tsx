@@ -1,6 +1,6 @@
 import { Box, Button, Icon } from '@chakra-ui/react';
 
-import { leftArrow, rightArrow } from '~/icons/Icon';
+import { LeftArrow, RightArrow } from '~/icons/Icon';
 
 export const SliderButton = ({ swiperRef }) => {
     const handlePrev = () => {
@@ -36,7 +36,7 @@ export const SliderButton = ({ swiperRef }) => {
                     zIndex='3'
                     onClick={handlePrev}
                 >
-                    <Icon as={leftArrow} w={{ '2xl': '24px' }}></Icon>
+                    <Icon as={LeftArrow} w={{ '2xl': '24px' }}></Icon>
                 </Button>
             </Box>
 
@@ -61,7 +61,7 @@ export const SliderButton = ({ swiperRef }) => {
                     zIndex='3'
                     onClick={handleNext}
                 >
-                    <Icon as={rightArrow} w={{ '2xl': '24px' }}></Icon>
+                    <Icon as={RightArrow} w={{ '2xl': '24px' }}></Icon>
                 </Button>
             </Box>
         </>

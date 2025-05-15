@@ -79,13 +79,14 @@ export function CookBlog({ isBurgerOpen }: PageMenuProps) {
                         </HStack>
                     </Box>
                     <Grid gap='0px' templateColumns={{ md: 'repeat(3, 33.333%)' }}>
-                        {CookBlogData.map((card) => (
+                        {CookBlogData.map((card, index) => (
                             <GridItem
                                 pr={{ base: '12px', xl: '12px' }}
                                 h={{ base: '152px', xl: '160px', '3xl': '184px' }}
                                 bg='transparent'
                                 mt={{ base: '12px', xl: '18px', '3xl': '32px' }}
                                 maxW='98%'
+                                key={`${card.id}_${card.name}_${index}`}
                             >
                                 <Card
                                     bg={isBurgerOpen ? 'rgba(0, 0, 0, 0.16)' : 'white'}

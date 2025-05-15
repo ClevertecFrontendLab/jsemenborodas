@@ -156,6 +156,7 @@ export function NavMenu() {
                                                     const path = `/${item.category}/${child.category}`;
                                                     navigate(path);
                                                 }}
+                                                key={`${child._id}1${child._id}`}
                                             >
                                                 <Heading
                                                     as='h5'

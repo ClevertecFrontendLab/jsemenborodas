@@ -98,7 +98,7 @@ export function Juciest() {
                 >
                     {data &&
                         data?.data.map((recipe, index) => (
-                            <GridItem>
+                            <GridItem key={`${recipe._id}${index}`}>
                                 <Card
                                     border='1px solid #00000014'
                                     borderRadius={8}

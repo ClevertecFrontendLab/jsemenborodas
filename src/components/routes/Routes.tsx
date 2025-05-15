@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import React from 'react';
 import { Navigate, Route, Routes as RouterRoutes, useLocation } from 'react-router';
 
 import { useGetCategoriesQuery } from '~/query/services/categories';
@@ -33,21 +34,23 @@ export function AppRoutes({ isBurgerOpen }: RoutesMenuProps) {
 
                     return (
                         <Route key={cat._id} path={`/${cat.category}`}>
-                            <Route index element={<Navigate to={`${firstSub}`} replace />} />
+                            <Route
+                                index
+                                key={`${cat._id}${cat.subCategories[0]._id}`}
+                                element={<Navigate to={`${firstSub}`} replace />}
+                            />
 
-                            {subCategories.map((sub, index) => (
-                                <>
+                            {subCategories.map((sub) => (
+                                <React.Fragment key={sub._id}>
                                     <Route
-                                        key={`${sub._id}-${index}`}
                                         path={`${sub.category}`}
                                         element={<DefaultPage isBurgerOpen={isBurgerOpen} />}
                                     />
                                     <Route
-                                        key={sub._id}
                                         path={`${sub.category}/*`}
                                         element={<RecipePage isBurgerOpen={isBurgerOpen} />}
                                     />
-                                </>
+                                </React.Fragment>
                             ))}
                         </Route>
                     );
