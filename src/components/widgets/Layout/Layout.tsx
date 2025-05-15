@@ -20,7 +20,6 @@ export function Layout() {
             setIsDisplay(false);
         }
     }, [location.pathname]);
-
     return (
         <Grid
             minH='100vh'
@@ -29,7 +28,7 @@ export function Layout() {
             overflow='hidden'
         >
             <Loader />
-            {isDisplay && <AlertNote />}
+            <AlertNote />
             {isDisplay && (
                 <GridItem>
                     <Header isBurgerOpen={isBurgerOpen} setIsBurgerOpen={setIsBurgerOpen} />

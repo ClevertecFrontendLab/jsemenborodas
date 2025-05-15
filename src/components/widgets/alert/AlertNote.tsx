@@ -1,20 +1,27 @@
 import {
+    AbsoluteCenter,
     Alert,
     AlertDescription,
     AlertIcon,
     AlertTitle,
     Box,
+    Button,
     Center,
     CloseButton,
+    Heading,
+    Icon,
     VStack,
 } from '@chakra-ui/react';
+import { Image, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
+import { BreakfastExit } from '~/icons/Icon';
 import { useAppDispatch } from '~/store/hooks';
 
 import { setAppError, userErrorSelector } from '../../../store/app-slice';
-
+import { alertMockData } from './alertMockData';
+import Breakfast from './assets/Breakfast.png';
 export function AlertNote() {
     const dispatch = useAppDispatch();
     const error = useSelector(userErrorSelector);
@@ -38,7 +45,75 @@ export function AlertNote() {
     }, [error, dispatch]);
 
     if (!error) return null;
-
+    if (error === 'ServerError') {
+        return (
+            <AbsoluteCenter
+                position='relative'
+                w={{ base: '316px', xl: '396px' }}
+                h={{ base: '380px', xl: '478px' }}
+                bg='rgba(255, 255, 255, 1)'
+                zIndex={11}
+                borderRadius='16px'
+            >
+                <Box
+                    w={{ base: '24px' }}
+                    h={{ base: '24px' }}
+                    position='absolute'
+                    top='24px'
+                    right='24px'
+                >
+                    <Icon as={BreakfastExit} w={{ base: '24px' }} h={{ base: '24px' }}></Icon>
+                </Box>
+                <Box
+                    w={{ base: '108px', xl: '206px' }}
+                    h={{ base: '108px', xl: '206px' }}
+                    mx={{ base: 'auto' }}
+                    my={{ base: '32px' }}
+                >
+                    <Image src={Breakfast} alt='breakfast' w='100%' h='100%'></Image>
+                </Box>
+                <VStack w={{ base: '252px', xl: '332px' }} mx='auto' spacing={4}>
+                    <Heading
+                        as='h2'
+                        fontFamily='Inter'
+                        fontWeight={700}
+                        fontSize={24}
+                        lineHeight={8}
+                        color='rgba(0, 0, 0, 1)'
+                        letterSpacing={{ base: '0.1px' }}
+                    >
+                        Вход не выполнен
+                    </Heading>
+                    <Text
+                        w={{ base: '252px' }}
+                        fontFamily='Inter'
+                        fontWeight={400}
+                        fontSize={16}
+                        lineHeight={6}
+                        color='rgba(0, 0, 0, 0.64)'
+                        letterSpacing={{ base: '0.2px' }}
+                    >
+                        Что-то пошло не так. Попробуйте еще раз
+                    </Text>
+                    <Button
+                        mt='16px'
+                        w='100%'
+                        h={{ base: '48px' }}
+                        bg='rgba(0, 0, 0, 0.92)'
+                        border='1px solid rgba(0, 0, 0, 0.08)'
+                        borderRadius='6px'
+                        fontFamily='Inter'
+                        fontWeight={600}
+                        fontSize={18}
+                        lineHeight={7}
+                        color='rgba(255, 255, 255, 1)'
+                    >
+                        Повторить
+                    </Button>
+                </VStack>
+            </AbsoluteCenter>
+        );
+    }
     return (
         <Center>
             <Alert
@@ -60,7 +135,9 @@ export function AlertNote() {
                         fontSize='16px'
                         lineHeight='24px'
                     >
-                        Ошибка сервера
+                        {error === 'error'
+                            ? 'Ошибка сервера'
+                            : alertMockData.filter((item) => item.errorMesage === error)[0].heading}
                     </AlertTitle>
                     <AlertDescription
                         color='#FFFFFF'
@@ -69,7 +146,10 @@ export function AlertNote() {
                         fontSize='16px'
                         lineHeight='24px'
                     >
-                        Попробуйте поискать снова попозже
+                        {error === 'error'
+                            ? 'Попробуйте поискать снова попозже'
+                            : alertMockData.filter((item) => item.errorMesage === error)[0]
+                                  .description}
                     </AlertDescription>
                 </VStack>
                 <Box

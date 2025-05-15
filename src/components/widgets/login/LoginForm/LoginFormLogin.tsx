@@ -10,10 +10,11 @@ import {
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import { useGetAuthMutation } from '~/query/services/auth';
 import { AuthError } from '~/query/types/types';
-import { setAppLoader, userLoadingSelector } from '~/store/app-slice';
+import { setAppError, setAppLoader, userLoadingSelector } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 
 import { Loader } from '../../loader/Loader';
@@ -24,6 +25,7 @@ export function LoginFormLogin() {
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
+    const navigate = useNavigate();
     const togglePasswordVisibility = () => {
         setShowPasswordBoolean(!ShowPasswordBoolean);
     };
@@ -75,17 +77,16 @@ export function LoginFormLogin() {
         if (checkData()) {
             try {
                 dispatch(setAppLoader(true));
-                console.log(isLoading);
                 await getAuth({ login: login, password: password }).unwrap();
-                console.log('Completed');
+                navigate('/');
             } catch (error) {
                 const AuthentificationError = error as AuthError;
                 const ErrorData = AuthentificationError.data;
                 const ErrorStatusCode = ErrorData.statusCode;
                 if (ErrorStatusCode === 401) {
-                    console.log(401);
+                    dispatch(setAppError('WrongLoginOrPassword'));
                 } else if (ErrorStatusCode === 403) {
-                    console.log(403);
+                    dispatch(setAppError('EmailNotVerified'));
                 } else if (ErrorStatusCode >= 500) {
                     console.log(ErrorStatusCode);
                 }
