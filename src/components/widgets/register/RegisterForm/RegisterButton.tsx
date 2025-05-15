@@ -1,6 +1,8 @@
 import { Box, Button } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 
-import { useAppSelector } from '~/store/hooks';
+import { setAppLoader } from '~/store/app-slice';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { progressSelect } from '~/store/reducers/user';
 
 type RegisterButtonProps = {
@@ -10,6 +12,15 @@ type RegisterButtonProps = {
 
 export function RegisterButton({ onClick, step }: RegisterButtonProps) {
     const progressBar = useAppSelector(progressSelect);
+    const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        if (isFirstMount) {
+            setIsFirstMount(false);
+            dispatch(setAppLoader(false));
+            return;
+        }
+    }, [isFirstMount, dispatch]);
     return (
         <>
             <Button

@@ -9,18 +9,21 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useGetAuthMutation } from '~/query/services/auth';
 import { AuthError } from '~/query/types/types';
-import { useAppDispatch } from '~/store/hooks';
+import { setAppLoader, userLoadingSelector } from '~/store/app-slice';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
 
+import { Loader } from '../../loader/Loader';
 import ShowPassword from './assets/ShowPassword.png';
 export function LoginFormLogin() {
-    const _dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
     const [ShowPasswordBoolean, setShowPasswordBoolean] = useState<boolean>(false);
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
     const togglePasswordVisibility = () => {
         setShowPasswordBoolean(!ShowPasswordBoolean);
     };
@@ -32,8 +35,8 @@ export function LoginFormLogin() {
     const [loginError, setLoginError] = useState<string>('');
     const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
     const [passwordError, setPasswordError] = useState<string>('');
-
     const [getAuth] = useGetAuthMutation();
+    const isLoading = useAppSelector(userLoadingSelector);
     const checkData = () => {
         let valid = true;
         if (login.length && login.length <= 50) {
@@ -68,8 +71,11 @@ export function LoginFormLogin() {
     };
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        console.log('Загрузка начата');
         if (checkData()) {
             try {
+                dispatch(setAppLoader(true));
+                console.log(isLoading);
                 await getAuth({ login: login, password: password }).unwrap();
                 console.log('Completed');
             } catch (error) {
@@ -83,6 +89,10 @@ export function LoginFormLogin() {
                 } else if (ErrorStatusCode >= 500) {
                     console.log(ErrorStatusCode);
                 }
+                console.log('Загрузка закончена');
+            } finally {
+                dispatch(setAppLoader(false));
+                console.log(isLoading);
             }
         }
     };
@@ -120,9 +130,17 @@ export function LoginFormLogin() {
             }
         }
     };
+    useEffect(() => {
+        if (isFirstMount) {
+            setIsFirstMount(false);
+            dispatch(setAppLoader(false));
+            return;
+        }
+    }, [isFirstMount, dispatch]);
 
     return (
         <>
+            {isLoading && <Loader />}
             <Box as='form' w='100%' onSubmit={handleSubmit}>
                 <VStack w='100%' spacing='112px'>
                     <Box w='100%'>

@@ -4,7 +4,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperType } from 'swiper/types';
 
 import { useRegisterUserMutation } from '~/query/services/auth';
-import { useAppSelector } from '~/store/hooks';
+import { setAppLoader } from '~/store/app-slice';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
     progressSelect,
     userEmailSelect,
@@ -33,10 +34,11 @@ export function RegisterFormRegister() {
     const swiperRef = useRef<SwiperType | null>(null);
     const progressBar = useAppSelector(progressSelect);
     const [getRegister] = useRegisterUserMutation();
-
+    const dispatch = useAppDispatch();
     const handleOnSubmit = async () => {
         if (Object.values(progressBar).filter((i) => i === true).length === 6) {
             try {
+                dispatch(setAppLoader(true));
                 await getRegister({
                     email: email,
                     login: login,
@@ -44,17 +46,10 @@ export function RegisterFormRegister() {
                     firstName: firstName,
                     lastName: lastName,
                 });
-                console.log(
-                    getRegister({
-                        email: email,
-                        login: login,
-                        password: password,
-                        firstName: firstName,
-                        lastName: lastName,
-                    }),
-                );
             } catch (error) {
                 console.log(error);
+            } finally {
+                dispatch(setAppLoader(false));
             }
         }
     };

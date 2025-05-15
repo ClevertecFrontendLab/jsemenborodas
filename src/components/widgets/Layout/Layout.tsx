@@ -28,7 +28,7 @@ export function Layout() {
             maxW={{ xl: 'calc(100vw)' }}
             overflow='hidden'
         >
-            {isDisplay && <Loader />}
+            <Loader />
             {isDisplay && <AlertNote />}
             {isDisplay && (
                 <GridItem>

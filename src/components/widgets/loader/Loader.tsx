@@ -1,5 +1,4 @@
 import { AbsoluteCenter, Box, Spinner, useBreakpointValue } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { userLoadingSelector } from '~/store/app-slice';
@@ -9,15 +8,7 @@ export function Loader() {
         base: '134px',
         md: '206px',
     });
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const isLoadingStatus = useSelector(userLoadingSelector);
-    useEffect(() => {
-        if (!isLoadingStatus) {
-            setIsLoading(false);
-            return;
-        }
-        return;
-    }, [isLoadingStatus]);
+    const isLoading = useSelector(userLoadingSelector);
     if (!isLoading) {
         return null;
     }
