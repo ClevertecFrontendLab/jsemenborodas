@@ -28,7 +28,9 @@ export function Juciest() {
         limit: 4,
     });
 
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const catData = Array.isArray(categoryData) ? categoryData : [];
     if (isError) {
         return null;
     }

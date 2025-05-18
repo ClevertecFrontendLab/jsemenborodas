@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import { FavouriteNotes, Likes } from '~/icons/Icon';
@@ -35,11 +35,18 @@ export function VeganKitchen() {
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const categoryName = pathSegments[0];
+
     const {
-        data: categoryData,
+        data: categoriesResponse,
         isError: isCategoryError,
         isLoading: isCategoryLoading,
     } = useGetCategoriesQuery({});
+    const catData = useMemo(
+        () => (categoriesResponse?.length ? categoriesResponse : []),
+        [categoriesResponse],
+    );
+    const categoryData = useMemo(() => (Array.isArray(catData) ? catData : []), [catData]);
+
     useEffect(() => {
         setCategories(categoryData?.filter((cat) => cat.subCategories !== undefined));
     }, [categoryData]);

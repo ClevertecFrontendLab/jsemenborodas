@@ -17,17 +17,68 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { BreakfastExit } from '~/icons/Icon';
+import { useGetAuthMutation } from '~/query/services/auth';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { authModalIsAlertOpenSelect, toggleIsAlertOpen } from '~/store/reducers/authModals';
 
-import { setAppError, userErrorSelector } from '../../../store/app-slice';
+import { setAppError, setAppLoader, setIsAuth, userErrorSelector } from '../../../store/app-slice';
+import { Err, Err2 } from '../login/LoginForm/LoginFormLogin';
 import { alertMockData } from './alertMockData';
 import Breakfast from './assets/Breakfast.png';
 import Breakfast2 from './assets/Breakfast2.png';
+
 export function AlertNote() {
     const dispatch = useAppDispatch();
+    const [getAuth] = useGetAuthMutation();
     const error = useSelector(userErrorSelector);
     const isModalOpen = useAppSelector(authModalIsAlertOpenSelect);
+    const onRepeat = async () => {
+        const password = sessionStorage.getItem('pswrd') || '';
+        const login = sessionStorage.getItem('lgn') || '';
+        dispatch(toggleIsAlertOpen());
+        try {
+            dispatch(setAppLoader(true));
+            const responce = await getAuth({ login: login, password: password });
+            if ('data' in responce) {
+                dispatch(setIsAuth(true));
+                sessionStorage.setItem('isAuth', 'true');
+                dispatch(setAppLoader(false));
+            }
+            if ('error' in responce) {
+                const err = responce as Err2;
+                const responceStatusCode = err.error.status;
+                if (responceStatusCode === 401) {
+                    dispatch(setAppError('WrongLoginOrPassword'));
+                }
+                if (responceStatusCode === 403) {
+                    dispatch(setAppError('EmailNotVerified'));
+                }
+                if (responceStatusCode >= 500) {
+                    dispatch(setAppError('ServerError'));
+                    dispatch(toggleIsAlertOpen());
+                }
+            }
+        } catch (error) {
+            const err = error as Err;
+            const responceStatusCode = err.statusCode;
+            if (responceStatusCode === 401) {
+                dispatch(setAppError('WrongLoginOrPassword'));
+                console.log('401');
+            }
+            if (responceStatusCode === 403) {
+                dispatch(setAppError('EmailNotVerified'));
+            }
+            if (responceStatusCode >= 500) {
+                dispatch(setAppError('ServerError'));
+                sessionStorage.setItem('pswrd', password);
+                sessionStorage.setItem('lgn', login);
+                dispatch(toggleIsAlertOpen());
+            }
+        } finally {
+            dispatch(setAppLoader(false));
+        }
+    };
+
     useEffect(() => {
         const savedError = localStorage.getItem('Error');
         if (savedError) {
@@ -113,6 +164,7 @@ export function AlertNote() {
                         lineHeight={7}
                         color='rgba(255, 255, 255, 1)'
                         data-test-id='repeat-button'
+                        onClick={() => onRepeat()}
                     >
                         Повторить
                     </Button>

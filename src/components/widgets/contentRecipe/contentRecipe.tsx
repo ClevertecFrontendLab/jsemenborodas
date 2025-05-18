@@ -51,7 +51,9 @@ export function ContentRecipe() {
     const sortBy = useAppSelector(selectSortBy);
     const sortOrder = useAppSelector(selectSortOrder);
     const isSearchStarted = useAppSelector(selectIsSearchStarted);
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const catData = Array.isArray(categoryData) ? categoryData : [];
     const catId = catData?.filter(
         (cat) => cat.category === pathSegments[0] && cat.subCategories !== undefined,
     );

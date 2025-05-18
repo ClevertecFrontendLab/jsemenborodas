@@ -7,8 +7,7 @@ import { Tags } from '~/query/constants/tags.ts';
 import { apiSlice } from '~/query/create-api.ts';
 import { setAppError } from '~/store/app-slice';
 
-import { ApiErrorResponce, Category } from '../types/types';
-import { GetError } from './utils/errorUtil';
+import { Category } from '../types/types';
 
 interface CategoriesProps {
     _id?: string;
@@ -46,9 +45,8 @@ export const categoryApiSlice = apiSlice
                 async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
                     try {
                         await queryFulfilled;
-                    } catch (error) {
-                        const errorProp = error as ApiErrorResponce;
-                        dispatch(setAppError(GetError(errorProp)));
+                    } catch (_error) {
+                        dispatch(setAppError('Error'));
                     }
                 },
                 keepUnusedDataFor: Infinity,

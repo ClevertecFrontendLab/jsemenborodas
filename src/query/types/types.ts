@@ -90,7 +90,7 @@ export type AuthErrorData = {
 };
 
 export type AuthError = { status: number; data: AuthErrorData };
-
+export type AuthSucces = { statusText: string; message: string };
 export type RegisterRequest = {
     email: string;
     login: string;

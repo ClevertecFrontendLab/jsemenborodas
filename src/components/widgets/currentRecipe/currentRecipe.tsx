@@ -52,7 +52,9 @@ export function CurrentRecipe() {
         data: recipe;
         isError: boolean;
     };
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const catData = Array.isArray(categoryData) ? categoryData : [];
     // if (isLoading) {
     //     return <Loader />;
     // }

@@ -2,15 +2,12 @@ import { Grid, GridItem } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
-import { AppRoutes } from '~/components/routes/Routes';
+import { LoginRoutes } from '~/components/routes/LoginRoutes';
 
 import { AlertNote } from '../alert/AlertNote';
-import { Footer } from '../footer/Footer';
-import { Header } from '../header/Header';
 import { Loader } from '../loader/Loader';
 
-export function Layout() {
-    const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
+export function LoginLayout() {
     const [isDisplay, setIsDisplay] = useState<boolean>(true);
     const location = useLocation();
 
@@ -23,7 +20,6 @@ export function Layout() {
 
         setIsDisplay(true);
     }, [location.pathname]);
-
     return (
         <Grid
             minH='100vh'
@@ -31,22 +27,11 @@ export function Layout() {
             maxW={{ xl: 'calc(100vw)' }}
             overflow='hidden'
         >
-            <Loader />
-
-            <AlertNote />
-            {isDisplay && (
-                <GridItem>
-                    <Header isBurgerOpen={isBurgerOpen} setIsBurgerOpen={setIsBurgerOpen} />
-                </GridItem>
-            )}
             <GridItem>
-                <AppRoutes isBurgerOpen={isBurgerOpen} />
+                <LoginRoutes />
             </GridItem>
-            {isDisplay && (
-                <GridItem>
-                    <Footer isBurgerOpen={isBurgerOpen} />
-                </GridItem>
-            )}
+            <Loader />
+            <AlertNote />
         </Grid>
     );
 }

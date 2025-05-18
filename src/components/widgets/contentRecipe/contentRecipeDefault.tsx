@@ -34,7 +34,9 @@ export function ContentRecipeDefault() {
     const secondSegment = pathSegments[1];
     const title = Name[secondSegment];
     const navigate = useNavigate();
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse, isLoading } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const catData = Array.isArray(categoryData) ? categoryData : [];
     const isSearchStarted = useAppSelector(selectIsSearchStarted);
     const catDataCategory = catData?.filter(
         (cat) => cat.category === pathSegments[0] && cat.subCategories !== undefined,
@@ -45,9 +47,10 @@ export function ContentRecipeDefault() {
     const { data, isError } = useGetRecipeByCategoryQuery({
         _id: catDataSubCategoryId ? catDataSubCategoryId : '',
     });
-    if (isError) {
-        return null;
-    }
+    if (isLoading)
+        if (isError) {
+            return null;
+        }
     return (
         <>
             <Box w='100%' rowGap={{ base: '0px' }} pl={{ xl: '4px' }}>

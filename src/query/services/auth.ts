@@ -4,15 +4,25 @@ import { EndpointNames } from '~/query/constants/endpoint-names.ts';
 import { Tags } from '~/query/constants/tags.ts';
 import { apiSlice } from '~/query/create-api.ts';
 
-import { AuthRequest, RegisterRequest, RestoreRequest } from '../types/types';
+import {
+    AuthError,
+    AuthRequest,
+    AuthSucces,
+    RegisterRequest,
+    RestoreRequest,
+} from '../types/types';
+
+type SignInResponce = AuthError | AuthSucces;
 
 export const authApiSlice = apiSlice
+
     .enhanceEndpoints({
         addTagTypes: [Tags.AUTH],
     })
+
     .injectEndpoints({
         endpoints: (builder) => ({
-            getAuth: builder.mutation<void, AuthRequest>({
+            getAuth: builder.mutation<SignInResponce, AuthRequest>({
                 query: (authrequest) => ({
                     url: ApiEndpoints.AUTH,
                     method: 'POST',
@@ -20,6 +30,13 @@ export const authApiSlice = apiSlice
                     apiGroupName: ApiGroupNames.AUTH,
                     name: EndpointNames.GET_AUTH,
                 }),
+                transformResponse: (responce: SignInResponce, meta): SignInResponce => {
+                    const token = meta?.response?.headers.get('authentication-access');
+                    if (token) {
+                        localStorage.setItem('accessToken', token);
+                    }
+                    return responce;
+                },
                 invalidatesTags: [Tags.AUTH],
             }),
             registerUser: builder.mutation<void, RegisterRequest>({

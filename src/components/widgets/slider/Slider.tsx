@@ -33,7 +33,9 @@ export function Slider() {
     const { data, isError, isLoading } = useGetRecipeByCreateDateQuery({
         limit: 10,
     });
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const catData = Array.isArray(categoryData) ? categoryData : [];
     const filteredData = data?.data
         ?.slice()
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());

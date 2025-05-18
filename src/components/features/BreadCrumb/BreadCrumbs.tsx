@@ -17,7 +17,9 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
             : displayPaths.length >= 3
               ? displayPaths[2]
               : '';
-    const { data: categories, isError: isCategoriesError } = useGetCategoriesQuery({});
+    const { data: categoriesResponse, isError: isCategoriesError } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const categories = Array.isArray(categoryData) ? categoryData : [];
     const { data: recipe, isError: isRecipeError } = useGetRecipesQuery(
         { id: recipeId },
         { skip: !recipeId },

@@ -7,12 +7,9 @@ import { useGetCategoriesQuery } from '~/query/services/categories';
 import { DefaultPage } from '../Pages/defaultPage/DefaultPage';
 import { ErrorPage } from '../Pages/errorPage/ErrorPage';
 import { JuciestPage } from '../Pages/juciest/JuciestPage';
-import { LoginPage } from '../Pages/loginPage/loginPage';
 import { Main } from '../Pages/main/Main';
 import { RecipePage } from '../Pages/RecipePage/RecipePage';
-import { RegisterPage } from '../Pages/registerPage/RegisterPage';
 import { VeganKitchenPage } from '../Pages/veganKitchen/VeganKitchenPage';
-import { VerificationPage } from '../Pages/verificationPage/VerificationPage';
 
 interface RoutesMenuProps {
     isBurgerOpen: boolean;
@@ -66,9 +63,7 @@ export function AppRoutes({ isBurgerOpen }: RoutesMenuProps) {
                 <Route path='/:/:/:/*' element={<RecipePage isBurgerOpen={isBurgerOpen} />} />
                 <Route path='/not-found/*' element={<ErrorPage isBurgerOpen={isBurgerOpen} />} />
                 <Route path='*' element={<Navigate to='/not-found/' replace />} />
-                <Route path='/login' element={<LoginPage />} />
-                <Route path='/register' element={<RegisterPage />} />
-                <Route path='/verification' element={<VerificationPage />} />
+                <Route path='/login' element={<Navigate to='/' replace />} />
             </RouterRoutes>
         </>
     );

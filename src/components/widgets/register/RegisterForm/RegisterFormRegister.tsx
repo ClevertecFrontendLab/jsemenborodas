@@ -1,5 +1,5 @@
 import { Box, useBreakpointValue, VStack } from '@chakra-ui/react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperType } from 'swiper/types';
 
@@ -37,6 +37,8 @@ export function RegisterFormRegister() {
     const progressBar = useAppSelector(progressSelect);
     const [getRegister] = useRegisterUserMutation();
     const dispatch = useAppDispatch();
+    const [step, setStep] = useState<number>(0);
+    const stepIncrement = () => setStep(step + 1);
     const handleOnSubmit = async () => {
         if (Object.values(progressBar).filter((i) => i === true).length === 6) {
             dispatch(setAppLoader(true));
@@ -88,14 +90,23 @@ export function RegisterFormRegister() {
                             <VStack w='100%'>
                                 <RegisterStep />
                                 <RegisterFormPersonalInputs />
-                                <RegisterButton onClick={() => swiperRef?.current?.slideNext()} />
+                                <RegisterButton
+                                    onClick={() => {
+                                        swiperRef?.current?.slideNext();
+                                        stepIncrement();
+                                    }}
+                                />
                             </VStack>
                         </SwiperSlide>
                         <SwiperSlide style={{ width: '100%' }}>
                             <VStack w='100%'>
                                 <RegisterStep />
                                 <RegisterFormPasswordInputs />
-                                <RegisterButton step={1} onClick={() => handleOnSubmit()} />
+                                {step === 0 ? (
+                                    ''
+                                ) : (
+                                    <RegisterButton step={step} onClick={() => handleOnSubmit()} />
+                                )}
                             </VStack>
                         </SwiperSlide>
                     </Swiper>

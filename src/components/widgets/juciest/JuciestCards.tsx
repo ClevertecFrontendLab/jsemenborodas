@@ -32,7 +32,9 @@ export function JuciestCards({ page }: pageProps) {
         limit: 8,
         page: page,
     }) as { data: recipeRequest; isError: boolean; isLoading: boolean; isFetching: boolean };
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const catData = Array.isArray(categoryData) ? categoryData : [];
     const navigate = useNavigate();
     if (isError) {
         return null;

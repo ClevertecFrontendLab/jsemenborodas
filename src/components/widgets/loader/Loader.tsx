@@ -4,10 +4,11 @@ import { useSelector } from 'react-redux';
 import { userLoadingSelector } from '~/store/app-slice';
 
 export function Loader() {
-    const sizes = useBreakpointValue({
-        base: '134px',
-        md: '206px',
-    });
+    const sizes =
+        useBreakpointValue({
+            base: '134px',
+            md: '206px',
+        }) ?? '134px';
     const isLoading = useSelector(userLoadingSelector);
     if (!isLoading) {
         return null;

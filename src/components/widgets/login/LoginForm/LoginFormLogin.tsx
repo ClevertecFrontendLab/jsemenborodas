@@ -10,16 +10,22 @@ import {
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useGetAuthMutation } from '~/query/services/auth';
-import { AuthError } from '~/query/types/types';
-import { setAppError, setAppLoader, userLoadingSelector } from '~/store/app-slice';
+import { setAppError, setAppLoader, setIsAuth, userLoadingSelector } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { toggleIsAlertOpen, toggleIsResetPasswordOpen } from '~/store/reducers/authModals';
 
 import { Loader } from '../../loader/Loader';
 import ShowPassword from './assets/ShowPassword.png';
+
+export type Err = { error: string; message: string; statusCode: number };
+export type Err2 = {
+    error: {
+        data: { message: string; error: string; statusCode: number };
+        status: number;
+    };
+};
 export function LoginFormLogin() {
     const dispatch = useAppDispatch();
     const [ShowPasswordBoolean, setShowPasswordBoolean] = useState<boolean>(false);
@@ -27,7 +33,6 @@ export function LoginFormLogin() {
     const [password, setPassword] = useState<string>('');
     const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
 
-    const navigate = useNavigate();
     const togglePasswordVisibility = () => {
         setShowPasswordBoolean(!ShowPasswordBoolean);
     };
@@ -78,18 +83,41 @@ export function LoginFormLogin() {
         if (checkData()) {
             try {
                 dispatch(setAppLoader(true));
-                await getAuth({ login: login, password: password }).unwrap();
-                navigate('/');
+                const responce = await getAuth({ login: login, password: password });
+                console.log(responce);
+                if ('data' in responce) {
+                    dispatch(setIsAuth(true));
+                    sessionStorage.setItem('isAuth', 'true');
+                    dispatch(setAppLoader(false));
+                }
+                if ('error' in responce) {
+                    const err = responce as Err2;
+                    const responceStatusCode = err.error.status;
+                    if (responceStatusCode === 401) {
+                        dispatch(setAppError('WrongLoginOrPassword'));
+                    }
+                    if (responceStatusCode === 403) {
+                        dispatch(setAppError('EmailNotVerified'));
+                    }
+                    if (responceStatusCode >= 500) {
+                        dispatch(setAppError('ServerError'));
+                        dispatch(toggleIsAlertOpen());
+                    }
+                }
             } catch (error) {
-                const AuthentificationError = error as AuthError;
-                const ErrorData = AuthentificationError.data;
-                const ErrorStatusCode = ErrorData.statusCode;
-                if (ErrorStatusCode === 401) {
+                const err = error as Err;
+                const responceStatusCode = err.statusCode;
+                if (responceStatusCode === 401) {
                     dispatch(setAppError('WrongLoginOrPassword'));
-                } else if (ErrorStatusCode === 403) {
+                    console.log('401');
+                }
+                if (responceStatusCode === 403) {
                     dispatch(setAppError('EmailNotVerified'));
-                } else if (ErrorStatusCode >= 500) {
+                }
+                if (responceStatusCode >= 500) {
                     dispatch(setAppError('ServerError'));
+                    sessionStorage.setItem('pswrd', password);
+                    sessionStorage.setItem('lgn', login);
                     dispatch(toggleIsAlertOpen());
                 }
             } finally {
@@ -99,7 +127,7 @@ export function LoginFormLogin() {
     };
 
     const handleChangeLogin = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = event.target.value;
+        const newValue = event.target.value.trim();
         setLogin(newValue);
         if (newValue.length && newValue.length <= 50) {
             setIsLoginValid(true);
@@ -113,6 +141,11 @@ export function LoginFormLogin() {
                 setLoginError('Максимальная длина 50 символов');
             }
         }
+    };
+
+    const trimLogin = () => {
+        const newValue = login.trim();
+        setLogin(newValue);
     };
 
     const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,6 +203,9 @@ export function LoginFormLogin() {
                                         value={login}
                                         isInvalid={!isLoginValid}
                                         onChange={handleChangeLogin}
+                                        onMouseDown={trimLogin}
+                                        onMouseUp={trimLogin}
+                                        onMouseLeave={trimLogin}
                                         sx={{
                                             '::placeholder': {
                                                 fontFamily: 'Inter',

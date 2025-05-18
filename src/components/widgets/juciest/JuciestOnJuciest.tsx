@@ -23,7 +23,9 @@ export function JuciestOnJuciest() {
             setIsButtonLoading(false);
         }
     }, [isLoading, isFetching]);
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const catData = Array.isArray(categoryData) ? categoryData : [];
 
     if (isError) {
         return null;

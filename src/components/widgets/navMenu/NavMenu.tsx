@@ -25,7 +25,9 @@ export function NavMenu() {
     const dispatch = useAppDispatch();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const navigate = useNavigate();
-    const { data, isError, isLoading, error } = useGetCategoriesQuery({});
+    const { data: categoriesResponse, isError, isLoading, error } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const data = Array.isArray(categoryData) ? categoryData : [];
     const mockData = localStorage.getItem('navMenu');
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
     useEffect(() => {

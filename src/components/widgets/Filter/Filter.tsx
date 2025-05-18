@@ -76,7 +76,9 @@ export function Filter() {
     const [isAllergenMenuOpen, setIsAllergenMenuOpen] = useState<boolean>(false);
     const [localAllergens, setLocalAllergens] = useState<string[]>([]);
 
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const catData = Array.isArray(categoryData) ? categoryData : [];
 
     const inputRef = useRef<HTMLInputElement>(null);
 

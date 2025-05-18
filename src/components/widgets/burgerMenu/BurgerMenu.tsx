@@ -40,8 +40,9 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
         base: 'vegan-cuisine',
         xl: '',
     });
-    const { data, isError, isLoading } = useGetCategoriesQuery({});
-
+    const { data: categoriesResponse, isError, isLoading } = useGetCategoriesQuery({});
+    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
+    const data = Array.isArray(categoryData) ? categoryData : [];
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
     useEffect(() => {
         if (!isLoading) {
