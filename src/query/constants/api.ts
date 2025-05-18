@@ -5,4 +5,7 @@ export enum ApiEndpoints {
     TEST = '/recipe',
     AUTH = '/auth/login',
     REGISTER = '/auth/signup',
+    RESTORE = '/auth/forgot-password',
+    VERIFYOTP = '/auth/verify-otp',
+    RESETPASSWORD = '/auth/reset-password',
 }

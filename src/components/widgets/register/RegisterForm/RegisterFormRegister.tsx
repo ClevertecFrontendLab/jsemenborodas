@@ -74,7 +74,7 @@ export function RegisterFormRegister() {
     };
     return (
         <>
-            <Box as='form' w={{ base: '100%' }} ml={{ '2xl': '24px' }}>
+            <Box as='form' w={{ base: '100%' }} ml={{ '2xl': '24px' }} data-test-id='sign-up-form'>
                 <VStack w='100%' spacing='112px'>
                     <Swiper
                         slidesPerView={1}

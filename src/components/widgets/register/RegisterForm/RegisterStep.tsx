@@ -11,6 +11,7 @@ export function RegisterStep() {
                 Шаг 1. Личная информация
             </Text>
             <Progress
+                data-test-id='sign-up-progress'
                 value={
                     (Object.values(progressBar).filter((item) => item === true).length / 6) * 100
                 }

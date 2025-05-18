@@ -19,6 +19,7 @@ export function Verification() {
                 bg='rgba(255, 255, 255, 1)'
                 zIndex={11}
                 borderRadius='16px'
+                data-test-id='sign-up-success-modal'
             >
                 <Box
                     w={{ base: '24px' }}
@@ -27,6 +28,7 @@ export function Verification() {
                     top='24px'
                     right='24px'
                     onClick={() => dispatch(toggleIsVerifyOpen())}
+                    data-test-id='close-button'
                 >
                     <Icon as={BreakfastExit} w={{ base: '24px' }} h={{ base: '24px' }}></Icon>
                 </Box>

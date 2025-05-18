@@ -50,6 +50,7 @@ export function RegisterButton({ onClick, step }: RegisterButtonProps) {
                     fontSize={18}
                     lineHeight={7}
                     color='rgba(255, 255, 255, 1)'
+                    data-test-id='submit-button'
                 >
                     {step === 1 ? 'Зарегистрироваться' : 'Дальше'}
                 </Box>

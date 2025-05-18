@@ -14,7 +14,7 @@ export function Verified() {
         const emailVerified = queryParams.get('emailVerified');
         if (emailVerified === 'true') {
             navigate('/login');
-            dispatch(setAppSuccess('Hell yeah'));
+            dispatch(setAppSuccess('VerificatioinGreat'));
             return;
         }
         navigate('/register');

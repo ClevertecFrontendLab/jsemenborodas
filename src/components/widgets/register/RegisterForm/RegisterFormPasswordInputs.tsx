@@ -176,6 +176,7 @@ export function RegisterFormPasswordInputs() {
                     </FormLabel>
                     <Input
                         type='text'
+                        data-test-id='login-input'
                         bg='white'
                         w={{ base: '100%' }}
                         h='48px'
@@ -253,6 +254,7 @@ export function RegisterFormPasswordInputs() {
                         <Input
                             type={isPasswordVisible ? 'text' : 'password'}
                             bg='white'
+                            data-test-id='password-input'
                             w={{ base: '100%' }}
                             h='48px'
                             placeholder='Пароль'
@@ -339,6 +341,7 @@ export function RegisterFormPasswordInputs() {
                     </FormLabel>
                     <InputGroup>
                         <Input
+                            data-test-id='confirm-password-input'
                             type={isRepeatPasswordVibisle ? 'text' : 'password'}
                             bg='white'
                             w={{ base: '100%' }}

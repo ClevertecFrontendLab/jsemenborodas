@@ -4,12 +4,14 @@ type authModalsState = {
     isAlertOpen?: boolean;
     isVerifyOpen?: boolean;
     isRegisterErrorOpen?: boolean;
+    isResetPasswordOpen?: boolean;
 };
 
 const initialState: authModalsState = {
     isAlertOpen: false,
     isVerifyOpen: false,
     isRegisterErrorOpen: false,
+    isResetPasswordOpen: false,
 };
 
 export const authModalsSlice = createSlice({
@@ -25,6 +27,9 @@ export const authModalsSlice = createSlice({
         toggleIsRegisterErrorOpen(state) {
             state.isRegisterErrorOpen = !state.isRegisterErrorOpen;
         },
+        toggleIsResetPasswordOpen(state) {
+            state.isResetPasswordOpen = !state.isResetPasswordOpen;
+        },
         resetAllAuthModals(state) {
             state.isAlertOpen = false;
             state.isVerifyOpen = false;
@@ -39,11 +44,15 @@ export const authModalIsVerifyOpenSelect = (state: { authModals: authModalsState
     state.authModals.isVerifyOpen;
 export const authModalsIsRegisterErrorOpen = (state: { authModals: authModalsState }) =>
     state.authModals.isRegisterErrorOpen;
+
+export const authModaisIsResetPasswordOpenSelect = (state: { authModals: authModalsState }) =>
+    state.authModals.isResetPasswordOpen;
 export const {
     toggleIsAlertOpen,
     toggleIsVerifyOpen,
     toggleIsRegisterErrorOpen,
     resetAllAuthModals,
+    toggleIsResetPasswordOpen,
 } = authModalsSlice.actions;
 
 export default authModalsSlice.reducer;

@@ -16,7 +16,7 @@ import { useGetAuthMutation } from '~/query/services/auth';
 import { AuthError } from '~/query/types/types';
 import { setAppError, setAppLoader, userLoadingSelector } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { toggleIsAlertOpen } from '~/store/reducers/authModals';
+import { toggleIsAlertOpen, toggleIsResetPasswordOpen } from '~/store/reducers/authModals';
 
 import { Loader } from '../../loader/Loader';
 import ShowPassword from './assets/ShowPassword.png';
@@ -26,6 +26,7 @@ export function LoginFormLogin() {
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
+
     const navigate = useNavigate();
     const togglePasswordVisibility = () => {
         setShowPasswordBoolean(!ShowPasswordBoolean);
@@ -141,7 +142,7 @@ export function LoginFormLogin() {
     return (
         <>
             {isLoading && <Loader />}
-            <Box as='form' w='100%' onSubmit={handleSubmit}>
+            <Box as='form' w='100%' onSubmit={handleSubmit} data-test-id='sign-in-form'>
                 <VStack w='100%' spacing='112px'>
                     <Box w='100%'>
                         <VStack w='100%'>
@@ -163,6 +164,7 @@ export function LoginFormLogin() {
                                         type='text'
                                         bg='white'
                                         w={{ base: '100%' }}
+                                        data-test-id='login-input'
                                         h='48px'
                                         placeholder='Введите логин'
                                         value={login}
@@ -216,6 +218,7 @@ export function LoginFormLogin() {
                                             w={{ base: '100%' }}
                                             h='48px'
                                             placeholder='Пароль для сайта'
+                                            data-test-id='password-input'
                                             value={password}
                                             onChange={handleChangePassword}
                                             isInvalid={!isPasswordValid}
@@ -235,6 +238,7 @@ export function LoginFormLogin() {
                                             onMouseUp={togglePasswordVisibility}
                                             onMouseLeave={resetPasswordVisibility}
                                             cursor='pointer'
+                                            data-test-id='password-visibility-button'
                                         >
                                             <Image src={ShowPassword} />
                                         </InputRightElement>
@@ -267,6 +271,7 @@ export function LoginFormLogin() {
                                 h='48px'
                                 bg='rgba(0, 0, 0, 0.92)'
                                 border='1px solid rgba(0, 0, 0, 0.08)'
+                                data-test-id='submit-button'
                                 sx={{ _hover: { bg: 'rgba(0, 0, 0, 0.92)' } }}
                             >
                                 <Box
@@ -282,7 +287,11 @@ export function LoginFormLogin() {
                                 </Box>
                             </Button>
                         </Box>
-                        <Box w='100%' mt='16px'>
+                        <Box
+                            w='100%'
+                            mt='16px'
+                            onClick={() => dispatch(toggleIsResetPasswordOpen())}
+                        >
                             <Text
                                 fontFamily='Inter'
                                 fontWeight='600'
@@ -290,6 +299,8 @@ export function LoginFormLogin() {
                                 lineHeight={{ base: '24px' }}
                                 color='rgba(0, 0, 0, 1)'
                                 mx='auto'
+                                cursor='pointer'
+                                data-test-id='forgot-password'
                             >
                                 Забыли логин или пароль?
                             </Text>

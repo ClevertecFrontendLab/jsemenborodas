@@ -56,6 +56,7 @@ export function AlertNote() {
                 bg='rgba(255, 255, 255, 1)'
                 zIndex={11}
                 borderRadius='16px'
+                data-test-id='sign-in-error-modal'
             >
                 <Box
                     w={{ base: '24px' }}
@@ -63,6 +64,7 @@ export function AlertNote() {
                     position='absolute'
                     top='24px'
                     right='24px'
+                    data-test-id='close-button'
                     onClick={() => dispatch(toggleIsAlertOpen())}
                 >
                     <Icon as={BreakfastExit} w={{ base: '24px' }} h={{ base: '24px' }}></Icon>
@@ -110,6 +112,7 @@ export function AlertNote() {
                         fontSize={18}
                         lineHeight={7}
                         color='rgba(255, 255, 255, 1)'
+                        data-test-id='repeat-button'
                     >
                         Повторить
                     </Button>
@@ -126,6 +129,7 @@ export function AlertNote() {
                 bg='rgba(255, 255, 255, 1)'
                 zIndex={11}
                 borderRadius='16px'
+                data-test-id='email-verification-failed-modal'
             >
                 <Box
                     w={{ base: '24px' }}
@@ -134,6 +138,7 @@ export function AlertNote() {
                     top='24px'
                     right='24px'
                     onClick={() => dispatch(toggleIsAlertOpen())}
+                    data-test-id='close-button'
                 >
                     <Icon as={BreakfastExit} w={{ base: '24px' }} h={{ base: '24px' }}></Icon>
                 </Box>
@@ -199,7 +204,7 @@ export function AlertNote() {
                             color='#FFFFFF'
                             fontFamily='Inter'
                             fontWeight={700}
-                            fontSize='16px'
+                            fontSize='14px'
                             lineHeight='24px'
                         >
                             {error === 'error'
@@ -208,10 +213,11 @@ export function AlertNote() {
                                       .heading}
                         </AlertTitle>
                         <AlertDescription
+                            textAlign='left'
                             color='#FFFFFF'
                             fontFamily='Inter'
                             fontWeight={400}
-                            fontSize='16px'
+                            fontSize='12px'
                             lineHeight='24px'
                         >
                             {error === 'error'
@@ -228,8 +234,9 @@ export function AlertNote() {
                             dispatch(setAppError(null));
                             localStorage.removeItem('Error');
                         }}
+                        data-test-id='close-alert-button'
                     >
-                        <CloseButton color='white' data-test-id='close-alert-button'></CloseButton>
+                        <CloseButton color='white'></CloseButton>
                     </Box>
                 </Alert>
             </Center>

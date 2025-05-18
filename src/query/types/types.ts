@@ -103,3 +103,11 @@ export type ResponceMessage = {
     message: string;
     statusText: string;
 };
+
+export type RestoreRequest = {
+    email: string;
+    otpToken?: string;
+    login?: string;
+    password?: string;
+    passwordConfirm?: string;
+};

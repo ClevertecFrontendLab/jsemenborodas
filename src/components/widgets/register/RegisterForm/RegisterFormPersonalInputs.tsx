@@ -153,6 +153,7 @@ export function RegisterFormPersonalInputs() {
                         Ваше имя
                     </FormLabel>
                     <Input
+                        data-test-id='first-name-input'
                         type='text'
                         bg='white'
                         w={{ base: '100%' }}
@@ -208,6 +209,7 @@ export function RegisterFormPersonalInputs() {
                         Ваша фамилия
                     </FormLabel>
                     <Input
+                        data-test-id='last-name-input'
                         type='text'
                         bg='white'
                         w={{ base: '100%' }}
@@ -263,6 +265,7 @@ export function RegisterFormPersonalInputs() {
                         Ваш e-mail
                     </FormLabel>
                     <Input
+                        data-test-id='email-input'
                         type='text'
                         bg='white'
                         w={{ base: '100%' }}
