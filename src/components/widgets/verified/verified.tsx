@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { setAppError, setAppSuccess } from '~/store/app-slice';
 import { useAppDispatch } from '~/store/hooks';
-import { toggleIsAlertOpen } from '~/store/reducers/authModals';
+import { setIsAlertOpen } from '~/store/reducers/authModals';
 
 export function Verified() {
     const location = useLocation();
@@ -19,7 +19,7 @@ export function Verified() {
         }
         navigate('/register');
         dispatch(setAppError('EmailRegistrationError'));
-        dispatch(toggleIsAlertOpen());
+        dispatch(setIsAlertOpen(true));
     });
     return <></>;
 }

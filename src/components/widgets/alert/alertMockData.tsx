@@ -15,6 +15,11 @@ export const alertMockData = [
         description: '',
     },
     {
+        errorMesage: 'TryToFindLater',
+        heading: 'Ошибка сервера',
+        description: 'Попробуйте поискать снова попозже',
+    },
+    {
         errorMesage: 'EmailRegistrationError',
         heading: '',
         description: '',
@@ -26,12 +31,12 @@ export const alertMockData = [
     },
     {
         errorMesage: 'Пользователь с таким login уже существует.',
-        heading: 'Пользователь с таким login уже существует',
+        heading: 'Пользователь с таким login уже существует.',
         description: '',
     },
     {
         errorMesage: 'Пользователь с таким email уже существует.',
-        heading: 'Пользователь с таким email уже существует',
+        heading: 'Пользователь с таким email уже существует.',
         description: '',
     },
     {

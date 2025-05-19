@@ -3,16 +3,15 @@ import { useEffect } from 'react';
 
 import { scrollController } from '~/components/shared/utils/scrollController';
 import { ErrorComponent } from '~/components/widgets/error/Error';
+import { useAppSelector } from '~/store/hooks';
+import { selectorIsBurgerOpen } from '~/store/reducers/open';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
 import { NavMenu } from '../../widgets/navMenu/NavMenu';
 
-interface PageMenuProps {
-    isBurgerOpen: boolean;
-}
-
-export function ErrorPage({ isBurgerOpen }: PageMenuProps) {
+export function ErrorPage() {
+    const isBurgerOpen = useAppSelector(selectorIsBurgerOpen);
     useEffect(() => {
         if (isBurgerOpen) {
             scrollController.disabledScroll();

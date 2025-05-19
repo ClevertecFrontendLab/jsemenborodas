@@ -33,13 +33,13 @@ const initialState: UserState = {
         isRepeatValid: false,
     },
 };
-const firstLetterRegExp = new RegExp('^[А-Я]', 'im');
-const allRegExp = new RegExp('^[А-Яа-я-ё]{1,}$', 'im');
+const firstLetterRegExp = new RegExp('^[А-Я]');
+const allRegExp = new RegExp('^[А-Яа-я-ё]{1,}$');
 const emailRegExp = new RegExp(
     '^[A-Za-z0-9._%+-]{1,}(?<!\\.)@([A-Za-z0-9-]{1,})(\\.[A-Za-z]{2,})+$',
 );
-const loginRegExp = new RegExp('^[A-Za-z0-9!@#$&_+-.]{5,50}$', 'im');
-const passwordRegExp = new RegExp('^[A-Za-z0-9!@#$&_+-.]{8,50}$', 'im');
+const loginRegExp = new RegExp('^[A-Za-z0-9!@#$&_+-.]{5,50}$');
+const passwordRegExp = new RegExp('^[A-Za-z0-9!@#$&_+-.]{8,50}$');
 const firstLetterUpperCaseRegExp = new RegExp('^[A-Z]{1,}');
 const hasNumberRegExp = new RegExp('[0-9]');
 export const userSlice = createSlice({
@@ -79,6 +79,15 @@ export const userSlice = createSlice({
             state.repeatPassword = payload;
             state.progress.isRepeatValid = state.repeatPassword === state.password;
         },
+        setIsFirstNameValid(state, { payload }: PayloadAction<boolean>) {
+            state.progress.isFirstNameValid = payload;
+        },
+        setIsSubNameValid(state, { payload }: PayloadAction<boolean>) {
+            state.progress.isLastNameValid = payload;
+        },
+        setIsEmailValid(state, { payload }: PayloadAction<boolean>) {
+            state.progress.isEmailValid = payload;
+        },
         resetAllUserState(state) {
             state.email = '';
             state.firstName = '';
@@ -103,7 +112,11 @@ export const userLoginSelect = (state: { user: UserState }) => state.user.login;
 export const userPasswordSelect = (state: { user: UserState }) => state.user.password;
 export const userRepeatPasswordSelect = (state: { user: UserState }) => state.user.repeatPassword;
 export const progressSelect = (state: { user: UserState }) => state.user.progress;
-
+export const isFirstNameValidSelect = (state: { user: UserState }) =>
+    state.user.progress.isFirstNameValid;
+export const isSubNameValidSelect = (state: { user: UserState }) =>
+    state.user.progress.isLastNameValid;
+export const isEmailValidSelect = (state: { user: UserState }) => state.user.progress.isEmailValid;
 export const {
     setEmail,
     setFirstName,
@@ -112,6 +125,9 @@ export const {
     setPassword,
     setRepeatPassword,
     resetAllUserState,
+    setIsFirstNameValid,
+    setIsEmailValid,
+    setIsSubNameValid,
 } = userSlice.actions;
 
 export default userSlice.reducer;

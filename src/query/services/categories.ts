@@ -1,11 +1,12 @@
 import { FetchBaseQueryMeta } from '@reduxjs/toolkit/query';
+import { useLocation } from 'react-router';
 
 import { ApiEndpoints } from '~/query/constants/api.ts';
 import { ApiGroupNames } from '~/query/constants/api-group-names.ts';
 import { EndpointNames } from '~/query/constants/endpoint-names.ts';
 import { Tags } from '~/query/constants/tags.ts';
 import { apiSlice } from '~/query/create-api.ts';
-import { setAppError } from '~/store/app-slice';
+import { setAppError, setAppLoader } from '~/store/app-slice';
 
 import { Category } from '../types/types';
 
@@ -13,7 +14,7 @@ interface CategoriesProps {
     _id?: string;
     isOnlyParent?: boolean;
 }
-
+const UseCurrentLocation = () => useLocation();
 export const categoryApiSlice = apiSlice
     .enhanceEndpoints({
         addTagTypes: [Tags.CATEGORIES],
@@ -43,10 +44,20 @@ export const categoryApiSlice = apiSlice
 
                 providesTags: [Tags.CATEGORIES],
                 async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                    const location = UseCurrentLocation();
+                    const pathSegments = location.pathname.split('/').filter(Boolean);
+
+                    dispatch(setAppLoader(true));
                     try {
                         await queryFulfilled;
-                    } catch (_error) {
+                    } catch (error) {
+                        if (pathSegments[0] === 'login' || pathSegments[0] === 'register') {
+                            console.log(error);
+                            return;
+                        }
                         dispatch(setAppError('Error'));
+                    } finally {
+                        dispatch(setAppLoader(false));
                     }
                 },
                 keepUnusedDataFor: Infinity,

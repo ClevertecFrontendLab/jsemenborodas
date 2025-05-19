@@ -126,13 +126,9 @@ export function SearchForm2() {
         if (isEliminateAllergensOn) {
             setLocalAllergens(allergens ? allergens : []);
             dispatch(setAllergens([]));
-            console.log('allergen placed:');
-            console.log(allergens);
         } else {
             dispatch(setAllergens(localAllergens));
             setLocalAllergens([]);
-            console.log('allergenssetted:');
-            console.log(allergens);
         }
     };
     useEffect(() => {

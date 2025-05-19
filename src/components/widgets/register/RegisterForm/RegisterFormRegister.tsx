@@ -17,10 +17,10 @@ import {
     userPasswordSelect,
 } from '~/store/reducers/user';
 
-import { RegisterButton } from './RegisterButton';
 import { RegisterFormPasswordInputs } from './RegisterFormPasswordInputs';
 import { RegisterFormPersonalInputs } from './RegisterFormPersonalInputs';
 import { RegisterStep } from './RegisterStep';
+
 export function RegisterFormRegister() {
     const sliderWidth = useBreakpointValue({
         base: '328px',
@@ -51,18 +51,19 @@ export function RegisterFormRegister() {
                     firstName: firstName,
                     lastName: lastName,
                 });
+
                 if ('error' in response) {
                     const AuthentificationError = response.error as AuthError;
                     const ErrorData = AuthentificationError.data;
                     const ErrorStatusCode = ErrorData.statusCode;
+                    const ErrorStatus = AuthentificationError.status;
 
-                    if (ErrorStatusCode === 400) {
+                    if (ErrorStatusCode === 400 || ErrorStatus === 400) {
                         dispatch(setAppError(ErrorData.message));
-                    } else if (ErrorStatusCode > 500) {
+                    } else if (ErrorStatusCode >= 500 || ErrorStatus >= 500) {
                         dispatch(setAppError('Error'));
                     }
                 } else {
-                    console.log(response);
                     if ('data' in response) {
                         dispatch(toggleIsVerifyOpen());
                     }
@@ -89,8 +90,7 @@ export function RegisterFormRegister() {
                         <SwiperSlide style={{ width: '100%' }}>
                             <VStack w='100%'>
                                 <RegisterStep />
-                                <RegisterFormPersonalInputs />
-                                <RegisterButton
+                                <RegisterFormPersonalInputs
                                     onClick={() => {
                                         swiperRef?.current?.slideNext();
                                         stepIncrement();
@@ -98,15 +98,11 @@ export function RegisterFormRegister() {
                                 />
                             </VStack>
                         </SwiperSlide>
+
                         <SwiperSlide style={{ width: '100%' }}>
                             <VStack w='100%'>
                                 <RegisterStep />
-                                <RegisterFormPasswordInputs />
-                                {step === 0 ? (
-                                    ''
-                                ) : (
-                                    <RegisterButton step={step} onClick={() => handleOnSubmit()} />
-                                )}
+                                <RegisterFormPasswordInputs onClick={() => handleOnSubmit()} />
                             </VStack>
                         </SwiperSlide>
                     </Swiper>

@@ -15,6 +15,7 @@ import { useGetAuthMutation } from '~/query/services/auth';
 import { setAppError, setAppLoader, setIsAuth, userLoadingSelector } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { toggleIsAlertOpen, toggleIsResetPasswordOpen } from '~/store/reducers/authModals';
+import { resetAllUserState } from '~/store/reducers/user';
 
 import { Loader } from '../../loader/Loader';
 import ShowPassword from './assets/ShowPassword.png';
@@ -84,7 +85,6 @@ export function LoginFormLogin() {
             try {
                 dispatch(setAppLoader(true));
                 const responce = await getAuth({ login: login, password: password });
-                console.log(responce);
                 if ('data' in responce) {
                     dispatch(setIsAuth(true));
                     sessionStorage.setItem('isAuth', 'true');
@@ -109,7 +109,6 @@ export function LoginFormLogin() {
                 const responceStatusCode = err.statusCode;
                 if (responceStatusCode === 401) {
                     dispatch(setAppError('WrongLoginOrPassword'));
-                    console.log('401');
                 }
                 if (responceStatusCode === 403) {
                     dispatch(setAppError('EmailNotVerified'));
@@ -326,7 +325,10 @@ export function LoginFormLogin() {
                         <Box
                             w='100%'
                             mt='16px'
-                            onClick={() => dispatch(toggleIsResetPasswordOpen())}
+                            onClick={() => {
+                                dispatch(resetAllUserState());
+                                dispatch(toggleIsResetPasswordOpen());
+                            }}
                         >
                             <Text
                                 fontFamily='Inter'

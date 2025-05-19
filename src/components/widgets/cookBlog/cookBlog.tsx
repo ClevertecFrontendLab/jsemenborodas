@@ -16,13 +16,14 @@ import {
 import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 
+import { useAppSelector } from '~/store/hooks';
+import { selectorIsBurgerOpen } from '~/store/reducers/open';
+
 import { CookBlogData } from '../../entities/Data/cookBlogData';
 import rightArrow from '../../shared/images/buttonImages/Vector.png';
 
-interface PageMenuProps {
-    isBurgerOpen: boolean;
-}
-export function CookBlog({ isBurgerOpen }: PageMenuProps) {
+export function CookBlog() {
+    const isBurgerOpen = useAppSelector(selectorIsBurgerOpen);
     return (
         <>
             <Box

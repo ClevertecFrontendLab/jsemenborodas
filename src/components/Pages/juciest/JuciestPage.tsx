@@ -8,19 +8,16 @@ import { Filter } from '~/components/widgets/Filter/Filter';
 import { JuciestOnJuciest } from '~/components/widgets/juciest/JuciestOnJuciest';
 import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
 import { useAppSelector } from '~/store/hooks';
-import { selectorIsFilterOpen } from '~/store/reducers/open';
+import { selectorIsBurgerOpen, selectorIsFilterOpen } from '~/store/reducers/open';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
 import { NavMenu } from '../../widgets/navMenu/NavMenu';
 import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 
-interface PageMenuProps {
-    isBurgerOpen: boolean;
-}
-
-export function JuciestPage({ isBurgerOpen }: PageMenuProps) {
+export function JuciestPage() {
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
+    const isBurgerOpen = useAppSelector(selectorIsBurgerOpen);
     useEffect(() => {
         if (isBurgerOpen || isFilterOpen) {
             scrollController.disabledScroll();

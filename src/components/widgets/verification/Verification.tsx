@@ -1,5 +1,6 @@
 import { AbsoluteCenter, Box, Heading, Icon, VStack } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
+import { useNavigate } from 'react-router';
 
 import { BreakfastExit } from '~/icons/Icon';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
@@ -10,6 +11,7 @@ import Breakfast from './assets/Breakfast.png';
 export function Verification() {
     const email = useAppSelector(userEmailSelect);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     return (
         <>
             <AbsoluteCenter
@@ -27,7 +29,10 @@ export function Verification() {
                     position='absolute'
                     top='24px'
                     right='24px'
-                    onClick={() => dispatch(toggleIsVerifyOpen())}
+                    onClick={() => {
+                        dispatch(toggleIsVerifyOpen());
+                        navigate('/login');
+                    }}
                     data-test-id='close-button'
                 >
                     <Icon as={BreakfastExit} w={{ base: '24px' }} h={{ base: '24px' }}></Icon>

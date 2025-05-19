@@ -1,48 +1,64 @@
-import { Box, FormControl, FormLabel, Input, VStack } from '@chakra-ui/react';
-import { useState } from 'react';
+import { Box, Button, FormControl, FormLabel, Input, VStack } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 
+import { setAppLoader } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
+    isEmailValidSelect,
+    isFirstNameValidSelect,
+    isSubNameValidSelect,
+    progressSelect,
     setEmail,
     setFirstName,
+    setIsEmailValid,
+    setIsFirstNameValid,
+    setIsSubNameValid,
     setLastName,
     userEmailSelect,
     userFirstNameSelect,
     userLastNameSelect,
 } from '~/store/reducers/user';
 
-export function RegisterFormPersonalInputs() {
+type RegisterButtonProps = {
+    onClick?: () => void;
+};
+
+export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
     const dispatch = useAppDispatch();
 
-    const firstLetterRegExp = new RegExp('^[А-Я]', 'gim');
-    const allRegExp = new RegExp('^[А-Яа-я-ё]{1,}$', 'gim');
+    const progressBar = useAppSelector(progressSelect);
+
+    const firstLetterRegExp = new RegExp('^[А-Я]');
+    const allRegExp = new RegExp('^[А-Яа-я-ё]{1,}$');
     const emailRegExp = new RegExp(
         '^[A-Za-z0-9._%+-]{1,}(?<!\\.)@([A-Za-z0-9-]{1,})(\\.[A-Za-z]{2,})+$',
     );
     const [firstNameError, setFirstNameError] = useState<string>('');
     const [subNameError, setSubNameError] = useState<string>('');
     const [emailError, setEmailError] = useState<string>('');
-    const [isFirstNameValid, setIsFirstNameValid] = useState<boolean>(true);
-    const [isSubNameValid, setIsSubNameValid] = useState<boolean>(true);
-    const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
+    const isFirstNameValid = useAppSelector(isFirstNameValidSelect);
+    const isEmailValid = useAppSelector(isEmailValidSelect);
+    const isSubNameValid = useAppSelector(isSubNameValidSelect);
+    const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
+
     const emailCheck = (value: string) => {
         if (value.length && value.length <= 50) {
             const isMatch = emailRegExp.test(value);
             if (isMatch) {
-                setIsEmailValid(true);
+                dispatch(setIsEmailValid(true));
                 setEmailError('');
                 return;
             }
-            setIsEmailValid(false);
+            dispatch(setIsEmailValid(false));
             setEmailError('Введите корректный e-mail');
             return;
         }
         if (value.length === 0) {
-            setIsEmailValid(false);
-            setEmailError('Введите e-mai');
+            dispatch(setIsEmailValid(false));
+            setEmailError('Введите e-mail');
             return;
         }
-        setIsEmailValid(false);
+        dispatch(setIsEmailValid(false));
         setEmailError('Максимальная длина 50 символов');
         return;
     };
@@ -53,27 +69,27 @@ export function RegisterFormPersonalInputs() {
             const isMatchByAll = allRegExp.test(value);
             if (isMatchByAll && isMatchByLetters) {
                 setFirstNameError('');
-                setIsFirstNameValid(true);
+                dispatch(setIsFirstNameValid(true));
                 return;
             }
             if (!isMatchByLetters) {
                 setFirstNameError('Должно начинаться с кириллицы А-Я');
-                setIsFirstNameValid(false);
+                dispatch(setIsFirstNameValid(false));
                 return;
             }
             if (!isMatchByAll) {
                 setFirstNameError('Только кириллица А-Я, и "-"');
-                setIsFirstNameValid(false);
+                dispatch(setIsFirstNameValid(false));
                 return;
             }
         }
         if (value.length === 0) {
             setFirstNameError('Введите имя');
-            setIsFirstNameValid(false);
+            dispatch(setIsFirstNameValid(false));
             return;
         }
         setFirstNameError('Максимальная длина 50 символов');
-        setIsFirstNameValid(false);
+        dispatch(setIsFirstNameValid(false));
     };
 
     const subNameCheck = (value: string) => {
@@ -82,27 +98,27 @@ export function RegisterFormPersonalInputs() {
             const isMatchByAll = allRegExp.test(value);
             if (isMatchByAll && isMatchByLetters) {
                 setSubNameError('');
-                setIsSubNameValid(true);
+                dispatch(setIsSubNameValid(true));
                 return;
             }
             if (!isMatchByLetters) {
                 setSubNameError('Должно начинаться с кириллицы А-Я');
-                setIsSubNameValid(false);
+                dispatch(setIsSubNameValid(false));
                 return;
             }
             if (!isMatchByAll) {
                 setSubNameError('Только кириллица А-Я, и "-"');
-                setIsSubNameValid(false);
+                dispatch(setIsSubNameValid(false));
                 return;
             }
         }
         if (value.length === 0) {
-            setSubNameError('Введите имя');
-            setIsSubNameValid(false);
+            setSubNameError('Введите фамилию');
+            dispatch(setIsSubNameValid(false));
             return;
         }
         setSubNameError('Максимальная длина 50 символов');
-        setIsSubNameValid(false);
+        dispatch(setIsSubNameValid(false));
     };
 
     const firstName = useAppSelector(userFirstNameSelect);
@@ -124,6 +140,47 @@ export function RegisterFormPersonalInputs() {
         dispatch(setEmail(newValue));
         emailCheck(newValue);
     };
+    const trimFirstName = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value.trim();
+        dispatch(setFirstName(newValue));
+        firstNameCheck(newValue);
+    };
+    const trimLastName = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value.trim();
+        dispatch(setLastName(newValue));
+        subNameCheck(newValue);
+    };
+    const trimEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value.trim();
+        dispatch(setEmail(newValue));
+        emailCheck(newValue);
+    };
+    const submitCheck = () => {
+        if (!isFirstNameValid) {
+            const newValue = firstName.trim();
+            firstNameCheck(newValue);
+        }
+        if (!isSubNameValid) {
+            const newValue = lastName.trim();
+            subNameCheck(newValue);
+        }
+        if (!isEmailValid) {
+            const newValue = email.trim();
+            emailCheck(newValue);
+        }
+        if (isFirstNameValid && isSubNameValid && isEmailValid) {
+            return true;
+        }
+        return false;
+    };
+
+    useEffect(() => {
+        if (isFirstMount) {
+            setIsFirstMount(false);
+            dispatch(setAppLoader(false));
+            return;
+        }
+    }, [isFirstMount, dispatch]);
 
     return (
         <VStack
@@ -161,6 +218,7 @@ export function RegisterFormPersonalInputs() {
                         placeholder='Имя'
                         value={firstName}
                         isInvalid={!isFirstNameValid}
+                        onBlur={trimFirstName}
                         onChange={handleChangeFirstName}
                         sx={{
                             '::placeholder': {
@@ -218,6 +276,7 @@ export function RegisterFormPersonalInputs() {
                         value={lastName}
                         isInvalid={!isSubNameValid}
                         onChange={handleChangeLastName}
+                        onBlur={trimLastName}
                         sx={{
                             '::placeholder': {
                                 fontFamily: 'Inter',
@@ -274,6 +333,7 @@ export function RegisterFormPersonalInputs() {
                         value={email}
                         isInvalid={!isEmailValid}
                         onChange={handleChangeEmail}
+                        onBlur={trimEmail}
                         sx={{
                             '::placeholder': {
                                 fontFamily: 'Inter',
@@ -300,6 +360,36 @@ export function RegisterFormPersonalInputs() {
                         {emailError}
                     </Box>
                 )}
+                <Button
+                    mt='40px'
+                    w='100%'
+                    px={6}
+                    borderRadius='6px'
+                    border='1px solid rgba(0, 0, 0, 0.08)'
+                    bg='rgba(0, 0, 0, 0.92)'
+                    h='48px'
+                    onClick={() => {
+                        if (submitCheck()) {
+                            onClick?.();
+                        }
+                    }}
+                    data-test-id={
+                        Object.values(progressBar).filter((i) => i === true).length < 4
+                            ? 'submit-button'
+                            : ''
+                    }
+                >
+                    <Box
+                        as='span'
+                        fontFamily='Inter'
+                        fontWeight={600}
+                        fontSize={18}
+                        lineHeight={7}
+                        color='rgba(255, 255, 255, 1)'
+                    >
+                        Дальше
+                    </Box>
+                </Button>
             </Box>
         </VStack>
     );

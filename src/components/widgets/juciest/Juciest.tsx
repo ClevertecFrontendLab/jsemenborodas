@@ -10,6 +10,7 @@ import {
     HStack,
     Icon,
     Show,
+    useBreakpointValue,
     VStack,
 } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
@@ -31,6 +32,16 @@ export function Juciest() {
     const { data: categoriesResponse } = useGetCategoriesQuery({});
     const categoryData = categoriesResponse?.length ? categoriesResponse : [];
     const catData = Array.isArray(categoryData) ? categoryData : [];
+    const testId = useBreakpointValue({
+        base: 'juiciest-link',
+        md: 'juiciest-link-mobile',
+        xl: 'juiciest-link',
+    });
+    const testIdReverse = useBreakpointValue({
+        base: 'juiciest-link-mobile',
+        md: 'juiciest-link',
+        xl: 'juiciest-link-mobile',
+    });
     if (isError) {
         return null;
     }
@@ -64,8 +75,11 @@ export function Juciest() {
                         bg='#B1FF2E'
                         mt={{ md: '-2px' }}
                         borderRadius='6px'
-                        data-test-id='juiciest-link'
-                        onClick={() => navigate('/the-juiciest')}
+                        data-test-id={testId}
+                        onClick={() => {
+                            navigate('/the-juiciest');
+                            window.location.reload();
+                        }}
                         // className='custom-cursor'
                         cursor='pointer'
                         display={{ base: 'none', md: 'block' }}
@@ -461,7 +475,7 @@ export function Juciest() {
                             </GridItem>
                         ))}
                     <GridItem
-                        data-test-id='juiciest-link-mobile'
+                        data-test-id={testIdReverse}
                         height={{ xl: '0' }}
                         sx={{
                             display: {

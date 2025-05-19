@@ -11,18 +11,14 @@ import { Main } from '../Pages/main/Main';
 import { RecipePage } from '../Pages/RecipePage/RecipePage';
 import { VeganKitchenPage } from '../Pages/veganKitchen/VeganKitchenPage';
 
-interface RoutesMenuProps {
-    isBurgerOpen: boolean;
-}
-
-export function AppRoutes({ isBurgerOpen }: RoutesMenuProps) {
+export function AppRoutes() {
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    const { data: categoriesAll } = useGetCategoriesQuery({ isOnlyParent: true });
+    const { data: categoriesAll, isLoading } = useGetCategoriesQuery({ isOnlyParent: true });
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [pathSegments]);
-
+    if (isLoading) return;
     return (
         <>
             <RouterRoutes>
@@ -40,30 +36,23 @@ export function AppRoutes({ isBurgerOpen }: RoutesMenuProps) {
 
                             {subCategories.map((sub) => (
                                 <React.Fragment key={sub._id}>
-                                    <Route
-                                        path={`${sub.category}`}
-                                        element={<DefaultPage isBurgerOpen={isBurgerOpen} />}
-                                    />
-                                    <Route
-                                        path={`${sub.category}/*`}
-                                        element={<RecipePage isBurgerOpen={isBurgerOpen} />}
-                                    />
+                                    <Route path={`${sub.category}`} element={<DefaultPage />} />
+                                    <Route path={`${sub.category}/*`} element={<RecipePage />} />
                                 </React.Fragment>
                             ))}
                         </Route>
                     );
                 })}
-                <Route path='/' element={<Main isBurgerOpen={isBurgerOpen} />} />
-                <Route path='/the-juiciest' element={<JuciestPage isBurgerOpen={isBurgerOpen} />} />
-                <Route
-                    path='/the-juiciest/*'
-                    element={<RecipePage isBurgerOpen={isBurgerOpen} />}
-                />
-                <Route path='/Vegan/*' element={<VeganKitchenPage isBurgerOpen={isBurgerOpen} />} />
-                <Route path='/:/:/:/*' element={<RecipePage isBurgerOpen={isBurgerOpen} />} />
-                <Route path='/not-found/*' element={<ErrorPage isBurgerOpen={isBurgerOpen} />} />
+
+                <Route path='/the-juiciest' element={<JuciestPage />} />
+                <Route path='/the-juiciest/*' element={<RecipePage />} />
+                <Route path='/Vegan/*' element={<VeganKitchenPage />} />
+                <Route path='/:/:/:/*' element={<RecipePage />} />
+                <Route path='/not-found/*' element={<ErrorPage />} />
+                <Route path='/' element={<Main />} />
                 <Route path='*' element={<Navigate to='/not-found/' replace />} />
                 <Route path='/login' element={<Navigate to='/' replace />} />
+                <Route path='/register' element={<Navigate to='/' replace />} />
             </RouterRoutes>
         </>
     );

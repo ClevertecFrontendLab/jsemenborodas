@@ -23,13 +23,15 @@ import {
     useVerifyOTPMutation,
 } from '~/query/services/auth';
 import { AuthError } from '~/query/types/types';
-import { setAppError, setAppSuccess } from '~/store/app-slice';
+import { setAppError, setAppLoader, setAppSuccess } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
     authModaisIsResetPasswordOpenSelect,
     toggleIsResetPasswordOpen,
 } from '~/store/reducers/authModals';
 import {
+    isEmailValidSelect,
+    setIsEmailValid,
     setLogin,
     setPassword,
     setRepeatPassword,
@@ -46,10 +48,9 @@ export function ResetPassword() {
     const isPasswordResetOpen = useAppSelector(authModaisIsResetPasswordOpenSelect);
     const [ResetResponce] = useResetPasswordMutation();
     const [email, setEmail] = useState<string>('');
-    const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
     const [step, setStep] = useState<number>(0);
     const [pinValue, setPinValue] = useState<string>('');
-    const [_emailError, setEmailError] = useState<string>('');
+    const [emailError, setEmailError] = useState<string>('');
     const [pinError, setPinError] = useState<string>('');
     const emailRegExp = new RegExp(
         '^[A-Za-z0-9._%+-]{1,}(?<!\\.)@([A-Za-z0-9-]{1,})(\\.[A-Za-z]{2,})+$',
@@ -83,6 +84,13 @@ export function ResetPassword() {
     const loginRegExp = new RegExp('^[A-Za-z0-9!@#$&_+-.]{0,50}$', 'im');
     const firstLetterUpperCaseRegExp = new RegExp('^[A-Z]{1,}');
     const hasNumberRegExp = new RegExp('[0-9]');
+    const isEmailValid = useAppSelector(isEmailValidSelect);
+    const trimEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value.trim();
+        setEmail(newValue);
+        emailCheck(newValue);
+    };
+
     const checkLogin = (value: string) => {
         if (value.length >= 5 && value.length <= 50) {
             const isMatch = loginRegExp.test(value);
@@ -170,7 +178,11 @@ export function ResetPassword() {
     const resetRepeatPasswordVisibility = () => {
         setIsRepeatPasswordVisible(false);
     };
-
+    const trimLogin = () => {
+        const newValue = login.trim();
+        dispatch(setLogin(newValue));
+        checkLogin(newValue);
+    };
     const handleChangeLogin = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
         dispatch(setLogin(newValue));
@@ -186,32 +198,49 @@ export function ResetPassword() {
         dispatch(setRepeatPassword(newValue));
         checkRepeatPassword(newValue);
     };
+
     const emailCheck = (value: string) => {
         if (value.length && value.length <= 50) {
             const isMatch = emailRegExp.test(value);
             if (isMatch) {
-                setIsEmailValid(true);
+                dispatch(setIsEmailValid(true));
+
                 setEmailError('');
-                return;
+                return true;
             }
-            setIsEmailValid(false);
+            dispatch(setIsEmailValid(false));
             setEmailError('Введите корректный e-mail');
-            return;
+            return false;
         }
         if (value.length === 0) {
-            setIsEmailValid(false);
-            setEmailError('Введите e-mai');
-            return;
+            dispatch(setIsEmailValid(false));
+            setEmailError('Введите e-mail');
+            return false;
         }
-        setIsEmailValid(false);
+        dispatch(setIsEmailValid(false));
         setEmailError('Максимальная длина 50 символов');
-        return;
+        return false;
+    };
+
+    const onSumbitPreventDefault = (e: React.FormEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        if (step === 0) {
+            if (emailCheck(email)) {
+                onSubmit();
+            }
+        }
+        if (step === 2) {
+            registerSubmit();
+        }
     };
     const onSubmit = async () => {
+        setPinError('');
+        setPinValue('');
         if (email.length && isEmailValid) {
             try {
                 const responce = await request({ email: email });
                 if ('error' in responce) {
+                    setEmail('');
                     const ErrorResponce = responce.error as AuthError;
                     if (ErrorResponce.status === 400) {
                         dispatch(setAppError('waitTillNewCodeWillGenerate'));
@@ -221,6 +250,7 @@ export function ResetPassword() {
                         dispatch(setAppError('Error'));
                     }
                 }
+
                 if ('data' in responce) {
                     setStep(step + 1);
                 }
@@ -230,34 +260,40 @@ export function ResetPassword() {
         }
     };
     const onSubmitStep1 = async (newValue: string) => {
+        dispatch(setAppLoader(true));
+        setPinError('');
         try {
             const responce = await verifyRequest({ email: email, otpToken: newValue });
             if ('error' in responce) {
                 const ErrorResponce = responce.error as AuthError;
-                console.log(responce);
                 if (ErrorResponce.status === 403) {
-                    setPinError('error');
+                    setPinError('WrongCode');
                     resetPin();
                 } else if (ErrorResponce.status >= 500) {
                     setPinError('error');
                     resetPin();
-                    console.log('hehe');
                     dispatch(setAppError('Error'));
                 }
             }
             if ('data' in responce) {
+                setPinError('');
                 resetPin();
                 setStep(step + 1);
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            dispatch(setAppLoader(false));
         }
     };
+
     const registerSubmit = async () => {
         checkLogin(login);
         checkPassword(password);
         checkRepeatPassword(repeatPassword);
+
         if (isLoginValid && isPasswordValid && isRepeatValid) {
+            dispatch(setAppLoader(true));
             try {
                 const responce = await ResetResponce({
                     email: email,
@@ -267,7 +303,6 @@ export function ResetPassword() {
                 });
                 if ('error' in responce) {
                     const ErrorResponce = responce.error as AuthError;
-                    console.log(responce);
                     if (ErrorResponce.status >= 500) {
                         dispatch(setAppError('Error'));
                     }
@@ -276,10 +311,12 @@ export function ResetPassword() {
                     resetPin();
                     setStep(0);
                     dispatch(toggleIsResetPasswordOpen());
-                    dispatch(setAppSuccess('VerificatioinGreat'));
+                    dispatch(setAppSuccess('restoreDataGreat'));
                 }
             } catch (error) {
                 console.log(error);
+            } finally {
+                dispatch(setAppLoader(false));
             }
         }
     };
@@ -294,17 +331,20 @@ export function ResetPassword() {
             onSubmitStep1(newValue);
         }
     };
+
     if (isPasswordResetOpen && step === 0) {
         return (
             <>
                 <AbsoluteCenter
+                    as='form'
+                    onSubmit={onSumbitPreventDefault}
                     position='relative'
                     w={{ base: '316px', xl: '396px' }}
                     h={{ base: '520px', xl: '578px' }}
                     bg='rgba(255, 255, 255, 1)'
                     zIndex={11}
                     borderRadius='16px'
-                    data-test-id='sign-up-success-modal'
+                    data-test-id='send-email-modal'
                 >
                     <Box
                         w={{ base: '24px' }}
@@ -312,7 +352,12 @@ export function ResetPassword() {
                         position='absolute'
                         top='24px'
                         right='24px'
-                        onClick={() => dispatch(toggleIsResetPasswordOpen())}
+                        onClick={() => {
+                            dispatch(toggleIsResetPasswordOpen());
+                            setEmail('');
+                            setPinError('');
+                            setPinValue('');
+                        }}
                         data-test-id='close-button'
                     >
                         <Icon as={BreakfastExit} w={{ base: '24px' }} h={{ base: '24px' }}></Icon>
@@ -356,7 +401,9 @@ export function ResetPassword() {
                                 h='48px'
                                 placeholder='e-mail'
                                 value={email}
+                                isInvalid={!isEmailValid}
                                 onChange={handleChangeEmail}
+                                onBlur={trimEmail}
                                 sx={{
                                     '::placeholder': {
                                         fontFamily: 'Inter',
@@ -367,6 +414,23 @@ export function ResetPassword() {
                                 }}
                             />
                         </FormControl>
+                        {!isEmailValid && (
+                            <Box
+                                mt='-16px'
+                                w={{
+                                    base: '100%',
+                                    sm: '355px',
+                                    xl: '451px',
+                                    '2xl': '461px',
+                                }}
+                                mx='auto'
+                                textAlign='left'
+                                fontFamily='Inter'
+                                color='#E53E3E'
+                            >
+                                {emailError}
+                            </Box>
+                        )}
                         <Button
                             mt='8px'
                             w='100%'
@@ -416,6 +480,7 @@ export function ResetPassword() {
         return (
             <>
                 <AbsoluteCenter
+                    as='form'
                     position='relative'
                     w={{ base: '316px', xl: '396px' }}
                     h={{ base: '412px', xl: '470px' }}
@@ -430,7 +495,11 @@ export function ResetPassword() {
                         position='absolute'
                         top='24px'
                         right='24px'
-                        onClick={() => dispatch(toggleIsResetPasswordOpen())}
+                        onClick={() => {
+                            dispatch(toggleIsResetPasswordOpen());
+                            setStep(0);
+                            setEmail('');
+                        }}
                         data-test-id='close-button'
                     >
                         <Icon as={BreakfastExit} w={{ base: '24px' }} h={{ base: '24px' }}></Icon>
@@ -453,6 +522,18 @@ export function ResetPassword() {
                             color='rgba(0, 0, 0, 1)'
                             letterSpacing={{ base: '0px' }}
                         >
+                            {pinError === 'WrongCode' && (
+                                <Box
+                                    as='span'
+                                    display='block'
+                                    fontSize={24}
+                                    fontWeight={700}
+                                    transform='translateY(-24px)'
+                                >
+                                    Неверный код
+                                    <br />
+                                </Box>
+                            )}
                             Мы отправили вам на e-mail
                             <br />{' '}
                             <Box as='span' fontWeight={600}>
@@ -475,13 +556,6 @@ export function ResetPassword() {
                                 value={pinValue}
                                 onComplete={onComplete}
                             >
-                                <PinInputField
-                                    w={{ base: '40px' }}
-                                    h={{ base: '40px' }}
-                                    mr={{ base: '6px' }}
-                                    borderColor={pinError.length ? 'red' : 'rgba(0, 0, 0, 0.06)'}
-                                    data-test-id='verification-code-input-0'
-                                />
                                 <PinInputField
                                     w={{ base: '40px' }}
                                     h={{ base: '40px' }}
@@ -516,6 +590,13 @@ export function ResetPassword() {
                                     mr={{ base: '6px' }}
                                     borderColor={pinError.length ? 'red' : 'rgba(0, 0, 0, 0.06)'}
                                     data-test-id='verification-code-input-5'
+                                />
+                                <PinInputField
+                                    w={{ base: '40px' }}
+                                    h={{ base: '40px' }}
+                                    mr={{ base: '6px' }}
+                                    borderColor={pinError.length ? 'red' : 'rgba(0, 0, 0, 0.06)'}
+                                    data-test-id='verification-code-input-6'
                                 />
                             </PinInput>
                         </FormControl>
@@ -554,6 +635,8 @@ export function ResetPassword() {
         return (
             <>
                 <AbsoluteCenter
+                    as='form'
+                    onSubmit={onSumbitPreventDefault}
                     position='relative'
                     w={{ base: '316px', xl: '396px' }}
                     h={{ base: '580px', xl: '564px' }}
@@ -612,6 +695,7 @@ export function ResetPassword() {
                                     h='48px'
                                     placeholder='bake_and_pie'
                                     value={login}
+                                    onBlur={trimLogin}
                                     onChange={handleChangeLogin}
                                     isInvalid={!isLoginValid}
                                     sx={{
@@ -810,6 +894,7 @@ export function ResetPassword() {
                             </FormControl>
                         </Box>
                         <Button
+                            type='submit'
                             mt='16px'
                             w='100%'
                             h={{ base: '48px' }}

@@ -6,7 +6,6 @@ export function LoginFormTabs() {
     const location = useLocation();
 
     const [indexOfTab, setIndexOfTab] = useState<number>(0);
-
     useEffect(() => {
         const pathSegments = location.pathname.split('/').filter(Boolean);
         if (pathSegments[0] === 'register') {
@@ -43,7 +42,9 @@ export function LoginFormTabs() {
                             color: 'rgba(32, 126, 0, 1)',
                         },
                     }}
-                    onClick={() => navigate('/login')}
+                    onClick={() => {
+                        navigate('/login');
+                    }}
                 >
                     Вход на сайт
                 </Tab>
@@ -61,7 +62,9 @@ export function LoginFormTabs() {
                             color: 'rgba(32, 126, 0, 1)',
                         },
                     }}
-                    onClick={() => navigate('/register')}
+                    onClick={() => {
+                        navigate('/register');
+                    }}
                 >
                     Регистрация
                 </Tab>

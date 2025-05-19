@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type authModalsState = {
     isAlertOpen?: boolean;
@@ -21,6 +21,7 @@ export const authModalsSlice = createSlice({
         toggleIsAlertOpen(state) {
             state.isAlertOpen = !state.isAlertOpen;
         },
+
         toggleIsVerifyOpen(state) {
             state.isVerifyOpen = !state.isVerifyOpen;
         },
@@ -29,6 +30,9 @@ export const authModalsSlice = createSlice({
         },
         toggleIsResetPasswordOpen(state) {
             state.isResetPasswordOpen = !state.isResetPasswordOpen;
+        },
+        setIsAlertOpen(state, { payload }: PayloadAction<boolean>) {
+            state.isAlertOpen = payload;
         },
         resetAllAuthModals(state) {
             state.isAlertOpen = false;
@@ -53,6 +57,7 @@ export const {
     toggleIsRegisterErrorOpen,
     resetAllAuthModals,
     toggleIsResetPasswordOpen,
+    setIsAlertOpen,
 } = authModalsSlice.actions;
 
 export default authModalsSlice.reducer;

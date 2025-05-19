@@ -10,7 +10,6 @@ import { Header } from '../header/Header';
 import { Loader } from '../loader/Loader';
 
 export function Layout() {
-    const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
     const [isDisplay, setIsDisplay] = useState<boolean>(true);
     const location = useLocation();
 
@@ -36,15 +35,15 @@ export function Layout() {
             <AlertNote />
             {isDisplay && (
                 <GridItem>
-                    <Header isBurgerOpen={isBurgerOpen} setIsBurgerOpen={setIsBurgerOpen} />
+                    <Header />
                 </GridItem>
             )}
             <GridItem>
-                <AppRoutes isBurgerOpen={isBurgerOpen} />
+                <AppRoutes />
             </GridItem>
             {isDisplay && (
                 <GridItem>
-                    <Footer isBurgerOpen={isBurgerOpen} />
+                    <Footer />
                 </GridItem>
             )}
         </Grid>

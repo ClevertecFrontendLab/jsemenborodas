@@ -63,7 +63,6 @@ export function AlertNote() {
             const responceStatusCode = err.statusCode;
             if (responceStatusCode === 401) {
                 dispatch(setAppError('WrongLoginOrPassword'));
-                console.log('401');
             }
             if (responceStatusCode === 403) {
                 dispatch(setAppError('EmailNotVerified'));
@@ -215,7 +214,7 @@ export function AlertNote() {
                         Упс! Что-то пошло не так
                     </Heading>
                     <Text fontFamily='Inter' fontWeight={400} fontSize={16} lineHeight={6}>
-                        Ваша ссылка для верификации недействительная. Попробуйте зарегистрироваться
+                        Ваша ссылка для верификации недействительна. Попробуйте зарегистрироваться
                         снова.
                     </Text>
                     <Text

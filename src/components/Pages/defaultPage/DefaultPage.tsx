@@ -10,18 +10,15 @@ import { Slider } from '~/components/widgets/slider/Slider';
 import { Tabs } from '~/components/widgets/tabs/Tabs';
 import { VeganKitchen } from '~/components/widgets/veganKitchen/veganKitchen';
 import { useAppSelector } from '~/store/hooks';
-import { selectorIsFilterOpen } from '~/store/reducers/open';
+import { selectorIsBurgerOpen, selectorIsFilterOpen } from '~/store/reducers/open';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
 import { MetricsDesktop } from '../../widgets/metricsDesktop/MetricsDesktop';
 import { NavMenu } from '../../widgets/navMenu/NavMenu';
 import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 
-interface PageMenuProps {
-    isBurgerOpen: boolean;
-}
-
-export function DefaultPage({ isBurgerOpen }: PageMenuProps) {
+export function DefaultPage() {
+    const isBurgerOpen = useAppSelector(selectorIsBurgerOpen);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     useEffect(() => {
         if (isBurgerOpen || isFilterOpen) {

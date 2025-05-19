@@ -1,5 +1,6 @@
 import {
     Box,
+    Button,
     FormControl,
     FormLabel,
     Input,
@@ -12,6 +13,7 @@ import { useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
+    progressSelect,
     setLogin,
     setPassword,
     setRepeatPassword,
@@ -21,8 +23,10 @@ import {
 } from '~/store/reducers/user';
 
 import ShowPassword from '../../login/LoginForm/assets/ShowPassword.png';
-
-export function RegisterFormPasswordInputs() {
+type RegisterButtonProps = {
+    onClick?: () => void;
+};
+export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
     const dispatch = useAppDispatch();
 
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
@@ -31,6 +35,8 @@ export function RegisterFormPasswordInputs() {
     const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
     const [isLoginValid, setIsLoginValid] = useState<boolean>(true);
     const [isRepeatValid, setIsRepeatValid] = useState<boolean>(true);
+
+    const progressBar = useAppSelector(progressSelect);
 
     const [passwordError, setPasswordError] = useState<string>('');
     const [loginError, setLoginError] = useState<string>('');
@@ -147,6 +153,31 @@ export function RegisterFormPasswordInputs() {
         checkRepeatPassword(newValue);
     };
 
+    const trimLogin = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value.trim();
+        dispatch(setLogin(newValue));
+        checkLogin(newValue);
+    };
+
+    const onSubmit = () => {
+        if (!isLoginValid) {
+            const newValue = login.trim();
+            dispatch(setLogin(newValue));
+            checkLogin(newValue);
+        }
+        if (!isPasswordValid) {
+            const newValue = password;
+            dispatch(setPassword(newValue));
+            checkPassword(newValue);
+        }
+        if (!isRepeatValid) {
+            const newValue = repeatPassword;
+            dispatch(setRepeatPassword(newValue));
+            checkRepeatPassword(newValue);
+        }
+        if (isLoginValid && isPasswordValid && isRepeatValid) return true;
+        return false;
+    };
     return (
         <VStack
             w='100%'
@@ -183,6 +214,7 @@ export function RegisterFormPasswordInputs() {
                         placeholder='bake_and_pie'
                         value={login}
                         onChange={handleChangeLogin}
+                        onBlur={trimLogin}
                         isInvalid={!isLoginValid}
                         sx={{
                             '::placeholder': {
@@ -391,6 +423,36 @@ export function RegisterFormPasswordInputs() {
                     )}
                 </FormControl>
             </Box>
+            <Button
+                mt='40px'
+                w='100%'
+                px={6}
+                borderRadius='6px'
+                border='1px solid rgba(0, 0, 0, 0.08)'
+                bg='rgba(0, 0, 0, 0.92)'
+                h='48px'
+                onClick={() => {
+                    if (onSubmit()) {
+                        onClick?.();
+                    }
+                }}
+                data-test-id={
+                    Object.values(progressBar).filter((i) => i === true).length < 4
+                        ? ''
+                        : 'submit-button'
+                }
+            >
+                <Box
+                    as='span'
+                    fontFamily='Inter'
+                    fontWeight={600}
+                    fontSize={18}
+                    lineHeight={7}
+                    color='rgba(255, 255, 255, 1)'
+                >
+                    Зарегистрироваться
+                </Box>
+            </Button>
         </VStack>
     );
 }

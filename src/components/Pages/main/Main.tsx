@@ -8,7 +8,7 @@ import { Filter } from '~/components/widgets/Filter/Filter';
 import { Juciest } from '~/components/widgets/juciest/Juciest';
 import { Slider } from '~/components/widgets/slider/Slider';
 import { useAppSelector } from '~/store/hooks';
-import { selectorIsFilterOpen } from '~/store/reducers/open';
+import { selectorIsBurgerOpen, selectorIsFilterOpen } from '~/store/reducers/open';
 import { selectIsSearchStarted, selectIsSearchSuccessful } from '~/store/reducers/search';
 
 import { AddRecipe } from '../../widgets/addRecipe/AddRecipe';
@@ -18,11 +18,8 @@ import { NavMenu } from '../../widgets/navMenu/NavMenu';
 import { SearchForm2 } from '../../widgets/searchForm/SearchForm2';
 import { VeganKitchen } from '../../widgets/veganKitchen/veganKitchen';
 
-interface PageMenuProps {
-    isBurgerOpen: boolean;
-}
-
-export function Main({ isBurgerOpen }: PageMenuProps) {
+export function Main() {
+    const isBurgerOpen = useAppSelector(selectorIsBurgerOpen);
     const isSearchStarted = useAppSelector(selectIsSearchStarted);
     const isSearchSuccessful = useAppSelector(selectIsSearchSuccessful);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
@@ -123,7 +120,7 @@ export function Main({ isBurgerOpen }: PageMenuProps) {
                                         overflow='hidden'
                                         display={DisplayUtil(false)}
                                     >
-                                        <CookBlog isBurgerOpen={isBurgerOpen}></CookBlog>
+                                        <CookBlog></CookBlog>
                                     </Box>
                                     <Box as='section' display={DisplayUtil(true)}>
                                         <ContentRecipe />

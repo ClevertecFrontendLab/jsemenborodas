@@ -95,7 +95,7 @@ export function VeganKitchen() {
         // return <Loader />;
     }
     if (isCategoryError || isRecipeError) {
-        dispatch(setAppError('Error'));
+        dispatch(setAppError('TryToFindLater'));
         return null;
     }
     if (!fiveRecipes?.length) {

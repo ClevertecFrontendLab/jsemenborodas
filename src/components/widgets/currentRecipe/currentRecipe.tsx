@@ -42,7 +42,7 @@ export function CurrentRecipe() {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const recipeId = pathSegments[pathSegments.length - 1];
 
-    const [inputValue, setInputValue] = useState(3);
+    const [inputValue, setInputValue] = useState(1);
 
     const handleChange = (valueString: string) => {
         const valueNumber = parseInt(valueString, 10);

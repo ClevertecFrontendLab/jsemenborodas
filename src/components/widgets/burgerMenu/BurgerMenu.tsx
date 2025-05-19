@@ -19,20 +19,18 @@ import { Burger, OpenBurger } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { Category } from '~/query/types/types';
 import { setAppLoader } from '~/store/app-slice';
-import { useAppDispatch } from '~/store/hooks';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { resetBurger, selectorIsBurgerOpen, setIsBurgerOpen } from '~/store/reducers/open';
 
 import exiticon from '../../../someimages/exitIcon.png';
-interface BurgerMenuProps {
-    isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
-export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
+export function BurgerMenu() {
     const location = useLocation();
+    const isOpen = useAppSelector(selectorIsBurgerOpen);
     const pathNames = location.pathname.split('/').filter((x) => x);
     const dispatch = useAppDispatch();
     const toggleMenu = () => {
-        setIsOpen((prev) => !prev);
+        dispatch(setIsBurgerOpen());
     };
     const isDesktop = useBreakpointValue({ base: false, xl: true });
     const navigate = useNavigate();
@@ -305,6 +303,28 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                     </Box>
                 </VStack>
             </Box>
+            <Box
+                position='fixed'
+                top='0'
+                zIndex={11}
+                display={isOpen ? 'block' : 'none'}
+                bottom='0'
+                right='344px'
+                left='0'
+                bg='transparent'
+                onClick={() => dispatch(resetBurger())}
+            ></Box>
+            <Box
+                position='fixed'
+                top='652px'
+                zIndex={11}
+                display={isOpen ? 'block' : 'none'}
+                bottom='0'
+                right='0'
+                left='0'
+                bg='transparent'
+                onClick={() => dispatch(resetBurger())}
+            ></Box>
         </>
     );
 }
