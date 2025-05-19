@@ -1,5 +1,4 @@
 import { FetchBaseQueryMeta } from '@reduxjs/toolkit/query';
-import { useLocation } from 'react-router';
 
 import { ApiEndpoints } from '~/query/constants/api.ts';
 import { ApiGroupNames } from '~/query/constants/api-group-names.ts';
@@ -14,7 +13,6 @@ interface CategoriesProps {
     _id?: string;
     isOnlyParent?: boolean;
 }
-const UseCurrentLocation = () => useLocation();
 export const categoryApiSlice = apiSlice
     .enhanceEndpoints({
         addTagTypes: [Tags.CATEGORIES],
@@ -44,8 +42,7 @@ export const categoryApiSlice = apiSlice
 
                 providesTags: [Tags.CATEGORIES],
                 async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-                    const location = UseCurrentLocation();
-                    const pathSegments = location.pathname.split('/').filter(Boolean);
+                    const pathSegments = window.location.pathname.split('/').filter(Boolean);
 
                     dispatch(setAppLoader(true));
                     try {

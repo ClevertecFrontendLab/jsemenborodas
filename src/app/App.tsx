@@ -20,7 +20,7 @@ function App() {
 
     return (
         <>
-            <BrowserRouter>
+            <BrowserRouter basename='/jsemenborodas'>
                 <ChakraProvider theme={theme}>
                     {isAuth ? <Layout /> : <LoginLayout />}
                 </ChakraProvider>
