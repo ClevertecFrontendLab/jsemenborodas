@@ -19,7 +19,7 @@ export function Loader() {
     return (
         <>
             <Box
-                position='fixed'
+                position='absolute'
                 zIndex={11}
                 bgColor='#00000029'
                 style={{

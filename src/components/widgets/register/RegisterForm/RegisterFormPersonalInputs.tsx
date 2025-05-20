@@ -184,6 +184,12 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
 
     return (
         <VStack
+            sx={{
+                '*': {
+                    _before: { display: 'none !important' },
+                    _after: { display: 'none !important' },
+                },
+            }}
             w='100%'
             mt={{ base: '16px' }}
             ml={{ '2xl': '24px' }}
@@ -211,6 +217,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                     </FormLabel>
                     <Input
                         data-test-id='first-name-input'
+                        display='block'
                         type='text'
                         bg='white'
                         w={{ base: '100%' }}
@@ -268,6 +275,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                     </FormLabel>
                     <Input
                         data-test-id='last-name-input'
+                        display='block'
                         type='text'
                         bg='white'
                         w={{ base: '100%' }}
@@ -325,6 +333,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                     </FormLabel>
                     <Input
                         data-test-id='email-input'
+                        display='block'
                         type='text'
                         bg='white'
                         w={{ base: '100%' }}

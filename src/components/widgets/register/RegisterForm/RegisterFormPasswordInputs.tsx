@@ -6,6 +6,7 @@ import {
     Input,
     InputGroup,
     InputRightElement,
+    useBreakpointValue,
     VStack,
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
@@ -158,7 +159,12 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
         dispatch(setLogin(newValue));
         checkLogin(newValue);
     };
-
+    const widthInput = useBreakpointValue({
+        base: '100%',
+        sm: '355px',
+        xl: '451px',
+        '2xl': '461px',
+    });
     const onSubmit = () => {
         if (!isLoginValid) {
             const newValue = login.trim();
@@ -180,6 +186,12 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
     };
     return (
         <VStack
+            sx={{
+                '*': {
+                    _before: { display: 'none !important' },
+                    _after: { display: 'none !important' },
+                },
+            }}
             w='100%'
             mt={{ base: '16px' }}
             ml={{ '2xl': '24px' }}
@@ -187,15 +199,7 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
             mr={{ '2xl': '24px' }}
         >
             <Box w='100%'>
-                <FormControl
-                    w={{
-                        base: '100%',
-                        sm: '355px',
-                        xl: '451px',
-                        '2xl': '461px',
-                    }}
-                    mx={{ sm: 'auto' }}
-                >
+                <FormControl w={widthInput} minW={widthInput} maxW={widthInput} mx={{ sm: 'auto' }}>
                     <FormLabel
                         fontFamily='Inter'
                         fontWeight={400}

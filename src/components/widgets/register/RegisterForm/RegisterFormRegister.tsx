@@ -38,7 +38,6 @@ export function RegisterFormRegister() {
     const [getRegister] = useRegisterUserMutation();
     const dispatch = useAppDispatch();
     const [step, setStep] = useState<number>(0);
-    const stepIncrement = () => setStep(step + 1);
     const handleOnSubmit = async () => {
         if (Object.values(progressBar).filter((i) => i === true).length === 6) {
             dispatch(setAppLoader(true));
@@ -77,29 +76,50 @@ export function RegisterFormRegister() {
     };
     return (
         <>
-            <Box as='form' w={{ base: '100%' }} ml={{ '2xl': '24px' }} data-test-id='sign-up-form'>
+            <Box
+                as='form'
+                w={{ base: '100%' }}
+                ml={{ '2xl': '24px' }}
+                maxW={sliderWidth}
+                overflow='hidden'
+                data-test-id='sign-up-form'
+            >
                 <VStack w='100%' spacing='112px'>
                     <Swiper
                         slidesPerView={1}
-                        style={{ maxWidth: sliderWidth, minWidth: sliderWidth }}
+                        style={{
+                            maxWidth: sliderWidth,
+                            minWidth: sliderWidth,
+                            overflow: 'hidden',
+                            padding: 0,
+                            margin: 0,
+                        }}
+                        spaceBetween={10}
                         allowTouchMove={false}
                         onSwiper={(swiper) => {
                             swiperRef.current = swiper;
                         }}
+                        cssMode={true}
+                        onSlideChange={(swiper) => {
+                            setStep(swiper.activeIndex);
+                        }}
                     >
-                        <SwiperSlide style={{ width: '100%' }}>
-                            <VStack w='100%'>
+                        <SwiperSlide
+                            style={{ width: '100%', marginRight: step === 1 ? '60px' : '0' }}
+                        >
+                            <VStack>
                                 <RegisterStep />
                                 <RegisterFormPersonalInputs
                                     onClick={() => {
                                         swiperRef?.current?.slideNext();
-                                        stepIncrement();
                                     }}
                                 />
                             </VStack>
                         </SwiperSlide>
 
-                        <SwiperSlide style={{ width: '100%' }}>
+                        <SwiperSlide
+                            style={{ width: '100%', marginLeft: step === 0 ? '60px' : '0' }}
+                        >
                             <VStack w='100%'>
                                 <RegisterStep />
                                 <RegisterFormPasswordInputs onClick={() => handleOnSubmit()} />

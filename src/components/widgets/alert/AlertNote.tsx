@@ -238,10 +238,10 @@ export function AlertNote() {
     }
     if (error !== 'ServerError' && error !== 'EmailRegistrationError') {
         return (
-            <Center>
+            <Center position='relative'>
                 <Alert
                     status='error'
-                    position='fixed'
+                    position='absolute'
                     bottom='100px'
                     bg='#E53E3E'
                     w={{ base: '328px', xl: '400px' }}

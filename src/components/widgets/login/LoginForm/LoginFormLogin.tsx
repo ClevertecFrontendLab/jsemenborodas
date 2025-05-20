@@ -12,12 +12,11 @@ import { Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 import { useGetAuthMutation } from '~/query/services/auth';
-import { setAppError, setAppLoader, setIsAuth, userLoadingSelector } from '~/store/app-slice';
-import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { setAppError, setAppLoader, setIsAuth } from '~/store/app-slice';
+import { useAppDispatch } from '~/store/hooks';
 import { toggleIsAlertOpen, toggleIsResetPasswordOpen } from '~/store/reducers/authModals';
 import { resetAllUserState } from '~/store/reducers/user';
 
-import { Loader } from '../../loader/Loader';
 import ShowPassword from './assets/ShowPassword.png';
 
 export type Err = { error: string; message: string; statusCode: number };
@@ -46,7 +45,6 @@ export function LoginFormLogin() {
     const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
     const [passwordError, setPasswordError] = useState<string>('');
     const [getAuth] = useGetAuthMutation();
-    const isLoading = useAppSelector(userLoadingSelector);
     const checkData = () => {
         let valid = true;
         if (login.length && login.length <= 50) {
@@ -173,7 +171,6 @@ export function LoginFormLogin() {
 
     return (
         <>
-            {isLoading && <Loader />}
             <Box as='form' w='100%' onSubmit={handleSubmit} data-test-id='sign-in-form'>
                 <VStack w='100%' spacing='112px'>
                     <Box w='100%'>

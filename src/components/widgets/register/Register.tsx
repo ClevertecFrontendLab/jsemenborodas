@@ -12,10 +12,14 @@ export function Register() {
 
     return (
         <>
-            <Box as='section' minW='100%' minH={{ base: '800px', sm: '1024px', xl: '1120px' }}>
+            <Box
+                as='section'
+                w='100vw'
+                maxW='1920px'
+                minH={{ base: '800px', sm: '1024px', xl: '1120px' }}
+            >
                 <HStack w='100%' spacing={0} h='100%'>
                     {isModalOpen && <Verification />}
-
                     <Box
                         w={{ base: '100%', xl: 'calc(100% - 48px)' }}
                         bg='linear-gradient(235deg, rgba(234, 255, 199, 1) 0%, rgba(41, 129, 63, 1) 100%)'
