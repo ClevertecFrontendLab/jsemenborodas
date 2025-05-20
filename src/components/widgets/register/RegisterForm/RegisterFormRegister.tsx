@@ -37,7 +37,7 @@ export function RegisterFormRegister() {
     const progressBar = useAppSelector(progressSelect);
     const [getRegister] = useRegisterUserMutation();
     const dispatch = useAppDispatch();
-    const [step, setStep] = useState<number>(0);
+    const [_step, setStep] = useState<number>(0);
     const handleOnSubmit = async () => {
         if (Object.values(progressBar).filter((i) => i === true).length === 6) {
             dispatch(setAppLoader(true));
@@ -94,7 +94,7 @@ export function RegisterFormRegister() {
                             padding: 0,
                             margin: 0,
                         }}
-                        spaceBetween={10}
+                        spaceBetween={360}
                         allowTouchMove={false}
                         onSwiper={(swiper) => {
                             swiperRef.current = swiper;
@@ -104,9 +104,7 @@ export function RegisterFormRegister() {
                             setStep(swiper.activeIndex);
                         }}
                     >
-                        <SwiperSlide
-                            style={{ width: '100%', marginRight: step === 1 ? '60px' : '0' }}
-                        >
+                        <SwiperSlide style={{ width: '100%' }}>
                             <VStack>
                                 <RegisterStep />
                                 <RegisterFormPersonalInputs
@@ -117,9 +115,7 @@ export function RegisterFormRegister() {
                             </VStack>
                         </SwiperSlide>
 
-                        <SwiperSlide
-                            style={{ width: '100%', marginLeft: step === 0 ? '60px' : '0' }}
-                        >
+                        <SwiperSlide style={{ width: '100%' }}>
                             <VStack w='100%'>
                                 <RegisterStep />
                                 <RegisterFormPasswordInputs onClick={() => handleOnSubmit()} />

@@ -32,7 +32,6 @@ export function Layout() {
         >
             <Loader />
 
-            <AlertNote />
             {isDisplay && (
                 <GridItem>
                     <Header />
@@ -46,6 +45,7 @@ export function Layout() {
                     <Footer />
                 </GridItem>
             )}
+            <AlertNote />
         </Grid>
     );
 }

@@ -32,6 +32,7 @@ export function AlertNote() {
     const [getAuth] = useGetAuthMutation();
     const error = useSelector(userErrorSelector);
     const isModalOpen = useAppSelector(authModalIsAlertOpenSelect);
+
     const onRepeat = async () => {
         const password = sessionStorage.getItem('pswrd') || '';
         const login = sessionStorage.getItem('lgn') || '';
@@ -237,60 +238,64 @@ export function AlertNote() {
         );
     }
     if (error !== 'ServerError' && error !== 'EmailRegistrationError') {
+        console.log(error);
+        console.log(alertMockData.filter((item) => item.errorMesage === error)[0].heading);
         return (
-            <Center position='relative'>
-                <Alert
-                    status='error'
-                    position='absolute'
-                    bottom='100px'
-                    bg='#E53E3E'
-                    w={{ base: '328px', xl: '400px' }}
-                    h={{ base: '72px' }}
-                    zIndex={11}
-                    data-test-id='error-notification'
-                >
-                    <AlertIcon color='white' />
-                    <VStack alignItems='flex-start' spacing={0}>
-                        <AlertTitle
-                            color='#FFFFFF'
-                            fontFamily='Inter'
-                            fontWeight={700}
-                            fontSize='14px'
-                            lineHeight='24px'
-                        >
-                            {error === 'error'
-                                ? 'Ошибка сервера'
-                                : alertMockData.filter((item) => item.errorMesage === error)[0]
-                                      .heading}
-                        </AlertTitle>
-                        <AlertDescription
-                            textAlign='left'
-                            color='#FFFFFF'
-                            fontFamily='Inter'
-                            fontWeight={400}
-                            fontSize='12px'
-                            lineHeight='24px'
-                        >
-                            {error === 'error'
-                                ? 'Попробуйте поискать снова попозже'
-                                : alertMockData.filter((item) => item.errorMesage === error)[0]
-                                      .description}
-                        </AlertDescription>
-                    </VStack>
-                    <Box
+            <Box position='relative'>
+                <Center>
+                    <Alert
+                        status='error'
                         position='absolute'
-                        top='0'
-                        right='0'
-                        onClick={() => {
-                            dispatch(setAppError(null));
-                            localStorage.removeItem('Error');
-                        }}
-                        data-test-id='close-alert-button'
+                        bottom='100px'
+                        bg='#E53E3E'
+                        w={{ base: '328px', xl: '400px' }}
+                        h={{ base: '72px' }}
+                        zIndex={11}
+                        data-test-id='error-notification'
                     >
-                        <CloseButton color='white'></CloseButton>
-                    </Box>
-                </Alert>
-            </Center>
+                        <AlertIcon color='white' />
+                        <VStack alignItems='flex-start' spacing={0}>
+                            <AlertTitle
+                                color='#FFFFFF'
+                                fontFamily='Inter'
+                                fontWeight={700}
+                                fontSize='14px'
+                                lineHeight='24px'
+                            >
+                                {error === 'error'
+                                    ? 'Ошибка сервера'
+                                    : alertMockData.filter((item) => item.errorMesage === error)[0]
+                                          .heading}
+                            </AlertTitle>
+                            <AlertDescription
+                                textAlign='left'
+                                color='#FFFFFF'
+                                fontFamily='Inter'
+                                fontWeight={400}
+                                fontSize='12px'
+                                lineHeight='24px'
+                            >
+                                {error === 'error'
+                                    ? 'Попробуйте поискать снова попозже'
+                                    : alertMockData.filter((item) => item.errorMesage === error)[0]
+                                          .description}
+                            </AlertDescription>
+                        </VStack>
+                        <Box
+                            position='absolute'
+                            top='0'
+                            right='0'
+                            onClick={() => {
+                                dispatch(setAppError(null));
+                                localStorage.removeItem('Error');
+                            }}
+                            data-test-id='close-alert-button'
+                        >
+                            <CloseButton color='white'></CloseButton>
+                        </Box>
+                    </Alert>
+                </Center>
+            </Box>
         );
     }
 }
