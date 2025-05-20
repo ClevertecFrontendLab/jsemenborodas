@@ -23,7 +23,7 @@ export const categoryApiSlice = apiSlice
             getRecipeByCategory: builder.query<recipe[], CategoriesProps>({
                 query: (params = {}) => ({
                     url: params._id
-                        ? `${ApiEndpoints.RECIPES}categor2y/${params._id}`
+                        ? `${ApiEndpoints.RECIPES}category/${params._id}`
                         : ApiEndpoints.RECIPES,
                     method: 'GET',
                     params: {
