@@ -120,7 +120,7 @@ export function Main() {
                                         overflow='hidden'
                                         display={DisplayUtil(false)}
                                     >
-                                        <CookBlog></CookBlog>
+                                        <CookBlog />
                                     </Box>
                                     <Box as='section' display={DisplayUtil(true)}>
                                         <ContentRecipe />

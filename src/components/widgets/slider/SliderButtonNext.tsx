@@ -11,8 +11,9 @@ export function SliderButtonNext({ onClickFunc }: ButtonProps) {
             <Box
                 overflow={{ xl: 'hidden', '2xl': 'visible' }}
                 position='absolute'
-                top={{ xl: '208px', '2xl': '218px' }}
-                right='0'
+                display={{ base: 'none', xl: 'block' }}
+                top={{ xl: '214px', '2xl': '220px' }}
+                right={{ xl: 0, '2xl': -1 }}
                 w={{ xl: '40px', '2xl': '48px' }}
                 h={{ xl: '40px', '2xl': '48px' }}
             >

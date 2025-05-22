@@ -191,12 +191,14 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                 },
             }}
             w='100%'
+            minW='100%'
+            maxW='100%'
             mt={{ base: '16px' }}
             ml={{ '2xl': '24px' }}
             spacing={6}
             mr={{ '2xl': '24px' }}
         >
-            <Box w='100%'>
+            <Box w='100%' minW='100%' maxW='100%'>
                 <FormControl
                     w={{
                         base: '100%',
@@ -212,6 +214,9 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         fontSize='16px'
                         lineHeight='24px'
                         mb='4px'
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
                     >
                         Ваше имя
                     </FormLabel>
@@ -220,7 +225,9 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         display='block'
                         type='text'
                         bg='white'
-                        w={{ base: '100%' }}
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
                         h='48px'
                         placeholder='Имя'
                         value={firstName}
@@ -254,7 +261,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                     </Box>
                 )}
             </Box>
-            <Box w='100%'>
+            <Box w='100%' minW='100%' maxW='100%'>
                 <FormControl
                     w={{
                         base: '100%',
@@ -278,7 +285,9 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         display='block'
                         type='text'
                         bg='white'
-                        w={{ base: '100%' }}
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
                         h='48px'
                         placeholder='Фамилия'
                         value={lastName}
@@ -336,7 +345,9 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         display='block'
                         type='text'
                         bg='white'
-                        w={{ base: '100%' }}
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
                         h='48px'
                         placeholder='e-mail'
                         value={email}

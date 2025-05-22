@@ -11,7 +11,8 @@ export function SliderButtonPrev({ onClickFunc }: ButtonProps) {
             <Box
                 overflow={{ xl: 'hidden', '2xl': 'visible' }}
                 position='absolute'
-                top={{ xl: '208px', '2xl': '218px' }}
+                display={{ base: 'none', xl: 'block' }}
+                top={{ xl: '214px', '2xl': '220px' }}
                 w={{ xl: '40px', '2xl': '48px' }}
                 h={{ xl: '40px', '2xl': '48px' }}
             >
@@ -22,7 +23,7 @@ export function SliderButtonPrev({ onClickFunc }: ButtonProps) {
                     h={{ xl: '40px', '2xl': '48px' }}
                     position='absolute'
                     top='0px'
-                    left='-8px'
+                    left={{ xl: '3px', '2xl': -2 }}
                     borderRadius='6px'
                     zIndex='3'
                     onClick={onClickFunc}

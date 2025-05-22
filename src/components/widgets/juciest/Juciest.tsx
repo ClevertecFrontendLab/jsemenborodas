@@ -78,7 +78,6 @@ export function Juciest() {
                         data-test-id={testId}
                         onClick={() => {
                             navigate('/the-juiciest');
-                            window.location.reload();
                         }}
                         // className='custom-cursor'
                         cursor='pointer'

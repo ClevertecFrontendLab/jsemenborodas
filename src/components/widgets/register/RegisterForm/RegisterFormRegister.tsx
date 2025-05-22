@@ -86,6 +86,8 @@ export function RegisterFormRegister() {
             >
                 <VStack w='100%' spacing='112px'>
                     <Swiper
+                        speed={0}
+                        cssMode={false}
                         slidesPerView={1}
                         style={{
                             maxWidth: sliderWidth,
@@ -99,13 +101,12 @@ export function RegisterFormRegister() {
                         onSwiper={(swiper) => {
                             swiperRef.current = swiper;
                         }}
-                        cssMode={true}
                         onSlideChange={(swiper) => {
                             setStep(swiper.activeIndex);
                         }}
                     >
-                        <SwiperSlide style={{ width: '100%' }}>
-                            <VStack>
+                        <SwiperSlide style={{ width: '100%', minWidth: '100%', maxWidth: '100%' }}>
+                            <VStack w='100%' minW='100%' maxW='100%'>
                                 <RegisterStep />
                                 <RegisterFormPersonalInputs
                                     onClick={() => {
@@ -115,8 +116,8 @@ export function RegisterFormRegister() {
                             </VStack>
                         </SwiperSlide>
 
-                        <SwiperSlide style={{ width: '100%' }}>
-                            <VStack w='100%'>
+                        <SwiperSlide style={{ width: '100%', minWidth: '100%', maxWidth: '100%' }}>
+                            <VStack w='100%' minW='100%' maxW='100%'>
                                 <RegisterStep />
                                 <RegisterFormPasswordInputs onClick={() => handleOnSubmit()} />
                             </VStack>
