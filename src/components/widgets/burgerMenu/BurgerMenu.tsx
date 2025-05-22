@@ -11,14 +11,12 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
-import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { Breadcrumbs } from '~/components/features/BreadCrumb/BreadCrumbs';
 import { Burger, OpenBurger } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { Category } from '~/query/types/types';
-import { setAppLoader } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { resetBurger, selectorIsBurgerOpen, setIsBurgerOpen } from '~/store/reducers/open';
 
@@ -38,14 +36,9 @@ export function BurgerMenu() {
         base: 'vegan-cuisine',
         xl: '',
     });
-    const { data: categoriesResponse, isError, isLoading } = useGetCategoriesQuery({});
+    const { data: categoriesResponse, isError } = useGetCategoriesQuery({});
     const data = categoriesResponse?.length ? categoriesResponse : [];
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
-    useEffect(() => {
-        if (!isLoading) {
-            dispatch(setAppLoader(false));
-        }
-    }, [dispatch, isLoading]);
     let resultData;
 
     if (isError && filteredData) {

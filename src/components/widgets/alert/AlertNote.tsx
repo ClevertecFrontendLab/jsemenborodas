@@ -15,6 +15,7 @@ import {
 import { Image, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 import { AlertConst } from '~/components/consts/AlertConsts';
 import { ErrorStatus } from '~/components/consts/ErrorStatus';
@@ -24,13 +25,14 @@ import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { authModalIsAlertOpenSelect, toggleIsAlertOpen } from '~/store/reducers/authModals';
 import { resetAllUserState, userLoginSelect, userPasswordSelect } from '~/store/reducers/user';
 
-import { setAppError, setAppLoader, setIsAuth, userErrorSelector } from '../../../store/app-slice';
+import { setAppError, setAppLoader, userErrorSelector } from '../../../store/app-slice';
 import { Err2 } from '../login/LoginForm/LoginFormLogin';
 import { alertMockData } from './alertMockData';
 import Breakfast from './assets/Breakfast.png';
 import Breakfast2 from './assets/Breakfast2.png';
 
 export function AlertNote() {
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [getAuth] = useGetAuthMutation();
     const error = useSelector(userErrorSelector);
@@ -43,8 +45,8 @@ export function AlertNote() {
             dispatch(setAppLoader(true));
             const responce = await getAuth({ login: login, password: password });
             if ('data' in responce) {
-                dispatch(setIsAuth(true));
-                localStorage.setItem('isAuth', 'true');
+                sessionStorage.setItem('isAuth', 'true');
+                navigate('/');
                 dispatch(setAppLoader(false));
                 dispatch(resetAllUserState());
             }
@@ -228,29 +230,32 @@ export function AlertNote() {
         );
     }
     if (error !== 'ServerError' && error !== 'EmailRegistrationError') {
-        console.log(error);
-        console.log(alertMockData.filter((item) => item.errorMesage === error)[0].heading);
         return (
             <Box position='relative'>
                 <Center>
                     <Alert
+                        pl='18px'
                         status='error'
                         position='absolute'
-                        bottom='100px'
+                        bottom={{ base: '100px', xl: '80px' }}
                         bg='#E53E3E'
+                        ml={{ '2xl': '24px' }}
                         w={{ base: '328px', xl: '400px' }}
-                        h={{ base: '72px' }}
+                        h={error === 'not-found-user' ? { base: '96px' } : { base: '72px' }}
                         zIndex={11}
                         data-test-id='error-notification'
+                        gap='14px'
                     >
-                        <AlertIcon color='white' />
-                        <VStack alignItems='flex-start' spacing={0}>
+                        <AlertIcon color='white' mr={0} />
+                        <VStack alignItems='flex-start' spacing={0} w='100%'>
                             <AlertTitle
                                 color='#FFFFFF'
                                 fontFamily='Inter'
                                 fontWeight={700}
-                                fontSize='14px'
+                                fontSize='16px'
                                 lineHeight='24px'
+                                textAlign='left'
+                                w='100%'
                             >
                                 {error === 'error'
                                     ? 'Ошибка сервера'
@@ -262,8 +267,9 @@ export function AlertNote() {
                                 color='#FFFFFF'
                                 fontFamily='Inter'
                                 fontWeight={400}
-                                fontSize='12px'
+                                fontSize='16px'
                                 lineHeight='24px'
+                                w='100%'
                             >
                                 {error === 'error'
                                     ? 'Попробуйте поискать снова попозже'

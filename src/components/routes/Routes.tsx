@@ -1,10 +1,11 @@
+import { Grid, GridItem } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import React from 'react';
-import { Navigate, Route, Routes as RouterRoutes, useLocation } from 'react-router';
+import { Navigate, Outlet, Route, Routes as RouterRoutes, useLocation } from 'react-router';
 
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { userAuthSelector } from '~/store/app-slice';
-import { useAppSelector } from '~/store/hooks';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
 
 import { RoutesConsts } from '../consts/RoutesConsts';
 import { DefaultPage } from '../Pages/defaultPage/DefaultPage';
@@ -16,33 +17,62 @@ import { RecipePage } from '../Pages/RecipePage/RecipePage';
 import { RegisterPage } from '../Pages/registerPage/RegisterPage';
 import { VeganKitchenPage } from '../Pages/veganKitchen/VeganKitchenPage';
 import { VerificationPage } from '../Pages/verificationPage/VerificationPage';
+import { AlertNote } from '../widgets/alert/AlertNote';
+import { Footer } from '../widgets/footer/Footer';
+import { Header } from '../widgets/header/Header';
+import { Loader } from '../widgets/loader/Loader';
 
 export function AppRoutes() {
     const location = useLocation();
-    const pathSegments = location.pathname.split('/').filter(Boolean);
+    const { data: categoriesAll, isLoading } = useGetCategoriesQuery({
+        isOnlyParent: true,
+    });
     const isAuth = useAppSelector(userAuthSelector);
-    const { data: categoriesAll, isLoading } = useGetCategoriesQuery({ isOnlyParent: true });
+    const sessionAuth = sessionStorage.getItem('isAuth');
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    const dispatch = useAppDispatch();
+    const isAuthPage = ['login', 'register', 'verification'].includes(pathSegments[0]);
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [pathSegments]);
-    if (isLoading) return;
-    return (
-        <>
-            {isAuth ? (
-                <RouterRoutes>
-                    {categoriesAll?.map((cat) => {
-                        const subCategories = cat.subCategories || [];
-                        const firstSub = subCategories[0]?.category;
+    }, [location.pathname, dispatch]);
 
-                        return (
+    if (isLoading) return <Loader />;
+
+    return (
+        <Grid
+            minH='100vh'
+            templateRows={!isAuthPage ? { base: 'auto 1fr auto' } : { base: '1fr' }}
+            maxW={{ xl: 'calc(100vw)' }}
+            overflow='hidden'
+        >
+            {!isAuthPage && isAuth && (
+                <GridItem>
+                    <Header />
+                </GridItem>
+            )}
+
+            <GridItem>
+                <Loader />
+                <RouterRoutes>
+                    <Route path={RoutesConsts.login} element={<LoginPage />} />
+                    <Route path={RoutesConsts.register} element={<RegisterPage />} />
+                    <Route path={RoutesConsts.verification} element={<VerificationPage />} />
+
+                    <Route element={<ProtectedRoute isAuth={isAuth || !!sessionAuth} />}>
+                        <Route path='/' element={<Main />} />
+
+                        {categoriesAll?.map((cat) => (
                             <Route key={cat._id} path={`/${cat.category}`}>
                                 <Route
                                     index
-                                    key={`${cat._id}${cat.subCategories[0]._id}`}
-                                    element={<Navigate to={`${firstSub}`} replace />}
+                                    element={
+                                        <Navigate
+                                            to={`${cat.subCategories[0]?.category}`}
+                                            replace
+                                        />
+                                    }
                                 />
-
-                                {subCategories.map((sub) => (
+                                {cat.subCategories?.map((sub) => (
                                     <React.Fragment key={sub._id}>
                                         <Route path={`${sub.category}`} element={<DefaultPage />} />
                                         <Route
@@ -52,27 +82,36 @@ export function AppRoutes() {
                                     </React.Fragment>
                                 ))}
                             </Route>
-                        );
-                    })}
+                        ))}
 
-                    <Route path={RoutesConsts.juiciest} element={<JuciestPage />} />
-                    <Route path={`${RoutesConsts.juiciest}/*`} element={<RecipePage />} />
-                    <Route path={`${RoutesConsts.vegan}/*`} element={<VeganKitchenPage />} />
-                    <Route path='/:/:/:/*' element={<RecipePage />} />
-                    <Route path={`${RoutesConsts.notfound}/*`} element={<ErrorPage />} />
-                    <Route path='/' element={<Main />} />
-                    <Route path='*' element={<Navigate to={RoutesConsts.notfound} replace />} />
-                    <Route path={RoutesConsts.login} element={<Navigate to='/' replace />} />
-                    <Route path={RoutesConsts.register} element={<Navigate to='/' replace />} />
+                        <Route path={RoutesConsts.juiciest} element={<JuciestPage />} />
+                        <Route path={`${RoutesConsts.juiciest}/*`} element={<RecipePage />} />
+                        <Route path={`${RoutesConsts.vegan}/*`} element={<VeganKitchenPage />} />
+                        <Route path='/:/:/:/*' element={<RecipePage />} />
+                        <Route path={RoutesConsts.notfound} element={<ErrorPage />} />
+                        <Route path='*' element={<Navigate to={RoutesConsts.notfound} replace />} />
+                    </Route>
                 </RouterRoutes>
-            ) : (
-                <RouterRoutes>
-                    <Route path={RoutesConsts.login} element={<LoginPage />} />
-                    <Route path={RoutesConsts.register} element={<RegisterPage />} />
-                    <Route path={RoutesConsts.verification} element={<VerificationPage />} />
-                    <Route path='*' element={<Navigate to={RoutesConsts.login} replace />} />
-                </RouterRoutes>
+            </GridItem>
+
+            {!isAuthPage && isAuth && (
+                <>
+                    <GridItem>
+                        <Footer />
+                    </GridItem>
+                    <AlertNote />
+                </>
             )}
-        </>
+
+            {(isAuth || sessionAuth) && <Loader />}
+        </Grid>
     );
 }
+
+const ProtectedRoute = ({ isAuth }: { isAuth: boolean }) => {
+    if (!isAuth) {
+        sessionStorage.removeItem('isAuth');
+        return <Navigate to='/login' replace />;
+    }
+    return <Outlet />;
+};

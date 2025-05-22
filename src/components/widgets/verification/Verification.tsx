@@ -15,7 +15,7 @@ export function Verification() {
     return (
         <>
             <AbsoluteCenter
-                position='relative'
+                position='fixed'
                 w={{ base: '316px', xl: '396px' }}
                 h={{ base: '516px', xl: '550px' }}
                 bg='rgba(255, 255, 255, 1)'

@@ -31,6 +31,9 @@ export const authModalsSlice = createSlice({
         toggleIsResetPasswordOpen(state) {
             state.isResetPasswordOpen = !state.isResetPasswordOpen;
         },
+        closeResetPasswordOpen(state) {
+            state.isResetPasswordOpen = false;
+        },
         setIsAlertOpen(state, { payload }: PayloadAction<boolean>) {
             state.isAlertOpen = payload;
         },
@@ -58,6 +61,7 @@ export const {
     resetAllAuthModals,
     toggleIsResetPasswordOpen,
     setIsAlertOpen,
+    closeResetPasswordOpen,
 } = authModalsSlice.actions;
 
 export default authModalsSlice.reducer;

@@ -1,6 +1,6 @@
 import { Box, Card, CardHeader, Hide, HStack, Icon, Show } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { HeaderConsts } from '~/components/consts/HeaderConsts';
 import { UserAvatar } from '~/components/features/Avatar/Avatar';
@@ -17,7 +17,11 @@ export function Header() {
     const isBurgerOpen = useAppSelector(selectorIsBurgerOpen);
     const location = useLocation();
     const dispatch = useAppDispatch();
+    const sessionAuth = sessionStorage.getItem('isAuth');
+    const isAuth = !!sessionAuth;
+    const navigate = useNavigate();
     const pathNames = location.pathname.split('/').filter(Boolean);
+    console.log(pathNames);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     const isBurgerOrFilterOpen = () => {
         if (isBurgerOpen || isFilterOpen) {
@@ -42,6 +46,9 @@ export function Header() {
             window.removeEventListener('resize', handleResize);
         };
     }, [dispatch]);
+    if (!isAuth) {
+        navigate('/login');
+    }
     return (
         <Box
             as='header'

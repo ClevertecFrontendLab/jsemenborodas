@@ -7,7 +7,7 @@ export function LoginFooter() {
                 w='100%'
                 px={{ base: '8px' }}
                 position='absolute'
-                bottom={{ base: '26px', xl: '28px', '2xl': '30px' }}
+                bottom={{ base: '16px', sm: '26px', xl: '28px', '2xl': '30px' }}
             >
                 <Text
                     fontFamily='Inter'

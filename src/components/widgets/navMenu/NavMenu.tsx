@@ -11,29 +11,20 @@ import {
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
-import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { Category } from '~/query/types/types';
-import { setAppLoader } from '~/store/app-slice';
-import { useAppDispatch } from '~/store/hooks';
 
 import exiticon from '../../../someimages//exitIcon.png';
 export function NavMenu() {
     const location = useLocation();
-    const dispatch = useAppDispatch();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const navigate = useNavigate();
-    const { data: categoriesResponse, isError, isLoading, error } = useGetCategoriesQuery({});
+    const { data: categoriesResponse, isError, error } = useGetCategoriesQuery({});
     const data = categoriesResponse?.length ? categoriesResponse : [];
     const mockData = localStorage.getItem('navMenu');
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
-    useEffect(() => {
-        if (!isLoading) {
-            dispatch(setAppLoader(false));
-        }
-    }, [dispatch, isLoading]);
     if (mockData === null && data) {
         localStorage.setItem('navMenu', JSON.stringify(filteredData || []));
     }

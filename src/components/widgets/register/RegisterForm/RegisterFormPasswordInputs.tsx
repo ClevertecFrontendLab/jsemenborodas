@@ -6,7 +6,6 @@ import {
     Input,
     InputGroup,
     InputRightElement,
-    useBreakpointValue,
     VStack,
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
@@ -107,12 +106,6 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
         dispatch(setLogin(newValue));
         checkLogin(newValue);
     };
-    const widthInput = useBreakpointValue({
-        base: '100%',
-        sm: '355px',
-        xl: '451px',
-        '2xl': '461px',
-    });
     const onSubmit = () => {
         if (!loginState.isValid) {
             const newValue = login.trim();
@@ -129,7 +122,15 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
             dispatch(setRepeatPassword(newValue));
             checkRepeatPassword(newValue);
         }
-        if (loginState.isValid && passwordState.isValid && isRepeatValid) return true;
+        if (
+            loginState.isValid &&
+            passwordState.isValid &&
+            isRepeatValid &&
+            login.length &&
+            password.length &&
+            repeatPassword.length
+        )
+            return true;
         return false;
     };
     return (
@@ -140,19 +141,19 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                     _after: { display: 'none !important' },
                 },
             }}
-            w={widthInput}
-            minW={widthInput}
-            maxW={widthInput}
+            w='100%'
+            minW='100%'
+            maxW='100%'
             mt={{ base: '16px' }}
             ml={{ '2xl': '24px' }}
             spacing={6}
             mr={{ '2xl': '24px' }}
         >
-            <Box w={widthInput} minW={widthInput} maxW={widthInput}>
+            <Box w='100%'>
                 <FormControl
-                    w={widthInput}
-                    minW={widthInput}
-                    maxW={widthInput}
+                    w='100%'
+                    minW='100%'
+                    maxW='100%'
                     mx={{ sm: 'auto' }}
                     overflow='visible'
                 >
@@ -162,19 +163,27 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                         fontSize='16px'
                         lineHeight='24px'
                         mb='4px'
-                        w={widthInput}
-                        minW={widthInput}
-                        maxW={widthInput}
+                        mx={0}
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
                     >
                         Логин для входа на сайт
                     </FormLabel>
                     <Input
+                        transitionProperty='width, height'
+                        transitionDuration='0s'
+                        color='rgba(19, 75, 0, 1)'
+                        borderRadius='6px'
+                        border='1px solid rgba(215, 255, 148, 1)'
                         type='text'
                         data-test-id='login-input'
                         bg='white'
-                        w={widthInput}
-                        minW={widthInput}
-                        maxW={widthInput}
+                        px={0}
+                        pl={4}
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
                         h='48px'
                         placeholder='bake_and_pie'
                         value={login}
@@ -193,9 +202,9 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                 </FormControl>
                 <Box
                     mt='4px'
-                    w={widthInput}
-                    minW={widthInput}
-                    maxW={widthInput}
+                    w='100%'
+                    minW='100%'
+                    maxW='100%'
                     mx='auto'
                     textAlign='left'
                     fontFamily='Inter'
@@ -208,9 +217,9 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                 {!loginState.isValid && (
                     <Box
                         mt='4px'
-                        w={widthInput}
-                        minW={widthInput}
-                        maxW={widthInput}
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
                         mx='auto'
                         textAlign='left'
                         fontFamily='Inter'
@@ -223,24 +232,40 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                 )}
             </Box>
             <Box w='100%'>
-                <FormControl w={widthInput} minW={widthInput} maxW={widthInput} mx={{ sm: 'auto' }}>
+                <FormControl w='100%' minW='100%' maxW='100%' mx={{ sm: 'auto' }}>
                     <FormLabel
                         fontFamily='Inter'
                         fontWeight={400}
                         fontSize='16px'
                         lineHeight='24px'
                         mb='4px'
+                        mx={0}
                     >
                         Пароль
                     </FormLabel>
-                    <InputGroup w={widthInput} minW={widthInput} maxW={widthInput} display='block'>
+                    <InputGroup
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
+                        display='block'
+                        px={0}
+                        transitionProperty='width, height'
+                        transitionDuration='0s'
+                    >
                         <Input
+                            transitionProperty='width, height'
+                            transitionDuration='0s'
+                            px={0}
+                            pl={4}
+                            color='rgba(19, 75, 0, 1)'
+                            borderRadius='6px'
+                            border='1px solid rgba(215, 255, 148, 1)'
                             type={isPasswordVisible ? 'text' : 'password'}
                             bg='white'
                             data-test-id='password-input'
-                            w={widthInput}
-                            minW={widthInput}
-                            maxW={widthInput}
+                            w='100%'
+                            minW='100%'
+                            maxW='100%'
                             h='48px'
                             placeholder='Пароль'
                             value={password}
@@ -269,9 +294,9 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                 </FormControl>
                 <Box
                     mt='4px'
-                    w={widthInput}
-                    minW={widthInput}
-                    maxW={widthInput}
+                    w='100%'
+                    minW='100%'
+                    maxW='100%'
                     mx='auto'
                     textAlign='left'
                     fontFamily='Inter'
@@ -284,9 +309,9 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                 {!passwordState.isValid && (
                     <Box
                         mt='4px'
-                        w={widthInput}
-                        minW={widthInput}
-                        maxW={widthInput}
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
                         mx='auto'
                         textAlign='left'
                         fontFamily='Inter'
@@ -299,27 +324,43 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                 )}
             </Box>
             <Box w='100%'>
-                <FormControl w={widthInput} minW={widthInput} maxW={widthInput} mx={{ sm: 'auto' }}>
+                <FormControl w='100%' minW='100%' maxW='100%' mx={{ sm: 'auto' }}>
                     <FormLabel
-                        w={widthInput}
-                        minW={widthInput}
-                        maxW={widthInput}
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
                         fontFamily='Inter'
                         fontWeight={400}
                         fontSize='16px'
                         lineHeight='24px'
                         mb='4px'
+                        mx={0}
                     >
                         Повторите пароль
                     </FormLabel>
-                    <InputGroup w={widthInput} minW={widthInput} maxW={widthInput} display='block'>
+                    <InputGroup
+                        w='100%'
+                        minW='100%'
+                        maxW='100%'
+                        display='block'
+                        px={0}
+                        transitionProperty='width, height'
+                        transitionDuration='0s'
+                    >
                         <Input
+                            transitionProperty='width, height'
+                            transitionDuration='0s'
+                            px={0}
+                            pl={4}
+                            color='rgba(19, 75, 0, 1)'
+                            borderRadius='6px'
+                            border='1px solid rgba(215, 255, 148, 1)'
                             data-test-id='confirm-password-input'
                             type={isRepeatPasswordVibisle ? 'text' : 'password'}
                             bg='white'
-                            w={widthInput}
-                            minW={widthInput}
-                            maxW={widthInput}
+                            w='100%'
+                            minW='100%'
+                            maxW='100%'
                             h='48px'
                             placeholder='Повторите пароль'
                             value={repeatPassword}
@@ -348,9 +389,9 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                     {!isRepeatValid && (
                         <Box
                             mt='4px'
-                            w={widthInput}
-                            minW={widthInput}
-                            maxW={widthInput}
+                            w='100%'
+                            minW='100%'
+                            maxW='100%'
                             mx='auto'
                             textAlign='left'
                             fontFamily='Inter'

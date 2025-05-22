@@ -11,7 +11,6 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
-import { useNavigate } from 'react-router';
 
 import { FetchConsts } from '~/components/consts/FetchConsts';
 import { RoutesConsts } from '~/components/consts/RoutesConsts';
@@ -19,21 +18,28 @@ import { Metrics } from '~/components/features/Metrics/Metrics';
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipesQuery } from '~/query/services/recipes';
+import { setAppLoader } from '~/store/app-slice';
+import { useAppDispatch } from '~/store/hooks';
 
 interface pageProps {
     page: number;
 }
 
 export function JuciestCards({ page }: pageProps) {
+    const dispatch = useAppDispatch();
     const { data, isError } = useGetRecipesQuery({
         sortBy: 'likes',
         sortOrder: 'desc',
         limit: FetchConsts.CARDSLIMIT,
         page: page,
     });
-    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const { data: categoriesResponse, isLoading } = useGetCategoriesQuery({});
     const catData = categoriesResponse?.length ? categoriesResponse : [];
-    const navigate = useNavigate();
+    if (isLoading) {
+        setTimeout(() => {
+            dispatch(setAppLoader(true));
+        }, 1000);
+    }
     if (isError) {
         return null;
     }

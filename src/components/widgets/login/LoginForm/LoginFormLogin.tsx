@@ -6,10 +6,12 @@ import {
     Input,
     InputGroup,
     InputRightElement,
+    useBreakpointValue,
     VStack,
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import { AlertConst } from '~/components/consts/AlertConsts';
 import { ErrorStatus } from '~/components/consts/ErrorStatus';
@@ -41,7 +43,13 @@ export function LoginFormLogin() {
     const login = useAppSelector(userLoginSelect);
     const password = useAppSelector(userPasswordSelect);
     const [isFirstMount, setIsFirstMount] = useState(true);
-
+    const navigate = useNavigate();
+    const loginWidth = useBreakpointValue({
+        base: '328px',
+        sm: '355px',
+        xl: '451px',
+        '2xl': '461px',
+    });
     const togglePasswordVisibility = () => {
         setShowPasswordBoolean(!ShowPasswordBoolean);
     };
@@ -55,13 +63,16 @@ export function LoginFormLogin() {
     });
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        if (loginState.isValid && passwordState.isValid) {
+        validateLogin(login);
+        validatePassword(password);
+        if (loginState.isValid && passwordState.isValid && login.length && password.length) {
             try {
                 dispatch(setAppLoader(true));
                 const responce = await getAuth({ login: login, password: password });
                 if ('data' in responce) {
+                    sessionStorage.setItem('isAuth', 'true');
+                    navigate('/');
                     dispatch(setIsAuth(true));
-                    localStorage.setItem('isAuth', 'true');
                     dispatch(setAppLoader(false));
                 }
                 if ('error' in responce) {
@@ -123,21 +134,19 @@ export function LoginFormLogin() {
 
     return (
         <>
-            <Box as='form' w='100%' onSubmit={handleSubmit} data-test-id='sign-in-form'>
+            <Box as='form' w={loginWidth} onSubmit={handleSubmit} data-test-id='sign-in-form'>
                 <VStack w='100%' spacing='112px'>
                     <Box w='100%'>
                         <VStack w='100%'>
                             <Box w='100%' ml={{ '2xl': '24px' }}>
-                                <FormControl
-                                    w={{ base: '100%', sm: '355px', xl: '451px', '2xl': '461px' }}
-                                    mx={{ sm: 'auto' }}
-                                >
+                                <FormControl w={{ base: '100%' }} mx={{ sm: 'auto' }}>
                                     <FormLabel
                                         fontFamily='Inter'
                                         fontWeight={400}
                                         fontSize='16px'
                                         lineHeight='24px'
                                         mb='4px'
+                                        mx={0}
                                     >
                                         Логин для входа на сайт
                                     </FormLabel>
@@ -154,6 +163,9 @@ export function LoginFormLogin() {
                                         onMouseDown={trimLogin}
                                         onMouseUp={trimLogin}
                                         onMouseLeave={trimLogin}
+                                        color='rgba(19, 75, 0, 1)'
+                                        borderRadius='6px'
+                                        border='1px solid rgba(215, 255, 148, 1)'
                                         sx={{
                                             '::placeholder': {
                                                 fontFamily: 'Inter',
@@ -166,12 +178,7 @@ export function LoginFormLogin() {
                                 </FormControl>
                                 {!loginState.isValid && (
                                     <Box
-                                        w={{
-                                            base: '100%',
-                                            sm: '355px',
-                                            xl: '451px',
-                                            '2xl': '461px',
-                                        }}
+                                        w='100%'
                                         mx='auto'
                                         textAlign='left'
                                         fontFamily='Inter'
@@ -182,16 +189,14 @@ export function LoginFormLogin() {
                                 )}
                             </Box>
                             <Box w='100%' mt='16px' ml={{ '2xl': '24px' }}>
-                                <FormControl
-                                    w={{ base: '100%', sm: '355px', xl: '451px', '2xl': '461px' }}
-                                    mx={{ sm: 'auto' }}
-                                >
+                                <FormControl w='100%' mx={{ sm: 'auto' }}>
                                     <FormLabel
                                         fontFamily='Inter'
                                         fontWeight={400}
                                         fontSize='16px'
                                         lineHeight='24px'
                                         mb='4px'
+                                        mx={0}
                                     >
                                         Пароль
                                     </FormLabel>
@@ -206,6 +211,9 @@ export function LoginFormLogin() {
                                             value={password}
                                             onChange={handleChangePassword}
                                             isInvalid={!passwordState.isValid}
+                                            color='rgba(19, 75, 0, 1)'
+                                            borderRadius='6px'
+                                            border='1px solid rgba(215, 255, 148, 1)'
                                             sx={{
                                                 '::placeholder': {
                                                     fontFamily: 'Inter',
@@ -232,9 +240,6 @@ export function LoginFormLogin() {
                                     <Box
                                         w={{
                                             base: '100%',
-                                            sm: '355px',
-                                            xl: '451px',
-                                            '2xl': '461px',
                                         }}
                                         mx='auto'
                                         textAlign='left'
@@ -251,7 +256,7 @@ export function LoginFormLogin() {
                         <Box w='100%'>
                             <Button
                                 type='submit'
-                                w={{ base: '100%', sm: '355px', xl: '451px', '2xl': '461px' }}
+                                w='100%'
                                 h='48px'
                                 bg='rgba(0, 0, 0, 0.92)'
                                 border='1px solid rgba(0, 0, 0, 0.08)'

@@ -12,7 +12,6 @@ export function RegisterForm() {
                 pt={{ base: '72px', sm: '120px', md: '140px', xl: '170px' }}
                 w='100%'
                 spacing={{ base: '40px' }}
-                px={{ base: '16px' }}
                 position='relative'
                 minH={{ base: '800px', sm: '1024px', xl: '1120px' }}
                 h='100vh'

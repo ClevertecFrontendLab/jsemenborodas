@@ -2,12 +2,15 @@ import 'swiper/swiper-bundle.css';
 
 import { Box, Heading, useBreakpointValue } from '@chakra-ui/react';
 import { useRef } from 'react';
+import { useNavigate } from 'react-router';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperType } from 'swiper/types';
 
 import { FetchConsts } from '~/components/consts/FetchConsts';
+import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipeByCreateDateQuery } from '~/query/services/recipesnew';
+import { Category, SubCategory } from '~/query/types/types';
 
 import { SliderButtonNext } from './SliderButtonNext';
 import { SliderButtonPrev } from './SliderButtonPrevious';
@@ -16,7 +19,8 @@ export function Slider() {
     const { data } = useGetRecipeByCreateDateQuery({
         limit: FetchConsts.SLIDERCARDSLIMIT,
     });
-
+    const navigate = useNavigate();
+    const { data: catData } = useGetCategoriesQuery({});
     const swiperRef = useRef<SwiperType | null>(null);
     const filteredData = data?.data;
     const swiperWidth = useBreakpointValue({
@@ -88,6 +92,17 @@ export function Slider() {
                             maxWidth: cardWidth,
                             minHeight: cardHeight,
                             maxHeight: cardHeight,
+                        }}
+                        onClick={() => {
+                            const subcategoryLink = catData?.find(
+                                (cat) => cat._id === item.categoriesIds[0],
+                            ) as SubCategory | undefined;
+                            const categoryLink = catData?.find(
+                                (cat) => cat._id === subcategoryLink?.rootCategoryId,
+                            ) as Category | undefined;
+                            navigate(
+                                `/${categoryLink?.category}/${subcategoryLink?.category}/${item._id}`,
+                            );
                         }}
                     >
                         <SliderCard item={item} />

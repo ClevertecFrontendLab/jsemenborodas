@@ -1,5 +1,6 @@
 import { Box, HStack } from '@chakra-ui/react';
 
+import { AlertNote } from '~/components/widgets/alert/AlertNote';
 import { LoginImgBlock } from '~/components/widgets/login/LoginImgBlock';
 import { RegisterForm } from '~/components/widgets/register/RegisterForm/RegisterForm';
 import { Verification } from '~/components/widgets/verification/Verification';
@@ -24,6 +25,7 @@ export function RegisterPage() {
                         bg='linear-gradient(235deg, rgba(234, 255, 199, 1) 0%, rgba(41, 129, 63, 1) 100%)'
                     >
                         <RegisterForm />
+                        <AlertNote />
                     </Box>
                     <Box display={{ base: 'none', xl: 'inline-block' }} w='100%'>
                         <LoginImgBlock />

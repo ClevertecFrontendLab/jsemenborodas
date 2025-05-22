@@ -1,5 +1,6 @@
 import { Box, Button } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 
 import { FetchConsts } from '~/components/consts/FetchConsts';
 import { useGetCategoriesQuery } from '~/query/services/categories';
@@ -9,12 +10,14 @@ import { JuciestCards } from './JuciestCards';
 
 export function JuciestOnJuciest() {
     const [pages, setPages] = useState([1]);
+    const location = useLocation();
     const [isButtonLoading, setIsButtonLoading] = useState(false);
     const { data, isError, isLoading, isFetching } = useGetRecipeByLikesQuery({
         limit: FetchConsts.CARDSLIMIT,
         page: pages[pages.length - 1],
     });
-
+    const { data: categoriesResponse, refetch } = useGetCategoriesQuery({});
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
     useEffect(() => {
         if (isLoading || isFetching) {
             setIsButtonLoading(true);
@@ -22,9 +25,9 @@ export function JuciestOnJuciest() {
             setIsButtonLoading(false);
         }
     }, [isLoading, isFetching]);
-    const { data: categoriesResponse } = useGetCategoriesQuery({});
-    const catData = categoriesResponse?.length ? categoriesResponse : [];
-
+    useEffect(() => {
+        refetch();
+    }, [location.pathname, refetch]);
     if (isError) {
         return null;
     }

@@ -1,5 +1,6 @@
 import { FetchBaseQueryMeta } from '@reduxjs/toolkit/query';
 
+import { AlertConst } from '~/components/consts/AlertConsts';
 import { ApiEndpoints } from '~/query/constants/api.ts';
 import { ApiGroupNames } from '~/query/constants/api-group-names.ts';
 import { EndpointNames } from '~/query/constants/endpoint-names.ts';
@@ -43,18 +44,23 @@ export const categoryApiSlice = apiSlice
                 providesTags: [Tags.CATEGORIES],
                 async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
                     const pathSegments = window.location.pathname.split('/').filter(Boolean);
-
                     dispatch(setAppLoader(true));
                     try {
                         await queryFulfilled;
                     } catch (error) {
-                        if (pathSegments[0] === 'login' || pathSegments[0] === 'register') {
+                        if (
+                            pathSegments[0] === 'login' ||
+                            pathSegments[0] === 'register' ||
+                            pathSegments[0].includes('verification')
+                        ) {
                             console.log(error);
                             return;
                         }
                         dispatch(setAppError(AlertConst.USSUALERROR));
                     } finally {
-                        dispatch(setAppLoader(false));
+                        setTimeout(() => {
+                            dispatch(setAppLoader(false));
+                        }, 100);
                     }
                 },
                 keepUnusedDataFor: Infinity,

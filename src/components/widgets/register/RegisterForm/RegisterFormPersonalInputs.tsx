@@ -82,6 +82,9 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
         emailCheck(newValue);
     };
     const submitCheck = () => {
+        validateFirstName(firstName);
+        validateLastName(lastName);
+        validateEmail(email);
         if (!firstNameState.isValid) {
             const newValue = firstName.trim();
             firstNameCheck(newValue);
@@ -94,7 +97,14 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
             const newValue = email.trim();
             emailCheck(newValue);
         }
-        if (firstNameState.isValid && lastNameState.isValid && emailState.isValid) {
+        if (
+            firstNameState.isValid &&
+            lastNameState.isValid &&
+            emailState.isValid &&
+            firstName.length &&
+            lastName.length &&
+            email.length
+        ) {
             return true;
         }
         return false;
@@ -125,21 +135,14 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
             mr={{ '2xl': '24px' }}
         >
             <Box w='100%' minW='100%' maxW='100%'>
-                <FormControl
-                    w={{
-                        base: '100%',
-                        sm: '355px',
-                        xl: '451px',
-                        '2xl': '461px',
-                    }}
-                    mx={{ sm: 'auto' }}
-                >
+                <FormControl w='100%' mx={{ sm: 'auto' }}>
                     <FormLabel
                         fontFamily='Inter'
                         fontWeight={400}
                         fontSize='16px'
                         lineHeight='24px'
                         mb='4px'
+                        mx={0}
                         w='100%'
                         minW='100%'
                         maxW='100%'
@@ -147,6 +150,13 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         Ваше имя
                     </FormLabel>
                     <Input
+                        transitionProperty='width, height'
+                        transitionDuration='0s'
+                        px={0}
+                        pl={4}
+                        color='rgba(19, 75, 0, 1)'
+                        borderRadius='6px'
+                        border='1px solid rgba(215, 255, 148, 1)'
                         data-test-id='first-name-input'
                         display='block'
                         type='text'
@@ -171,42 +181,31 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                     />
                 </FormControl>
                 {!firstNameState.isValid && (
-                    <Box
-                        w={{
-                            base: '100%',
-                            sm: '355px',
-                            xl: '451px',
-                            '2xl': '461px',
-                        }}
-                        mx='auto'
-                        textAlign='left'
-                        fontFamily='Inter'
-                        color='#E53E3E'
-                    >
+                    <Box w='100%' mx='auto' textAlign='left' fontFamily='Inter' color='#E53E3E'>
                         {firstNameState.error}
                     </Box>
                 )}
             </Box>
             <Box w='100%' minW='100%' maxW='100%'>
-                <FormControl
-                    w={{
-                        base: '100%',
-                        sm: '355px',
-                        xl: '451px',
-                        '2xl': '461px',
-                    }}
-                    mx={{ sm: 'auto' }}
-                >
+                <FormControl w='100%' mx={{ sm: 'auto' }}>
                     <FormLabel
                         fontFamily='Inter'
                         fontWeight={400}
                         fontSize='16px'
                         lineHeight='24px'
                         mb='4px'
+                        mx={0}
                     >
                         Ваша фамилия
                     </FormLabel>
                     <Input
+                        transitionProperty='width, height'
+                        transitionDuration='0s'
+                        px={0}
+                        pl={4}
+                        color='rgba(19, 75, 0, 1)'
+                        borderRadius='6px'
+                        border='1px solid rgba(215, 255, 148, 1)'
                         data-test-id='last-name-input'
                         display='block'
                         type='text'
@@ -231,42 +230,31 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                     />
                 </FormControl>
                 {!lastNameState.isValid && (
-                    <Box
-                        w={{
-                            base: '100%',
-                            sm: '355px',
-                            xl: '451px',
-                            '2xl': '461px',
-                        }}
-                        mx='auto'
-                        textAlign='left'
-                        fontFamily='Inter'
-                        color='#E53E3E'
-                    >
+                    <Box w='100%' mx='auto' textAlign='left' fontFamily='Inter' color='#E53E3E'>
                         {lastNameState.error}
                     </Box>
                 )}
             </Box>
             <Box w='100%'>
-                <FormControl
-                    w={{
-                        base: '100%',
-                        sm: '355px',
-                        xl: '451px',
-                        '2xl': '461px',
-                    }}
-                    mx={{ sm: 'auto' }}
-                >
+                <FormControl w='100%' mx={{ sm: 'auto' }}>
                     <FormLabel
                         fontFamily='Inter'
                         fontWeight={400}
                         fontSize='16px'
                         lineHeight='24px'
                         mb='4px'
+                        mx={0}
                     >
                         Ваш e-mail
                     </FormLabel>
                     <Input
+                        transitionProperty='width, height'
+                        transitionDuration='0s'
+                        px={0}
+                        pl={4}
+                        color='rgba(19, 75, 0, 1)'
+                        borderRadius='6px'
+                        border='1px solid rgba(215, 255, 148, 1)'
                         data-test-id='email-input'
                         display='block'
                         type='text'
@@ -291,18 +279,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                     />
                 </FormControl>
                 {!emailState.isValid && (
-                    <Box
-                        w={{
-                            base: '100%',
-                            sm: '355px',
-                            xl: '451px',
-                            '2xl': '461px',
-                        }}
-                        mx='auto'
-                        textAlign='left'
-                        fontFamily='Inter'
-                        color='#E53E3E'
-                    >
+                    <Box w='100%' mx='auto' textAlign='left' fontFamily='Inter' color='#E53E3E'>
                         {emailState.error}
                     </Box>
                 )}

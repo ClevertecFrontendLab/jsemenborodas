@@ -7,19 +7,21 @@ import { useAppDispatch } from '~/store/hooks';
 import { setIsAlertOpen } from '~/store/reducers/authModals';
 
 export function Verified() {
+    const dispatch = useAppDispatch();
+    dispatch(setAppError(''));
     const location = useLocation();
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
+
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const emailVerified = queryParams.get('emailVerified');
         if (emailVerified === 'true') {
             navigate('/login');
-            dispatch(setAppSuccess(AlertConst.VERIFICATIONSUCCESS));
+            dispatch(setAppSuccess(AlertConst.VERIFICATIONSUCCESS.toString()));
             return;
         }
         navigate('/register');
-        dispatch(setAppError(AlertConst.EMAILREGERROR));
+        dispatch(setAppError(AlertConst.EMAILREGERROR.toString()));
         dispatch(setIsAlertOpen(true));
     });
     return <></>;

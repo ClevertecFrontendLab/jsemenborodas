@@ -1,5 +1,6 @@
 import { Box, HStack } from '@chakra-ui/react';
 
+import { AlertNote } from '~/components/widgets/alert/AlertNote';
 import { LoginForm } from '~/components/widgets/login/LoginForm/LoginForm';
 import { ResetPassword } from '~/components/widgets/login/LoginForm/ResetPassword';
 import { LoginImgBlock } from '~/components/widgets/login/LoginImgBlock';
@@ -15,8 +16,9 @@ export function LoginPage() {
                         w={{ base: '100%', xl: 'calc(100% - 48px)' }}
                         bg='linear-gradient(235deg, rgba(234, 255, 199, 1) 0%, rgba(41, 129, 63, 1) 100%)'
                     >
-                        <Success />
                         <LoginForm />
+                        <AlertNote />
+                        <Success />
                     </Box>
                     <Box display={{ base: 'none', xl: 'inline-block' }} w='100%'>
                         <LoginImgBlock />

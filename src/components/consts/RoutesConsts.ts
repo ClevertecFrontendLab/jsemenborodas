@@ -4,5 +4,5 @@ export const RoutesConsts = {
     juiciest: '/the-juiciest',
     vegan: '/Vegan',
     notfound: '/not-found',
-    verification: '/verifictaion',
+    verification: '/verification',
 };

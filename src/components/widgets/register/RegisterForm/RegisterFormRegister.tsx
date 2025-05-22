@@ -21,12 +21,13 @@ import {
 
 import { RegisterFormPasswordInputs } from './RegisterFormPasswordInputs';
 import { RegisterFormPersonalInputs } from './RegisterFormPersonalInputs';
-import { RegisterStep } from './RegisterStep';
+import { RegisterStep } from './RegisterStep1';
+import { RegisterStepTwo } from './RegisterStep2';
 
 export function RegisterFormRegister() {
     const sliderWidth = useBreakpointValue({
         base: '328px',
-        sm: '355px',
+        md: '355px',
         xl: '451px',
         '2xl': '461px',
     });
@@ -95,7 +96,7 @@ export function RegisterFormRegister() {
                 <VStack w='100%' spacing='112px'>
                     <Swiper
                         speed={0}
-                        cssMode={false}
+                        cssMode={true}
                         slidesPerView={1}
                         style={{
                             maxWidth: sliderWidth,
@@ -104,7 +105,7 @@ export function RegisterFormRegister() {
                             padding: 0,
                             margin: 0,
                         }}
-                        spaceBetween={360}
+                        spaceBetween={500}
                         allowTouchMove={false}
                         onSwiper={(swiper) => {
                             swiperRef.current = swiper;
@@ -113,8 +114,8 @@ export function RegisterFormRegister() {
                             setStep(swiper.activeIndex);
                         }}
                     >
-                        <SwiperSlide style={{ width: '100%', minWidth: '100%', maxWidth: '100%' }}>
-                            <VStack w='100%' minW='100%' maxW='100%'>
+                        <SwiperSlide style={{ minWidth: sliderWidth, maxWidth: sliderWidth }}>
+                            <VStack w={sliderWidth} p={0}>
                                 <RegisterStep />
                                 <RegisterFormPersonalInputs
                                     onClick={() => {
@@ -124,9 +125,9 @@ export function RegisterFormRegister() {
                             </VStack>
                         </SwiperSlide>
 
-                        <SwiperSlide style={{ width: '100%', minWidth: '100%', maxWidth: '100%' }}>
-                            <VStack w='100%' minW='100%' maxW='100%'>
-                                <RegisterStep />
+                        <SwiperSlide style={{ minWidth: sliderWidth, maxWidth: sliderWidth }}>
+                            <VStack w={sliderWidth}>
+                                <RegisterStepTwo />
                                 <RegisterFormPasswordInputs onClick={() => handleOnSubmit()} />
                             </VStack>
                         </SwiperSlide>

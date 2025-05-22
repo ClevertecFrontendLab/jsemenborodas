@@ -29,6 +29,7 @@ import { setAppError, setAppLoader, setAppSuccess } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
     authModaisIsResetPasswordOpenSelect,
+    closeResetPasswordOpen,
     toggleIsResetPasswordOpen,
 } from '~/store/reducers/authModals';
 import {
@@ -312,7 +313,7 @@ export function ResetPassword() {
                 if ('data' in responce) {
                     resetPin();
                     setStep(0);
-                    dispatch(toggleIsResetPasswordOpen());
+                    dispatch(closeResetPasswordOpen());
                     dispatch(setAppSuccess('restoreDataGreat'));
                 }
             } catch (error) {
@@ -392,6 +393,7 @@ export function ResetPassword() {
                                 fontSize='16px'
                                 lineHeight='24px'
                                 mb='4px'
+                                mx={0}
                             >
                                 Ваш e-mail
                             </FormLabel>
@@ -399,6 +401,9 @@ export function ResetPassword() {
                                 data-test-id='email-input'
                                 type='text'
                                 bg='white'
+                                color='rgba(19, 75, 0, 1)'
+                                borderRadius='6px'
+                                border='1px solid rgba(215, 255, 148, 1)'
                                 w={{ base: '100%' }}
                                 h='48px'
                                 placeholder='e-mail'
@@ -419,12 +424,7 @@ export function ResetPassword() {
                         {!isEmailValid && (
                             <Box
                                 mt='-16px'
-                                w={{
-                                    base: '100%',
-                                    sm: '355px',
-                                    xl: '451px',
-                                    '2xl': '461px',
-                                }}
+                                w='100%'
                                 mx='auto'
                                 textAlign='left'
                                 fontFamily='Inter'
@@ -686,10 +686,14 @@ export function ResetPassword() {
                                     fontSize='16px'
                                     lineHeight='24px'
                                     mb='4px'
+                                    mx={0}
                                 >
                                     Логин для входа на сайт
                                 </FormLabel>
                                 <Input
+                                    color='rgba(19, 75, 0, 1)'
+                                    borderRadius='6px'
+                                    border='1px solid rgba(215, 255, 148, 1)'
                                     data-test-id='login-input'
                                     type='text'
                                     bg='white'
@@ -727,12 +731,7 @@ export function ResetPassword() {
                             {!isLoginValid && (
                                 <Box
                                     mt='4px'
-                                    w={{
-                                        base: '100%',
-                                        sm: '355px',
-                                        xl: '451px',
-                                        '2xl': '461px',
-                                    }}
+                                    w='100%'
                                     mx='auto'
                                     textAlign='left'
                                     fontFamily='Inter'
@@ -757,6 +756,7 @@ export function ResetPassword() {
                                     fontSize='16px'
                                     lineHeight='24px'
                                     mb='4px'
+                                    mx={0}
                                 >
                                     Пароль
                                 </FormLabel>
@@ -765,6 +765,9 @@ export function ResetPassword() {
                                         data-test-id='password-input'
                                         type={isPasswordVisible ? 'text' : 'password'}
                                         bg='white'
+                                        color='rgba(19, 75, 0, 1)'
+                                        borderRadius='6px'
+                                        border='1px solid rgba(215, 255, 148, 1)'
                                         w={{ base: '100%' }}
                                         h='48px'
                                         placeholder='Пароль'
@@ -809,12 +812,7 @@ export function ResetPassword() {
                             {!isPasswordValid && (
                                 <Box
                                     mt='4px'
-                                    w={{
-                                        base: '100%',
-                                        sm: '355px',
-                                        xl: '451px',
-                                        '2xl': '461px',
-                                    }}
+                                    w='100%'
                                     mx='auto'
                                     textAlign='left'
                                     fontFamily='Inter'
@@ -839,6 +837,7 @@ export function ResetPassword() {
                                     fontSize='16px'
                                     lineHeight='24px'
                                     mb='4px'
+                                    mx={0}
                                 >
                                     Повторите пароль
                                 </FormLabel>
@@ -846,6 +845,9 @@ export function ResetPassword() {
                                     <Input
                                         type={isRepeatPasswordVibisle ? 'text' : 'password'}
                                         bg='white'
+                                        color='rgba(19, 75, 0, 1)'
+                                        borderRadius='6px'
+                                        border='1px solid rgba(215, 255, 148, 1)'
                                         data-test-id='confirm-password-input'
                                         w={{ base: '100%' }}
                                         h='48px'
@@ -876,12 +878,7 @@ export function ResetPassword() {
                                 {!isRepeatValid && (
                                     <Box
                                         mt='4px'
-                                        w={{
-                                            base: '100%',
-                                            sm: '355px',
-                                            xl: '451px',
-                                            '2xl': '461px',
-                                        }}
+                                        w='100%'
                                         mx='auto'
                                         textAlign='left'
                                         fontFamily='Inter'
