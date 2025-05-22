@@ -63,9 +63,9 @@ export function SearchForm2() {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const firstSegment = pathSegments[0];
     const title = Name[firstSegment] || 'Приятного аппетита!';
-    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [localAllergens, setLocalAllergens] = useState<string[]>([]);
-    const [searchInput, setSearchInput] = useState<string>('');
+    const [searchInput, setSearchInput] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
     const searchRef = useRef<HTMLInputElement>(null);
     const allergens = useAppSelector(selectAllergens);
@@ -104,7 +104,7 @@ export function SearchForm2() {
         if ((searchRef.current && searchRef?.current?.value?.length >= 2) || allergens?.length) {
             dispatch(setSearchString(searchRef?.current?.value));
             dispatch(setIsSearchStarted(true));
-            console.log(categories);
+
             categories?.length ? setCategories(categories) : '';
             authors?.length ? setCategories(authors) : '';
             meat?.length ? setCategories(meat) : '';
@@ -126,13 +126,9 @@ export function SearchForm2() {
         if (isEliminateAllergensOn) {
             setLocalAllergens(allergens ? allergens : []);
             dispatch(setAllergens([]));
-            console.log('allergen placed:');
-            console.log(allergens);
         } else {
             dispatch(setAllergens(localAllergens));
             setLocalAllergens([]);
-            console.log('allergenssetted:');
-            console.log(allergens);
         }
     };
     useEffect(() => {
@@ -442,6 +438,7 @@ export function SearchForm2() {
                                                                 ? '#0000000F'
                                                                 : '#FFFFFF'
                                                         }
+                                                        key={`${item.id}_${index}_${item.title}`}
                                                     >
                                                         <Checkbox
                                                             w='100%'

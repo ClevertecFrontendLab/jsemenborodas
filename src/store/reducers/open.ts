@@ -17,6 +17,9 @@ export const openSlice = createSlice({
         setIsBurgerOpen(state) {
             state.isBurgerOpen = !state.isBurgerOpen;
         },
+        resetBurger(state) {
+            state.isBurgerOpen = false;
+        },
         setIsFilterOpen(state) {
             state.isFilterOpen = !state.isFilterOpen;
         },
@@ -29,5 +32,5 @@ export const openSlice = createSlice({
 export const selectorIsBurgerOpen = (state: { open: OpenState }) => state.open.isBurgerOpen;
 export const selectorIsFilterOpen = (state: { open: OpenState }) => state.open.isFilterOpen;
 
-export const { setIsBurgerOpen, setIsFilterOpen, resetOpenState } = openSlice.actions;
+export const { setIsBurgerOpen, setIsFilterOpen, resetOpenState, resetBurger } = openSlice.actions;
 export default openSlice.reducer;

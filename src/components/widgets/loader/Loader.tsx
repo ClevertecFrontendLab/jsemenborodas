@@ -1,14 +1,25 @@
 import { AbsoluteCenter, Box, Spinner, useBreakpointValue } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
+
+import { userLoadingSelector } from '~/store/app-slice';
+import { useAppDispatch } from '~/store/hooks';
+import { resetBurger } from '~/store/reducers/open';
 
 export function Loader() {
-    const sizes = useBreakpointValue({
-        base: '134px',
-        md: '206px',
-    });
+    const dispatch = useAppDispatch();
+    const sizes =
+        useBreakpointValue({
+            base: '134px',
+            md: '206px',
+        }) ?? '134px';
+    const isLoading = useSelector(userLoadingSelector);
+    if (!isLoading) {
+        return null;
+    }
     return (
         <>
             <Box
-                position='fixed'
+                position='absolute'
                 zIndex={11}
                 bgColor='#00000029'
                 style={{
@@ -20,6 +31,7 @@ export function Loader() {
                 bottom={0}
                 left={0}
                 data-test-id='app-loader'
+                onClick={() => dispatch(resetBurger())}
             >
                 <AbsoluteCenter zIndex={11}>
                     <Box

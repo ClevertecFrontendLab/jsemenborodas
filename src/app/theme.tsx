@@ -5,6 +5,7 @@ import { switchTheme } from './CustomSwitchTheme';
 export const theme = extendTheme({
     components: {
         Switch: switchTheme,
+        Progress: { baseStyle: { filledTrack: { bg: 'rgba(196, 255, 97, 1)' } } },
         Checkbox: {
             baseStyle: {
                 control: {

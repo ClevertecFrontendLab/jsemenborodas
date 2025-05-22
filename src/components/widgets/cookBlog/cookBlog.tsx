@@ -16,13 +16,14 @@ import {
 import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 
+import { useAppSelector } from '~/store/hooks';
+import { selectorIsBurgerOpen } from '~/store/reducers/open';
+
 import { CookBlogData } from '../../entities/Data/cookBlogData';
 import rightArrow from '../../shared/images/buttonImages/Vector.png';
 
-interface PageMenuProps {
-    isBurgerOpen: boolean;
-}
-export function CookBlog({ isBurgerOpen }: PageMenuProps) {
+export function CookBlog() {
+    const isBurgerOpen = useAppSelector(selectorIsBurgerOpen);
     return (
         <>
             <Box
@@ -79,13 +80,14 @@ export function CookBlog({ isBurgerOpen }: PageMenuProps) {
                         </HStack>
                     </Box>
                     <Grid gap='0px' templateColumns={{ md: 'repeat(3, 33.333%)' }}>
-                        {CookBlogData.map((card) => (
+                        {CookBlogData.map((card, index) => (
                             <GridItem
                                 pr={{ base: '12px', xl: '12px' }}
                                 h={{ base: '152px', xl: '160px', '3xl': '184px' }}
                                 bg='transparent'
                                 mt={{ base: '12px', xl: '18px', '3xl': '32px' }}
                                 maxW='98%'
+                                key={`${card.id}_${card.name}_${index}`}
                             >
                                 <Card
                                     bg={isBurgerOpen ? 'rgba(0, 0, 0, 0.16)' : 'white'}

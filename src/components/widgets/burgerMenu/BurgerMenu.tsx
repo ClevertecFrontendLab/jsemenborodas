@@ -17,32 +17,28 @@ import { Breadcrumbs } from '~/components/features/BreadCrumb/BreadCrumbs';
 import { Burger, OpenBurger } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { Category } from '~/query/types/types';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { resetBurger, selectorIsBurgerOpen, setIsBurgerOpen } from '~/store/reducers/open';
 
 import exiticon from '../../../someimages/exitIcon.png';
-import { Loader } from '../loader/Loader';
-interface BurgerMenuProps {
-    isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
-export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
-    const toggleMenu = () => {
-        setIsOpen((prev) => !prev);
-    };
-
+export function BurgerMenu() {
     const location = useLocation();
-    const pathNames = location.pathname.split('/').filter((x) => x);
-
+    const isOpen = useAppSelector(selectorIsBurgerOpen);
+    const pathNames = location.pathname.split('/').filter(Boolean);
+    const dispatch = useAppDispatch();
+    const toggleMenu = () => {
+        dispatch(setIsBurgerOpen());
+    };
     const isDesktop = useBreakpointValue({ base: false, xl: true });
     const navigate = useNavigate();
     const dataId = useBreakpointValue({
         base: 'vegan-cuisine',
         xl: '',
     });
-    const { data, isError, isLoading, isFetching } = useGetCategoriesQuery({});
-
+    const { data: categoriesResponse, isError } = useGetCategoriesQuery({});
+    const data = categoriesResponse?.length ? categoriesResponse : [];
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
-
     let resultData;
 
     if (isError && filteredData) {
@@ -57,9 +53,6 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
         localStorage.setItem('navMenu', JSON.stringify(filteredData));
     }
 
-    if (isLoading || isFetching) {
-        return <Loader />;
-    }
     return (
         <>
             <Box onClick={toggleMenu} zIndex='11'>
@@ -96,7 +89,8 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                         pl={{ base: '42px', sm: '30px', md: '20px' }}
                         pb={{ base: '12px', sm: '25px', md: '16px' }}
                     >
-                        <Text
+                        <Box
+                            as='span'
                             fontFamily='Inter'
                             fontWeight={400}
                             fontSize='16px'
@@ -106,7 +100,7 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                             whiteSpace='wrap'
                         >
                             <Breadcrumbs></Breadcrumbs>
-                        </Text>
+                        </Box>
                     </HStack>
                     <Accordion
                         boxShadow='none'
@@ -138,104 +132,113 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                             },
                         }}
                     >
-                        {(isError ? resultData : filteredData)?.map((item: Category) => (
-                            <AccordionItem border='none' boxShadow='none'>
-                                <AccordionButton
-                                    p={0}
-                                    h='48px'
-                                    _expanded={{ bg: '#EAFFC7' }}
-                                    onClick={() => {
-                                        const path = `/${item.category}/${item.subCategories[0].category}`;
-                                        navigate(path);
-                                    }}
+                        {(isError ? resultData : filteredData)?.map(
+                            (item: Category, index: number) => (
+                                <AccordionItem
+                                    border='none'
+                                    boxShadow='none'
+                                    key={`${item._id}${index}1${index}`}
                                 >
-                                    <HStack
-                                        justifyContent='space-between'
-                                        w='100%'
-                                        pl={{ base: '18px' }}
-                                        pr={{ base: '28px', sm: '22px', md: '24px' }}
+                                    <AccordionButton
+                                        p={0}
+                                        h='48px'
+                                        _expanded={{ bg: '#EAFFC7' }}
+                                        onClick={() => {
+                                            const path = `/${item.category}/${item.subCategories[0].category}`;
+                                            navigate(path);
+                                        }}
                                     >
-                                        <HStack spacing='12px'>
-                                            <Image
-                                                src={`https://training-api.clevertec.ru${item.icon}`}
-                                                w='24px'
-                                                h='24px'
-                                            ></Image>
-                                            <Text
-                                                fontFamily='Inter'
-                                                fontWeight={
-                                                    pathNames[0] === item.category ? 700 : 500
-                                                }
-                                                fontSize='16px'
-                                                lineHeight='24px'
-                                                letterSpacing={0}
-                                                data-test-id={
-                                                    item.title === 'Веганская кухня' ? dataId : ''
-                                                }
-                                            >
-                                                {item.title}
-                                            </Text>
-                                        </HStack>
+                                        <HStack
+                                            justifyContent='space-between'
+                                            w='100%'
+                                            pl={{ base: '18px' }}
+                                            pr={{ base: '28px', sm: '22px', md: '24px' }}
+                                        >
+                                            <HStack spacing='12px'>
+                                                <Image
+                                                    src={`https://training-api.clevertec.ru${item.icon}`}
+                                                    w='24px'
+                                                    h='24px'
+                                                ></Image>
+                                                <Text
+                                                    fontFamily='Inter'
+                                                    fontWeight={
+                                                        pathNames[0] === item.category ? 700 : 500
+                                                    }
+                                                    fontSize='16px'
+                                                    lineHeight='24px'
+                                                    letterSpacing={0}
+                                                    data-test-id={
+                                                        item.title === 'Веганская кухня'
+                                                            ? dataId
+                                                            : ''
+                                                    }
+                                                >
+                                                    {item.title}
+                                                </Text>
+                                            </HStack>
 
-                                        <AccordionIcon w='24px' h='32px'></AccordionIcon>
-                                    </HStack>
-                                </AccordionButton>
-                                <AccordionPanel overflow='hidden' boxShadow='none' p={0} pt={2}>
-                                    <VStack alignItems='flex-start' spacing={0}>
-                                        {item.subCategories.map((child) => (
-                                            <Box
-                                                w='230px'
-                                                h='36px'
-                                                pl='62px'
-                                                onClick={() => {
-                                                    const path = `/${item.category}/${child.category}`;
-                                                    navigate(path);
-                                                }}
-                                            >
-                                                <HStack position='relative'>
-                                                    <Text
-                                                        fontWeight={
-                                                            pathNames[1] === child.category
-                                                                ? '700'
-                                                                : '500'
-                                                        }
-                                                        fontFamily='Inter'
-                                                        fontSize='16px'
-                                                        lineHeight='24px'
-                                                        letterSpacing={0}
-                                                        whiteSpace='nowrap'
-                                                        sx={{
-                                                            '&::before':
+                                            <AccordionIcon w='24px' h='32px'></AccordionIcon>
+                                        </HStack>
+                                    </AccordionButton>
+                                    <AccordionPanel overflow='hidden' boxShadow='none' p={0} pt={2}>
+                                        <VStack alignItems='flex-start' spacing={0}>
+                                            {item.subCategories.map((child, index) => (
+                                                <Box
+                                                    w='230px'
+                                                    h='36px'
+                                                    pl='62px'
+                                                    onClick={() => {
+                                                        const path = `/${item.category}/${child.category}`;
+                                                        navigate(path);
+                                                    }}
+                                                    key={`${child._id}_${index}_${child._id}`}
+                                                >
+                                                    <HStack position='relative'>
+                                                        <Text
+                                                            fontWeight={
                                                                 pathNames[1] === child.category
-                                                                    ? {
-                                                                          content: '""',
-                                                                          position: 'absolute',
-                                                                          left: '-16px',
-                                                                          height: '28px',
-                                                                          width: '8px',
-                                                                          backgroundColor:
-                                                                              '#C4FF61',
-                                                                      }
-                                                                    : {
-                                                                          content: '""',
-                                                                          position: 'absolute',
-                                                                          left: '-8px',
-                                                                          height: '24px',
-                                                                          width: '1px',
-                                                                          backgroundColor:
-                                                                              '#C4FF61',
-                                                                      },
-                                                        }}
-                                                    >
-                                                        {child.title}
-                                                    </Text>
-                                                </HStack>
-                                            </Box>
-                                        ))}
-                                    </VStack>
-                                </AccordionPanel>
-                            </AccordionItem>
-                        ))}
+                                                                    ? '700'
+                                                                    : '500'
+                                                            }
+                                                            fontFamily='Inter'
+                                                            fontSize='16px'
+                                                            lineHeight='24px'
+                                                            letterSpacing={0}
+                                                            whiteSpace='nowrap'
+                                                            sx={{
+                                                                '&::before':
+                                                                    pathNames[1] === child.category
+                                                                        ? {
+                                                                              content: '""',
+                                                                              position: 'absolute',
+                                                                              left: '-16px',
+                                                                              height: '28px',
+                                                                              width: '8px',
+                                                                              backgroundColor:
+                                                                                  '#C4FF61',
+                                                                          }
+                                                                        : {
+                                                                              content: '""',
+                                                                              position: 'absolute',
+                                                                              left: '-8px',
+                                                                              height: '24px',
+                                                                              width: '1px',
+                                                                              backgroundColor:
+                                                                                  '#C4FF61',
+                                                                          },
+                                                            }}
+                                                        >
+                                                            {child.title}
+                                                        </Text>
+                                                    </HStack>
+                                                </Box>
+                                            ))}
+                                        </VStack>
+                                    </AccordionPanel>
+                                </AccordionItem>
+                            ),
+                        )}
                     </Accordion>
                     <Box
                         w='100%'
@@ -289,6 +292,28 @@ export function BurgerMenu({ isOpen, setIsOpen }: BurgerMenuProps) {
                     </Box>
                 </VStack>
             </Box>
+            <Box
+                position='fixed'
+                top='0'
+                zIndex={11}
+                display={isOpen ? 'block' : 'none'}
+                bottom='0'
+                right='344px'
+                left='0'
+                bg='transparent'
+                onClick={() => dispatch(resetBurger())}
+            ></Box>
+            <Box
+                position='fixed'
+                top='652px'
+                zIndex={11}
+                display={isOpen ? 'block' : 'none'}
+                bottom='0'
+                right='0'
+                left='0'
+                bg='transparent'
+                onClick={() => dispatch(resetBurger())}
+            ></Box>
         </>
     );
 }

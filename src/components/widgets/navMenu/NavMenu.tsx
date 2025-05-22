@@ -11,37 +11,30 @@ import {
 } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { Category } from '~/query/types/types';
 
 import exiticon from '../../../someimages//exitIcon.png';
-import { Loader } from '../loader/Loader';
 export function NavMenu() {
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    const [loader, setLoader] = useState<boolean>(true);
     const navigate = useNavigate();
-    const { data, isError, isLoading, error, isFetching } = useGetCategoriesQuery({});
+    const { data: categoriesResponse, isError, error } = useGetCategoriesQuery({});
+    const data = categoriesResponse?.length ? categoriesResponse : [];
     const mockData = localStorage.getItem('navMenu');
-
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
-    useEffect(() => {
-        if (!isLoading && !isFetching) {
-            setLoader(false);
-        }
-    }, [isLoading, isFetching]);
-    if (loader) {
-        return <Loader />;
-    }
     if (mockData === null && data) {
-        localStorage.setItem('navMenu', JSON.stringify(filteredData));
+        localStorage.setItem('navMenu', JSON.stringify(filteredData || []));
     }
     let resultData;
-    if (mockData && data) {
-        resultData = JSON.parse(mockData);
+    if (mockData && mockData !== 'undefined') {
+        try {
+            resultData = JSON.parse(mockData);
+        } catch (_error) {
+            resultData = null;
+        }
     }
     if (isError) {
         return null;
@@ -159,6 +152,7 @@ export function NavMenu() {
                                                     const path = `/${item.category}/${child.category}`;
                                                     navigate(path);
                                                 }}
+                                                key={`${child._id}1${child._id}`}
                                             >
                                                 <Heading
                                                     as='h5'

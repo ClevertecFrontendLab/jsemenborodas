@@ -71,12 +71,13 @@ export function Filter() {
     const allFilters = useAppSelector(selectAllFilters);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
 
-    const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState<boolean>(false);
-    const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState<boolean>(false);
-    const [isAllergenMenuOpen, setIsAllergenMenuOpen] = useState<boolean>(false);
+    const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
+    const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
+    const [isAllergenMenuOpen, setIsAllergenMenuOpen] = useState(false);
     const [localAllergens, setLocalAllergens] = useState<string[]>([]);
 
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -122,7 +123,6 @@ export function Filter() {
             return;
         }
         dispatch(addAllergen(allergen));
-        console.log(allergen);
     };
     const handleSwitch = () => {
         if (isEliminateAllergensOn) {
@@ -284,7 +284,10 @@ export function Filter() {
                                 catData
                                     ?.filter((cat) => cat.subCategories !== undefined)
                                     .map((item, index) => (
-                                        <MenuItem bg={index % 2 === 0 ? '#0000000F' : '#FFFFFF'}>
+                                        <MenuItem
+                                            bg={index % 2 === 0 ? '#0000000F' : '#FFFFFF'}
+                                            key={`filter-${item._id}`}
+                                        >
                                             <Checkbox
                                                 isChecked={categories?.includes(item.title)}
                                                 onChange={() => {
@@ -380,6 +383,7 @@ export function Filter() {
                                         handleAuthors(item.title);
                                         handleAllFilters(item.title);
                                     }}
+                                    key={`filter-list-${item.title}`}
                                 >
                                     <Checkbox isChecked={authors?.includes(item.title)}>
                                         {item.title}
@@ -405,6 +409,7 @@ export function Filter() {
                         <VStack alignItems='flex-start'>
                             {meatMockData?.map((item) => (
                                 <Checkbox
+                                    key={`filter-meat-checkbox-${item.title}`}
                                     isChecked={meat?.includes(item.title)}
                                     onChange={() => {
                                         handleMeat(item.title);
@@ -433,6 +438,7 @@ export function Filter() {
                         <VStack alignItems='flex-start'>
                             {garnishMockData.map((item) => (
                                 <Checkbox
+                                    key={`filter-garnish-checkbox-${item.title}`}
                                     onChange={() => {
                                         handleGarnish(item.title);
                                         handleAllFilters(item.title);
@@ -487,6 +493,7 @@ export function Filter() {
                                         allFilters.map((item) => (
                                             <Box
                                                 data-test-id='filter-tag'
+                                                key={`filter-tag-${item}`}
                                                 lineHeight='16px'
                                                 fontSize='12px'
                                                 fontWeight={500}
@@ -523,7 +530,10 @@ export function Filter() {
                         </MenuButton>
                         <MenuList borderRadius={0} p={0} w='269px'>
                             {searchFormFiltersData.map((item, index) => (
-                                <MenuItem bg={index % 2 === 0 ? '#0000000F' : '#FFFFFF'}>
+                                <MenuItem
+                                    bg={index % 2 === 0 ? '#0000000F' : '#FFFFFF'}
+                                    key={`filter-search-filters-${item.id}`}
+                                >
                                     <Checkbox
                                         w='100%'
                                         isChecked={

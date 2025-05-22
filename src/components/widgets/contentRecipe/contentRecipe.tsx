@@ -51,7 +51,8 @@ export function ContentRecipe() {
     const sortBy = useAppSelector(selectSortBy);
     const sortOrder = useAppSelector(selectSortOrder);
     const isSearchStarted = useAppSelector(selectIsSearchStarted);
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
     const catId = catData?.filter(
         (cat) => cat.category === pathSegments[0] && cat.subCategories !== undefined,
     );
@@ -91,25 +92,26 @@ export function ContentRecipe() {
         isError: boolean;
         isLoading: boolean;
     };
-    if (isLoading) {
-        dispatch(setIsLoading(true));
-    } else {
-        dispatch(setIsLoading(false));
-    }
+    useEffect(() => {
+        dispatch(setIsLoading(isLoading));
+    }, [isLoading, dispatch]);
 
     useEffect(() => {
-        if (data && data?.data && data?.data?.length) {
+        if (isError) {
+            dispatch(setIsSearchStarted(false));
+            dispatch(setSearchString(''));
+            dispatch(setIsError(true));
+        }
+    }, [isError, dispatch]);
+
+    useEffect(() => {
+        if (data && data?.data?.length) {
             dispatch(setIsSearchSuccessful(true));
         } else {
             dispatch(setIsSearchSuccessful(false));
         }
     }, [data, dispatch]);
-    if (isError) {
-        dispatch(setIsSearchStarted(false));
-        dispatch(setSearchString(''));
-        dispatch(setIsError(true));
-        return null;
-    }
+
     return (
         <>
             <Box w='100%' rowGap={{ base: '0px' }} pl={{ xl: '4px' }}>
@@ -137,6 +139,7 @@ export function ContentRecipe() {
                                 overflow='hidden'
                                 minW={{ xl: '880px', '2xl': '0' }}
                                 data-test-id={isSearchStarted ? 'food-card' : ''}
+                                key={`search-food-card-${item._id}`}
                             >
                                 <CardBody p={0} maxH={{ xl: '244px' }} w='100%' maxW='100%'>
                                     <HStack h='100%' maxW='100%'>

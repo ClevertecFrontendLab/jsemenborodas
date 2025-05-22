@@ -1,20 +1,19 @@
 import { FetchBaseQueryMeta } from '@reduxjs/toolkit/query';
 
+import { AlertConst } from '~/components/consts/AlertConsts';
 import { ApiEndpoints } from '~/query/constants/api.ts';
 import { ApiGroupNames } from '~/query/constants/api-group-names.ts';
 import { EndpointNames } from '~/query/constants/endpoint-names.ts';
 import { Tags } from '~/query/constants/tags.ts';
 import { apiSlice } from '~/query/create-api.ts';
-import { setAppError } from '~/store/app-slice';
+import { setAppError, setAppLoader } from '~/store/app-slice';
 
-import { ApiErrorResponce, Category } from '../types/types';
-import { GetError } from './utils/errorUtil';
+import { Category } from '../types/types';
 
 interface CategoriesProps {
     _id?: string;
     isOnlyParent?: boolean;
 }
-
 export const categoryApiSlice = apiSlice
     .enhanceEndpoints({
         addTagTypes: [Tags.CATEGORIES],
@@ -44,11 +43,24 @@ export const categoryApiSlice = apiSlice
 
                 providesTags: [Tags.CATEGORIES],
                 async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+                    dispatch(setAppLoader(true));
                     try {
                         await queryFulfilled;
                     } catch (error) {
-                        const errorProp = error as ApiErrorResponce;
-                        dispatch(setAppError(GetError(errorProp)));
+                        if (
+                            pathSegments[0] === 'login' ||
+                            pathSegments[0] === 'register' ||
+                            pathSegments[0].includes('verification')
+                        ) {
+                            console.log(error);
+                            return;
+                        }
+                        dispatch(setAppError(AlertConst.USSUALERROR));
+                    } finally {
+                        setTimeout(() => {
+                            dispatch(setAppLoader(false));
+                        }, 100);
                     }
                 },
                 keepUnusedDataFor: Infinity,

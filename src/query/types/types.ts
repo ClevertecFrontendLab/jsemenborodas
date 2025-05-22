@@ -77,3 +77,37 @@ export type ApiErrorResponce = {
     isUnhandledError: boolean;
     meta: { request: string[]; response: string[] };
 };
+
+export type AuthRequest = {
+    login: string;
+    password: string;
+};
+
+export type AuthErrorData = {
+    error: string;
+    message: string;
+    statusCode: number;
+};
+
+export type AuthError = { status: number; data: AuthErrorData };
+export type AuthSucces = { statusText: string; message: string };
+export type RegisterRequest = {
+    email: string;
+    login: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+};
+
+export type ResponceMessage = {
+    message: string;
+    statusText: string;
+};
+
+export type RestoreRequest = {
+    email: string;
+    otpToken?: string;
+    login?: string;
+    password?: string;
+    passwordConfirm?: string;
+};

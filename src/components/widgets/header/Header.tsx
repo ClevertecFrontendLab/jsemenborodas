@@ -1,27 +1,27 @@
-import { Box, Card, CardHeader, Heading, Hide, HStack, Icon, Show } from '@chakra-ui/react';
+import { Box, Card, CardHeader, Hide, HStack, Icon, Show } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
+import { HeaderConsts } from '~/components/consts/HeaderConsts';
 import { UserAvatar } from '~/components/features/Avatar/Avatar';
 import { Breadcrumbs } from '~/components/features/BreadCrumb/BreadCrumbs';
 import { FavouriteNotes, FullLogo, Likes, Logo, Subscribers } from '~/icons/Icon';
-import { useAppSelector } from '~/store/hooks';
-import { selectorIsFilterOpen } from '~/store/reducers/open';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { resetBurger, selectorIsBurgerOpen, selectorIsFilterOpen } from '~/store/reducers/open';
 
 import { Metrics } from '../../features/Metrics/Metrics';
 import AvatarImg from '../../shared/images/avatarImages/avatar.jpg';
 import { BurgerMenu } from '../burgerMenu/BurgerMenu';
 
-interface HeaderMenuProps {
-    isBurgerOpen: boolean;
-    setIsBurgerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
+export function Header() {
+    const isBurgerOpen = useAppSelector(selectorIsBurgerOpen);
     const location = useLocation();
-    const pathNames = location.pathname.split('/').filter((x) => x);
-    const userName = 'Екатерина Константинопольская';
-    const userUsername = '@bake_and_pie';
+    const dispatch = useAppDispatch();
+    const sessionAuth = sessionStorage.getItem('isAuth');
+    const isAuth = !!sessionAuth;
+    const navigate = useNavigate();
+    const pathNames = location.pathname.split('/').filter(Boolean);
+    console.log(pathNames);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     const isBurgerOrFilterOpen = () => {
         if (isBurgerOpen || isFilterOpen) {
@@ -34,7 +34,7 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 1280) {
-                setIsBurgerOpen(false);
+                dispatch(resetBurger());
             }
         };
 
@@ -45,7 +45,10 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [setIsBurgerOpen]);
+    }, [dispatch]);
+    if (!isAuth) {
+        navigate('/login');
+    }
     return (
         <Box
             as='header'
@@ -100,7 +103,8 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
                             </Box>
                         </Hide>
                         <Show above='xl'>
-                            <Heading
+                            <Box
+                                as='span'
                                 fontSize={16}
                                 lineHeight={6}
                                 fontWeight='400'
@@ -108,7 +112,7 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
                                 fontFamily='Inter'
                             >
                                 <Breadcrumbs />
-                            </Heading>
+                            </Box>
                         </Show>
                     </HStack>
                     <Box
@@ -118,10 +122,7 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
                         pr={{ base: '12px', xl: '0px' }}
                     >
                         <Box display={{ base: 'block', xl: 'none' }}>
-                            <BurgerMenu
-                                isOpen={isBurgerOpen}
-                                setIsOpen={setIsBurgerOpen}
-                            ></BurgerMenu>
+                            <BurgerMenu></BurgerMenu>
                         </Box>
                         <Show above='xl'>
                             <Card shadow='none' w='432px' bg='transparent'>
@@ -132,8 +133,8 @@ export function Header({ isBurgerOpen, setIsBurgerOpen }: HeaderMenuProps) {
                                         ml={{ base: 0, ...marginLeft }}
                                     >
                                         <UserAvatar
-                                            name={userName}
-                                            username={userUsername}
+                                            name={HeaderConsts.USERNAME}
+                                            username={HeaderConsts.USERLINK}
                                             imageSrc={AvatarImg}
                                         />
                                     </HStack>

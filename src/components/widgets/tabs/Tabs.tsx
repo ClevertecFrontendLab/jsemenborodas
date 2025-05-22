@@ -39,7 +39,7 @@ export function Tabs() {
                     overflowY='hidden'
                     flexWrap='wrap'
                     sx={{
-                        '-webkit-overflow-scrolling': 'touch',
+                        webkitOverflowScrolling: 'touch',
                         '&::-webkit-scrollbar': {
                             width: '1px',
                             h: '1px',

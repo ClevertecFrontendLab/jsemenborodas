@@ -34,7 +34,8 @@ export function ContentRecipeDefault() {
     const secondSegment = pathSegments[1];
     const title = Name[secondSegment];
     const navigate = useNavigate();
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse, isLoading } = useGetCategoriesQuery({});
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
     const isSearchStarted = useAppSelector(selectIsSearchStarted);
     const catDataCategory = catData?.filter(
         (cat) => cat.category === pathSegments[0] && cat.subCategories !== undefined,
@@ -45,9 +46,10 @@ export function ContentRecipeDefault() {
     const { data, isError } = useGetRecipeByCategoryQuery({
         _id: catDataSubCategoryId ? catDataSubCategoryId : '',
     });
-    if (isError) {
-        return null;
-    }
+    if (isLoading)
+        if (isError) {
+            return null;
+        }
     return (
         <>
             <Box w='100%' rowGap={{ base: '0px' }} pl={{ xl: '4px' }}>
@@ -79,6 +81,7 @@ export function ContentRecipeDefault() {
                                 overflow='hidden'
                                 minW={{ xl: '880px', '2xl': '0' }}
                                 data-test-id={isSearchStarted ? '' : `food-card-${index}`}
+                                key={`content-recipe-${item._id}`}
                             >
                                 <CardBody p={0} maxH={{ xl: '244px' }} w='100%' maxW='100%'>
                                     <HStack h='100%' maxW='100%'>

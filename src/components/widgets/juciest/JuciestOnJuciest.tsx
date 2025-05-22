@@ -1,43 +1,33 @@
 import { Box, Button } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 
+import { FetchConsts } from '~/components/consts/FetchConsts';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipeByLikesQuery } from '~/query/services/recipesnew';
-import { recipeRequest } from '~/query/types/types';
 
-import { Loader } from '../loader/Loader';
 import { JuciestCards } from './JuciestCards';
 
 export function JuciestOnJuciest() {
-    const [pages, setPages] = useState<number[]>([1]);
-    const [showLoader, setShowLoader] = useState(true);
-    const [isButtonLoading, setIsButtonLoading] = useState<boolean>(false);
+    const [pages, setPages] = useState([1]);
+    const location = useLocation();
+    const [isButtonLoading, setIsButtonLoading] = useState(false);
     const { data, isError, isLoading, isFetching } = useGetRecipeByLikesQuery({
-        limit: 8,
+        limit: FetchConsts.CARDSLIMIT,
         page: pages[pages.length - 1],
-    }) as { data: recipeRequest; isError: boolean; isLoading: boolean; isFetching: boolean };
-
+    });
+    const { data: categoriesResponse, refetch } = useGetCategoriesQuery({});
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
     useEffect(() => {
         if (isLoading || isFetching) {
             setIsButtonLoading(true);
         } else {
-            const timer = setTimeout(() => {
-                setIsButtonLoading(false);
-            }, 500);
-            return () => clearTimeout(timer);
+            setIsButtonLoading(false);
         }
     }, [isLoading, isFetching]);
-    const { data: catData } = useGetCategoriesQuery({});
-
-    if (showLoader) {
-        setTimeout(() => setShowLoader(false), 1000);
-        return <Loader />;
-    }
-
-    if (isLoading || isFetching) {
-        return <Loader />;
-    }
-
+    useEffect(() => {
+        refetch();
+    }, [location.pathname, refetch]);
     if (isError) {
         return null;
     }
@@ -46,7 +36,9 @@ export function JuciestOnJuciest() {
         <Box w='100%' rowGap={{ base: '0px' }} pl={{ xl: '4px' }} mb='100px'>
             {catData && pages.map((page) => <JuciestCards key={page} page={page} />)}
             <Button
-                data-test-id={pages.length >= data?.meta?.totalPages ? '' : 'load-more-button'}
+                data-test-id={
+                    pages.length >= (data?.meta?.totalPages ?? 0) ? '' : 'load-more-button'
+                }
                 h={{ base: '40px' }}
                 w={{ base: '152px' }}
                 borderRadius='6px'
@@ -58,7 +50,7 @@ export function JuciestOnJuciest() {
                 fontSize={16}
                 mt={4}
                 onClick={() => setPages((prev) => [...prev, prev.length + 1])}
-                display={pages.length >= data?.meta?.totalPages ? 'none' : 'block'}
+                display={pages.length >= (data?.meta?.totalPages ?? 0) ? 'none' : 'block'}
                 isDisabled={isButtonLoading}
                 mx='auto'
                 isLoading={isButtonLoading}

@@ -1,4 +1,4 @@
-import { HStack, Icon, StackProps, Text } from '@chakra-ui/react';
+import { Box, HStack, Icon, StackProps } from '@chakra-ui/react';
 import { ElementType } from 'react';
 
 interface MetricProps extends StackProps {
@@ -23,9 +23,15 @@ export function Metrics({
                 w={{ base: iconSize, '2xl': iconSizeXL }}
                 h={{ base: iconSize, '2xl': iconSizeXL }}
             />
-            <Text color='rgba(45, 177, 0, 1)' fontFamily='Inter' fontSize={12} fontWeight='600'>
+            <Box
+                as='span'
+                color='rgba(45, 177, 0, 1)'
+                fontFamily='Inter'
+                fontSize={12}
+                fontWeight='600'
+            >
                 {children}
-            </Text>
+            </Box>
         </HStack>
     );
 }

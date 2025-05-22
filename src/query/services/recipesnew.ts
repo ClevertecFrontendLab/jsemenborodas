@@ -1,9 +1,10 @@
+import { AlertConst } from '~/components/consts/AlertConsts';
 import { ApiEndpoints } from '~/query/constants/api.ts';
 import { ApiGroupNames } from '~/query/constants/api-group-names.ts';
 import { EndpointNames } from '~/query/constants/endpoint-names.ts';
 import { Tags } from '~/query/constants/tags.ts';
 import { apiSlice } from '~/query/create-api.ts';
-import { setAppError } from '~/store/app-slice';
+import { setAppError, setAppLoader } from '~/store/app-slice';
 
 import { ApiErrorResponce, recipe, recipeRequest } from '../types/types';
 import { GetError } from './utils/errorUtil';
@@ -35,11 +36,12 @@ export const categoryApiSlice = apiSlice
                 providesTags: [Tags.RECIPES],
                 async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
                     try {
+                        dispatch(setAppLoader(true));
                         await queryFulfilled;
-                    } catch (error) {
-                        const errorProp = error as ApiErrorResponce;
-                        console.log('error');
-                        dispatch(setAppError(GetError(errorProp)));
+                    } catch (_error) {
+                        dispatch(setAppError(AlertConst.TRYTOFINDLATER));
+                    } finally {
+                        dispatch(setAppLoader(false));
                     }
                 },
                 keepUnusedDataFor: Infinity,
@@ -84,10 +86,13 @@ export const categoryApiSlice = apiSlice
                 providesTags: [Tags.RECIPES],
                 async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
                     try {
+                        dispatch(setAppLoader(true));
                         await queryFulfilled;
                     } catch (error) {
                         const errorProp = error as ApiErrorResponce;
                         dispatch(setAppError(GetError(errorProp)));
+                    } finally {
+                        dispatch(setAppLoader(false));
                     }
                 },
                 keepUnusedDataFor: Infinity,

@@ -10,12 +10,15 @@ import {
     HStack,
     Icon,
     Show,
+    useBreakpointValue,
     VStack,
 } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 
+import { FetchConsts } from '~/components/consts/FetchConsts';
+import { RoutesConsts } from '~/components/consts/RoutesConsts';
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipeByLikesQuery } from '~/query/services/recipesnew';
@@ -25,10 +28,21 @@ import RightArrow from '../../shared/images/buttonImages/Vector.png';
 export function Juciest() {
     const navigate = useNavigate();
     const { data, isError } = useGetRecipeByLikesQuery({
-        limit: 4,
+        limit: FetchConsts.RECIPEBYLIKESLIMIT,
     });
 
-    const { data: catData } = useGetCategoriesQuery({});
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
+    const testId = useBreakpointValue({
+        base: 'juiciest-link',
+        md: 'juiciest-link-mobile',
+        xl: 'juiciest-link',
+    });
+    const testIdReverse = useBreakpointValue({
+        base: 'juiciest-link-mobile',
+        md: 'juiciest-link',
+        xl: 'juiciest-link-mobile',
+    });
     if (isError) {
         return null;
     }
@@ -62,9 +76,10 @@ export function Juciest() {
                         bg='#B1FF2E'
                         mt={{ md: '-2px' }}
                         borderRadius='6px'
-                        data-test-id='juiciest-link'
-                        onClick={() => navigate('/the-juiciest')}
-                        // className='custom-cursor'
+                        data-test-id={testId}
+                        onClick={() => {
+                            navigate(RoutesConsts.juiciest);
+                        }}
                         cursor='pointer'
                         display={{ base: 'none', md: 'block' }}
                     >
@@ -98,15 +113,13 @@ export function Juciest() {
                 >
                     {data &&
                         data?.data.map((recipe, index) => (
-                            <GridItem>
+                            <GridItem key={`${recipe._id}${index}`}>
                                 <Card
                                     border='1px solid #00000014'
                                     borderRadius={8}
                                     w={{ base: '100%', md: '100%', xl: '100%', '3xl': '100%' }}
                                     maxW={{ '3xl': '668px' }}
                                     h={{ base: '128px', xl: '244px' }}
-                                    // className='custom-cursor'
-
                                     bg='transparent'
                                 >
                                     <CardBody p={0} w='100%' h='100%' borderLeftRadius={8}>
@@ -428,7 +441,7 @@ export function Juciest() {
                                                             borderRadius='6px'
                                                             onClick={() =>
                                                                 navigate(
-                                                                    `/the-juiciest/${recipe?._id}`,
+                                                                    `${RoutesConsts.juiciest}/${recipe?._id}`,
                                                                 )
                                                             }
                                                             data-test-id={`card-link-${index}`}
@@ -459,7 +472,7 @@ export function Juciest() {
                             </GridItem>
                         ))}
                     <GridItem
-                        data-test-id='juiciest-link-mobile'
+                        data-test-id={testIdReverse}
                         height={{ xl: '0' }}
                         sx={{
                             display: {
@@ -475,7 +488,7 @@ export function Juciest() {
                             pl={{ base: '15px' }}
                             bg='#B1FF2E'
                             mt={{ md: '-3px' }}
-                            onClick={() => navigate('/the-juiciest')}
+                            onClick={() => navigate(RoutesConsts.juiciest)}
                         >
                             <HStack spacing='10px' height={{ xl: '0' }}>
                                 <Text
