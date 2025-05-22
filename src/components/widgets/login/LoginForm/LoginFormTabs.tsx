@@ -5,7 +5,7 @@ export function LoginFormTabs() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [indexOfTab, setIndexOfTab] = useState<number>(0);
+    const [indexOfTab, setIndexOfTab] = useState(0);
     useEffect(() => {
         const pathSegments = location.pathname.split('/').filter(Boolean);
         if (pathSegments[0] === 'register') {

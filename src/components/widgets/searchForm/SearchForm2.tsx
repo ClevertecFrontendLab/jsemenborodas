@@ -63,9 +63,9 @@ export function SearchForm2() {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const firstSegment = pathSegments[0];
     const title = Name[firstSegment] || 'Приятного аппетита!';
-    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [localAllergens, setLocalAllergens] = useState<string[]>([]);
-    const [searchInput, setSearchInput] = useState<string>('');
+    const [searchInput, setSearchInput] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
     const searchRef = useRef<HTMLInputElement>(null);
     const allergens = useAppSelector(selectAllergens);

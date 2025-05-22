@@ -52,8 +52,7 @@ export function ContentRecipe() {
     const sortOrder = useAppSelector(selectSortOrder);
     const isSearchStarted = useAppSelector(selectIsSearchStarted);
     const { data: categoriesResponse } = useGetCategoriesQuery({});
-    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
-    const catData = Array.isArray(categoryData) ? categoryData : [];
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
     const catId = catData?.filter(
         (cat) => cat.category === pathSegments[0] && cat.subCategories !== undefined,
     );
@@ -106,7 +105,7 @@ export function ContentRecipe() {
     }, [isError, dispatch]);
 
     useEffect(() => {
-        if (data && data?.data && data?.data?.length) {
+        if (data && data?.data?.length) {
             dispatch(setIsSearchSuccessful(true));
         } else {
             dispatch(setIsSearchSuccessful(false));

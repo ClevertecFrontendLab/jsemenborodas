@@ -12,6 +12,7 @@ import {
 import { Image } from '@chakra-ui/react';
 import { useState } from 'react';
 
+import { useValidationPassword } from '~/components/hooks/useValidationPassword';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
     progressSelect,
@@ -30,82 +31,29 @@ type RegisterButtonProps = {
 export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
     const dispatch = useAppDispatch();
 
-    const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
-    const [isRepeatPasswordVibisle, setIsRepeatPasswordVisible] = useState<boolean>(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isRepeatPasswordVibisle, setIsRepeatPasswordVisible] = useState(false);
 
-    const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
-    const [isLoginValid, setIsLoginValid] = useState<boolean>(true);
-    const [isRepeatValid, setIsRepeatValid] = useState<boolean>(true);
+    const [isRepeatValid, setIsRepeatValid] = useState(true);
 
     const progressBar = useAppSelector(progressSelect);
 
-    const [passwordError, setPasswordError] = useState<string>('');
-    const [loginError, setLoginError] = useState<string>('');
-    const [repeatPasswordError, setRepeatPasswordError] = useState<string>('');
+    const [repeatPasswordError, setRepeatPasswordError] = useState('');
 
     const password = useAppSelector(userPasswordSelect);
     const login = useAppSelector(userLoginSelect);
     const repeatPassword = useAppSelector(userRepeatPasswordSelect);
 
-    const loginRegExp = new RegExp('^[A-Za-z0-9!@#$&_+-.]{0,50}$', 'im');
-    const firstLetterUpperCaseRegExp = new RegExp('^[A-Z]{1,}');
-    const hasNumberRegExp = new RegExp('[0-9]');
+    const { loginState, passwordState, validatePassword, validateLogin } = useValidationPassword({
+        login: { required: true, minLength: 5, maxLength: 50 },
+        password: { required: true, minLength: 8, maxLength: 50 },
+    });
     const checkLogin = (value: string) => {
-        if (value.length >= 5 && value.length <= 50) {
-            const isMatch = loginRegExp.test(value);
-            if (isMatch) {
-                setIsLoginValid(true);
-                setLoginError('');
-                return;
-            }
-            setIsLoginValid(false);
-            setLoginError('Не соответствует формату');
-        }
-        if (value.length === 0) {
-            setIsLoginValid(false);
-            setLoginError('Введите логин');
-            return;
-        }
-        if (value.length < 5) {
-            setIsLoginValid(false);
-            setLoginError('Не соответствует формату');
-            return;
-        }
-        if (value.length > 50) {
-            setIsLoginValid(false);
-            setLoginError('Максимальная длина 50 символов');
-            return;
-        }
+        validateLogin(value);
     };
 
     const checkPassword = (value: string) => {
-        if (value.length >= 8 && value.length <= 50) {
-            const isMatch = loginRegExp.test(value);
-            const isFirstLetterMatch = firstLetterUpperCaseRegExp.test(value);
-            const hasNumber = hasNumberRegExp.test(value);
-            if (isMatch && isFirstLetterMatch && hasNumber) {
-                setIsPasswordValid(true);
-                setPasswordError('');
-                return;
-            }
-            setIsPasswordValid(false);
-            setPasswordError('Не соответствует формату');
-        }
-        if (value.length === 0) {
-            setIsPasswordValid(false);
-            setPasswordError('Введите пароль');
-            return;
-        }
-        if (value.length < 8) {
-            setIsPasswordValid(false);
-            setPasswordError('Не соответствует формату');
-            return;
-        }
-        if (value.length > 50) {
-            setIsPasswordValid(false);
-            setPasswordError('Максимальная длина 50 символов');
-            return;
-        }
+        validatePassword(value);
     };
 
     const checkRepeatPassword = (value: string) => {
@@ -166,12 +114,12 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
         '2xl': '461px',
     });
     const onSubmit = () => {
-        if (!isLoginValid) {
+        if (!loginState.isValid) {
             const newValue = login.trim();
             dispatch(setLogin(newValue));
             checkLogin(newValue);
         }
-        if (!isPasswordValid) {
+        if (!passwordState.isValid) {
             const newValue = password;
             dispatch(setPassword(newValue));
             checkPassword(newValue);
@@ -181,7 +129,7 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
             dispatch(setRepeatPassword(newValue));
             checkRepeatPassword(newValue);
         }
-        if (isLoginValid && isPasswordValid && isRepeatValid) return true;
+        if (loginState.isValid && passwordState.isValid && isRepeatValid) return true;
         return false;
     };
     return (
@@ -232,7 +180,7 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                         value={login}
                         onChange={handleChangeLogin}
                         onBlur={trimLogin}
-                        isInvalid={!isLoginValid}
+                        isInvalid={!loginState.isValid}
                         sx={{
                             '::placeholder': {
                                 fontFamily: 'Inter',
@@ -257,7 +205,7 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                 >
                     Логин не менее 5 символов, только латиница
                 </Box>
-                {!isLoginValid && (
+                {!loginState.isValid && (
                     <Box
                         mt='4px'
                         w={widthInput}
@@ -270,7 +218,7 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                         lineHeight='16px'
                         color='#E53E3E'
                     >
-                        {loginError}
+                        {loginState.error}
                     </Box>
                 )}
             </Box>
@@ -296,7 +244,6 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                             h='48px'
                             placeholder='Пароль'
                             value={password}
-                            // isInvalid={!isLoginValid}
                             onChange={handleChangePassword}
                             sx={{
                                 '::placeholder': {
@@ -334,7 +281,7 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                 >
                     Пароль не менее 8 символов, с заглавной буквой и цифрой
                 </Box>
-                {!isPasswordValid && (
+                {!passwordState.isValid && (
                     <Box
                         mt='4px'
                         w={widthInput}
@@ -347,7 +294,7 @@ export function RegisterFormPasswordInputs({ onClick }: RegisterButtonProps) {
                         lineHeight='16px'
                         color='#E53E3E'
                     >
-                        {passwordError}
+                        {passwordState.error}
                     </Box>
                 )}
             </Box>

@@ -71,14 +71,13 @@ export function Filter() {
     const allFilters = useAppSelector(selectAllFilters);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
 
-    const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState<boolean>(false);
-    const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState<boolean>(false);
-    const [isAllergenMenuOpen, setIsAllergenMenuOpen] = useState<boolean>(false);
+    const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
+    const [isAuthorMenuOpen, setIsAuthorMenuOpen] = useState(false);
+    const [isAllergenMenuOpen, setIsAllergenMenuOpen] = useState(false);
     const [localAllergens, setLocalAllergens] = useState<string[]>([]);
 
     const { data: categoriesResponse } = useGetCategoriesQuery({});
-    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
-    const catData = Array.isArray(categoryData) ? categoryData : [];
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
 
     const inputRef = useRef<HTMLInputElement>(null);
 

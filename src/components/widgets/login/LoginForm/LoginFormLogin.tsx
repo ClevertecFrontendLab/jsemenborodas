@@ -11,11 +11,20 @@ import {
 import { Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
+import { AlertConst } from '~/components/consts/AlertConsts';
+import { ErrorStatus } from '~/components/consts/ErrorStatus';
+import { useValidationLogin } from '~/components/hooks/useValidationLogin';
 import { useGetAuthMutation } from '~/query/services/auth';
 import { setAppError, setAppLoader, setIsAuth } from '~/store/app-slice';
-import { useAppDispatch } from '~/store/hooks';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { toggleIsAlertOpen, toggleIsResetPasswordOpen } from '~/store/reducers/authModals';
-import { resetAllUserState } from '~/store/reducers/user';
+import {
+    resetAllUserState,
+    setLogin,
+    setPassword,
+    userLoginSelect,
+    userPasswordSelect,
+} from '~/store/reducers/user';
 
 import ShowPassword from './assets/ShowPassword.png';
 
@@ -28,10 +37,10 @@ export type Err2 = {
 };
 export function LoginFormLogin() {
     const dispatch = useAppDispatch();
-    const [ShowPasswordBoolean, setShowPasswordBoolean] = useState<boolean>(false);
-    const [login, setLogin] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
+    const [ShowPasswordBoolean, setShowPasswordBoolean] = useState(false);
+    const login = useAppSelector(userLoginSelect);
+    const password = useAppSelector(userPasswordSelect);
+    const [isFirstMount, setIsFirstMount] = useState(true);
 
     const togglePasswordVisibility = () => {
         setShowPasswordBoolean(!ShowPasswordBoolean);
@@ -39,82 +48,47 @@ export function LoginFormLogin() {
     const resetPasswordVisibility = () => {
         setShowPasswordBoolean(false);
     };
-
-    const [isLoginValid, setIsLoginValid] = useState<boolean>(true);
-    const [loginError, setLoginError] = useState<string>('');
-    const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
-    const [passwordError, setPasswordError] = useState<string>('');
     const [getAuth] = useGetAuthMutation();
-    const checkData = () => {
-        let valid = true;
-        if (login.length && login.length <= 50) {
-            setIsLoginValid(true);
-            setLoginError('');
-        } else {
-            if (login.length === 0) {
-                setIsLoginValid(false);
-                setLoginError('Введите логин');
-                valid = false;
-            } else {
-                setIsLoginValid(false);
-                setLoginError('Максимальная длина 50 символов');
-                valid = false;
-            }
-        }
-        if (password.length && password.length <= 50) {
-            setIsPasswordValid(true);
-            setPasswordError('');
-        } else {
-            if (password.length === 0) {
-                setIsPasswordValid(false);
-                setPasswordError('Введите пароль');
-                valid = false;
-            } else {
-                setIsPasswordValid(false);
-                setPasswordError('Максимальная длина 50 символов');
-                valid = false;
-            }
-        }
-        return valid;
-    };
+    const { loginState, passwordState, validateLogin, validatePassword } = useValidationLogin({
+        login: { required: true, maxLength: 50 },
+        password: { required: true, maxLength: 50 },
+    });
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        if (checkData()) {
+        if (loginState.isValid && passwordState.isValid) {
             try {
                 dispatch(setAppLoader(true));
                 const responce = await getAuth({ login: login, password: password });
                 if ('data' in responce) {
                     dispatch(setIsAuth(true));
-                    sessionStorage.setItem('isAuth', 'true');
+                    localStorage.setItem('isAuth', 'true');
                     dispatch(setAppLoader(false));
                 }
                 if ('error' in responce) {
                     const err = responce as Err2;
                     const responceStatusCode = err.error.status;
-                    if (responceStatusCode === 401) {
-                        dispatch(setAppError('WrongLoginOrPassword'));
+                    if (responceStatusCode === ErrorStatus.UNAUTHORIZED) {
+                        dispatch(setAppError(AlertConst.AUTHERROR));
                     }
-                    if (responceStatusCode === 403) {
-                        dispatch(setAppError('EmailNotVerified'));
+                    if (responceStatusCode === ErrorStatus.FORBIDDEN) {
+                        dispatch(setAppError(AlertConst.EMAILERROR));
                     }
-                    if (responceStatusCode >= 500) {
-                        dispatch(setAppError('ServerError'));
+                    if (responceStatusCode >= ErrorStatus.SERVERERROR) {
+                        dispatch(setAppError(AlertConst.SERVERERROR));
                         dispatch(toggleIsAlertOpen());
                     }
                 }
             } catch (error) {
                 const err = error as Err;
                 const responceStatusCode = err.statusCode;
-                if (responceStatusCode === 401) {
-                    dispatch(setAppError('WrongLoginOrPassword'));
+                if (responceStatusCode === ErrorStatus.UNAUTHORIZED) {
+                    dispatch(setAppError(AlertConst.AUTHERROR));
                 }
-                if (responceStatusCode === 403) {
-                    dispatch(setAppError('EmailNotVerified'));
+                if (responceStatusCode === ErrorStatus.FORBIDDEN) {
+                    dispatch(setAppError(AlertConst.EMAILERROR));
                 }
-                if (responceStatusCode >= 500) {
-                    dispatch(setAppError('ServerError'));
-                    sessionStorage.setItem('pswrd', password);
-                    sessionStorage.setItem('lgn', login);
+                if (responceStatusCode >= ErrorStatus.SERVERERROR) {
+                    dispatch(setAppError(AlertConst.SERVERERROR));
                     dispatch(toggleIsAlertOpen());
                 }
             } finally {
@@ -125,41 +99,19 @@ export function LoginFormLogin() {
 
     const handleChangeLogin = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value.trim();
-        setLogin(newValue);
-        if (newValue.length && newValue.length <= 50) {
-            setIsLoginValid(true);
-            setLoginError('');
-        } else {
-            if (newValue.length === 0) {
-                setIsLoginValid(false);
-                setLoginError('Введите логин');
-            } else {
-                setIsLoginValid(false);
-                setLoginError('Максимальная длина 50 символов');
-            }
-        }
+        dispatch(setLogin(newValue));
+        validateLogin(newValue);
     };
 
     const trimLogin = () => {
         const newValue = login.trim();
-        setLogin(newValue);
+        dispatch(setLogin(newValue));
     };
 
     const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
-        setPassword(newValue);
-        if (newValue.length && newValue.length <= 50) {
-            setIsPasswordValid(true);
-            setPasswordError('');
-        } else {
-            if (newValue.length === 0) {
-                setIsPasswordValid(false);
-                setPasswordError('Введите пароль');
-            } else {
-                setIsPasswordValid(false);
-                setPasswordError('Максимальная длина 50 символов');
-            }
-        }
+        dispatch(setPassword(newValue));
+        validatePassword(newValue);
     };
     useEffect(() => {
         if (isFirstMount) {
@@ -197,7 +149,7 @@ export function LoginFormLogin() {
                                         h='48px'
                                         placeholder='Введите логин'
                                         value={login}
-                                        isInvalid={!isLoginValid}
+                                        isInvalid={!loginState.isValid}
                                         onChange={handleChangeLogin}
                                         onMouseDown={trimLogin}
                                         onMouseUp={trimLogin}
@@ -212,7 +164,7 @@ export function LoginFormLogin() {
                                         }}
                                     />
                                 </FormControl>
-                                {!isLoginValid && (
+                                {!loginState.isValid && (
                                     <Box
                                         w={{
                                             base: '100%',
@@ -225,7 +177,7 @@ export function LoginFormLogin() {
                                         fontFamily='Inter'
                                         color='#E53E3E'
                                     >
-                                        {loginError}
+                                        {loginState.error}
                                     </Box>
                                 )}
                             </Box>
@@ -253,7 +205,7 @@ export function LoginFormLogin() {
                                             data-test-id='password-input'
                                             value={password}
                                             onChange={handleChangePassword}
-                                            isInvalid={!isPasswordValid}
+                                            isInvalid={!passwordState.isValid}
                                             sx={{
                                                 '::placeholder': {
                                                     fontFamily: 'Inter',
@@ -276,7 +228,7 @@ export function LoginFormLogin() {
                                         </InputRightElement>
                                     </InputGroup>
                                 </FormControl>
-                                {!isPasswordValid && (
+                                {!passwordState.isValid && (
                                     <Box
                                         w={{
                                             base: '100%',
@@ -289,7 +241,7 @@ export function LoginFormLogin() {
                                         fontFamily='Inter'
                                         color='#E53E3E'
                                     >
-                                        {passwordError}
+                                        {passwordState.error}
                                     </Box>
                                 )}
                             </Box>

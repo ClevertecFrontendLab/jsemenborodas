@@ -1,0 +1,6 @@
+export const FetchConsts = {
+    CARDSLIMIT: 8,
+    RECIPEBYLIKESLIMIT: 4,
+    SLIDERCARDSLIMIT: 10,
+    RECIPEKITCHENLIMIT: 5,
+};

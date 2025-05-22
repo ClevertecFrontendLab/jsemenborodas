@@ -12,7 +12,7 @@ import { theme } from './theme';
 function App() {
     const dispatch = useAppDispatch();
     useEffect(() => {
-        const isAuth = sessionStorage.getItem('isAuth') === 'true';
+        const isAuth = localStorage.getItem('isAuth') === 'true';
         dispatch(setIsAuth(isAuth));
     }, [dispatch]);
 

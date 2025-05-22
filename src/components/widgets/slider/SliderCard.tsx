@@ -11,8 +11,7 @@ type SliderCardProps = {
 
 export function SliderCard({ item }: SliderCardProps) {
     const { data: categoriesResponse } = useGetCategoriesQuery({});
-    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
-    const catData = Array.isArray(categoryData) ? categoryData : [];
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
     const cardWidth = useBreakpointValue({
         base: '158px',
         xl: '277px',

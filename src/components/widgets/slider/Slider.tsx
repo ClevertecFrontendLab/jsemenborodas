@@ -6,6 +6,7 @@ import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperType } from 'swiper/types';
 
+import { FetchConsts } from '~/components/consts/FetchConsts';
 import { useGetRecipeByCreateDateQuery } from '~/query/services/recipesnew';
 
 import { SliderButtonNext } from './SliderButtonNext';
@@ -13,7 +14,7 @@ import { SliderButtonPrev } from './SliderButtonPrevious';
 import { SliderCard } from './SliderCard';
 export function Slider() {
     const { data } = useGetRecipeByCreateDateQuery({
-        limit: 10,
+        limit: FetchConsts.SLIDERCARDSLIMIT,
     });
 
     const swiperRef = useRef<SwiperType | null>(null);

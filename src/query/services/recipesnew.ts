@@ -1,3 +1,4 @@
+import { AlertConst } from '~/components/consts/AlertConsts';
 import { ApiEndpoints } from '~/query/constants/api.ts';
 import { ApiGroupNames } from '~/query/constants/api-group-names.ts';
 import { EndpointNames } from '~/query/constants/endpoint-names.ts';
@@ -38,7 +39,7 @@ export const categoryApiSlice = apiSlice
                         dispatch(setAppLoader(true));
                         await queryFulfilled;
                     } catch (_error) {
-                        dispatch(setAppError('TryToFindLater'));
+                        dispatch(setAppError(AlertConst.TRYTOFINDLATER));
                     } finally {
                         dispatch(setAppLoader(false));
                     }

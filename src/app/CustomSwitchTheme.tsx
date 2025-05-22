@@ -6,10 +6,7 @@ const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpe
 );
 
 const baseStyle = definePartsStyle({
-    // define the part you're going to style
-    container: {
-        // ...
-    },
+    container: {},
     thumb: {
         bg: '#FFFFFF',
     },

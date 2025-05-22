@@ -15,6 +15,8 @@ import { Image } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router';
 
+import { AlertConst } from '~/components/consts/AlertConsts';
+import { FetchConsts } from '~/components/consts/FetchConsts';
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipeByCategoryQuery } from '~/query/services/recipesnew';
@@ -23,7 +25,6 @@ import { setAppError } from '~/store/app-slice';
 import { useAppDispatch } from '~/store/hooks';
 
 import { Metrics } from '../../features/Metrics/Metrics';
-// import { Loader } from '../loader/Loader';
 
 export function VeganKitchen() {
     const dispatch = useAppDispatch();
@@ -31,22 +32,15 @@ export function VeganKitchen() {
     const [randomSubCategory, setRandomSubCategory] = useState<SubCategory>();
     const [categories, setCategories] = useState<Category[]>();
     const [fiveRecipes, setFiveRecipes] = useState<recipe[]>([]);
-    const [loader, setLoader] = useState<boolean>(true);
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const categoryName = pathSegments[0];
 
-    const {
-        data: categoriesResponse,
-        isError: isCategoryError,
-        isLoading: isCategoryLoading,
-    } = useGetCategoriesQuery({});
-    const catData = useMemo(
+    const { data: categoriesResponse, isError: isCategoryError } = useGetCategoriesQuery({});
+    const categoryData = useMemo(
         () => (categoriesResponse?.length ? categoriesResponse : []),
         [categoriesResponse],
     );
-    const categoryData = useMemo(() => (Array.isArray(catData) ? catData : []), [catData]);
-
     useEffect(() => {
         setCategories(categoryData?.filter((cat) => cat.subCategories !== undefined));
     }, [categoryData]);
@@ -70,32 +64,21 @@ export function VeganKitchen() {
             );
         }
     }, [randomCategory]);
-    const {
-        data: recipesOfRandomSubCategory,
-        isLoading: isRecipesLoading,
-        isError: isRecipeError,
-    } = useGetRecipeByCategoryQuery(
-        {
-            _id: randomSubCategory?._id ? randomSubCategory?._id : '',
-            limit: 5,
-        },
-        { skip: !randomSubCategory },
-    );
+    const { data: recipesOfRandomSubCategory, isError: isRecipeError } =
+        useGetRecipeByCategoryQuery(
+            {
+                _id: randomSubCategory?._id ? randomSubCategory?._id : '',
+                limit: FetchConsts.RECIPEKITCHENLIMIT,
+            },
+            { skip: !randomSubCategory },
+        );
     useEffect(() => {
         if (recipesOfRandomSubCategory && recipesOfRandomSubCategory?.data) {
             setFiveRecipes(recipesOfRandomSubCategory?.data.slice(0, 5));
         }
     }, [recipesOfRandomSubCategory]);
-    useEffect(() => {
-        if (!isRecipesLoading && !isCategoryLoading) {
-            setLoader(false);
-        }
-    }, [isRecipesLoading, isCategoryLoading]);
-    if (loader) {
-        // return <Loader />;
-    }
     if (isCategoryError || isRecipeError) {
-        dispatch(setAppError('TryToFindLater'));
+        dispatch(setAppError(AlertConst.TRYTOFINDLATER));
         return null;
     }
     if (!fiveRecipes?.length) {

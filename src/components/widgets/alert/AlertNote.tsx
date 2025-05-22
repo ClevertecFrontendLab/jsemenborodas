@@ -16,13 +16,16 @@ import { Image, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
+import { AlertConst } from '~/components/consts/AlertConsts';
+import { ErrorStatus } from '~/components/consts/ErrorStatus';
 import { BreakfastExit } from '~/icons/Icon';
 import { useGetAuthMutation } from '~/query/services/auth';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { authModalIsAlertOpenSelect, toggleIsAlertOpen } from '~/store/reducers/authModals';
+import { resetAllUserState, userLoginSelect, userPasswordSelect } from '~/store/reducers/user';
 
 import { setAppError, setAppLoader, setIsAuth, userErrorSelector } from '../../../store/app-slice';
-import { Err, Err2 } from '../login/LoginForm/LoginFormLogin';
+import { Err2 } from '../login/LoginForm/LoginFormLogin';
 import { alertMockData } from './alertMockData';
 import Breakfast from './assets/Breakfast.png';
 import Breakfast2 from './assets/Breakfast2.png';
@@ -32,48 +35,35 @@ export function AlertNote() {
     const [getAuth] = useGetAuthMutation();
     const error = useSelector(userErrorSelector);
     const isModalOpen = useAppSelector(authModalIsAlertOpenSelect);
-
+    const password = useAppSelector(userPasswordSelect);
+    const login = useAppSelector(userLoginSelect);
     const onRepeat = async () => {
-        const password = sessionStorage.getItem('pswrd') || '';
-        const login = sessionStorage.getItem('lgn') || '';
         dispatch(toggleIsAlertOpen());
         try {
             dispatch(setAppLoader(true));
             const responce = await getAuth({ login: login, password: password });
             if ('data' in responce) {
                 dispatch(setIsAuth(true));
-                sessionStorage.setItem('isAuth', 'true');
+                localStorage.setItem('isAuth', 'true');
                 dispatch(setAppLoader(false));
+                dispatch(resetAllUserState());
             }
             if ('error' in responce) {
                 const err = responce as Err2;
                 const responceStatusCode = err.error.status;
-                if (responceStatusCode === 401) {
-                    dispatch(setAppError('WrongLoginOrPassword'));
+                if (responceStatusCode === ErrorStatus.UNAUTHORIZED) {
+                    dispatch(setAppError(AlertConst.AUTHERROR));
                 }
-                if (responceStatusCode === 403) {
-                    dispatch(setAppError('EmailNotVerified'));
+                if (responceStatusCode === ErrorStatus.FORBIDDEN) {
+                    dispatch(setAppError(AlertConst.EMAILERROR));
                 }
-                if (responceStatusCode >= 500) {
-                    dispatch(setAppError('ServerError'));
+                if (responceStatusCode >= ErrorStatus.SERVERERROR) {
+                    dispatch(setAppError(AlertConst.SERVERERROR));
                     dispatch(toggleIsAlertOpen());
                 }
             }
         } catch (error) {
-            const err = error as Err;
-            const responceStatusCode = err.statusCode;
-            if (responceStatusCode === 401) {
-                dispatch(setAppError('WrongLoginOrPassword'));
-            }
-            if (responceStatusCode === 403) {
-                dispatch(setAppError('EmailNotVerified'));
-            }
-            if (responceStatusCode >= 500) {
-                dispatch(setAppError('ServerError'));
-                sessionStorage.setItem('pswrd', password);
-                sessionStorage.setItem('lgn', login);
-                dispatch(toggleIsAlertOpen());
-            }
+            console.log(error);
         } finally {
             dispatch(setAppLoader(false));
         }

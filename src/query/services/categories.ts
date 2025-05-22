@@ -52,7 +52,7 @@ export const categoryApiSlice = apiSlice
                             console.log(error);
                             return;
                         }
-                        dispatch(setAppError('Error'));
+                        dispatch(setAppError(AlertConst.USSUALERROR));
                     } finally {
                         dispatch(setAppLoader(false));
                     }

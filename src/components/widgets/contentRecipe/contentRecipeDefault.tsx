@@ -35,8 +35,7 @@ export function ContentRecipeDefault() {
     const title = Name[secondSegment];
     const navigate = useNavigate();
     const { data: categoriesResponse, isLoading } = useGetCategoriesQuery({});
-    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
-    const catData = Array.isArray(categoryData) ? categoryData : [];
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
     const isSearchStarted = useAppSelector(selectIsSearchStarted);
     const catDataCategory = catData?.filter(
         (cat) => cat.category === pathSegments[0] && cat.subCategories !== undefined,

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
+import { AlertConst } from '~/components/consts/AlertConsts';
 import { setAppError, setAppSuccess } from '~/store/app-slice';
 import { useAppDispatch } from '~/store/hooks';
 import { setIsAlertOpen } from '~/store/reducers/authModals';
@@ -14,11 +15,11 @@ export function Verified() {
         const emailVerified = queryParams.get('emailVerified');
         if (emailVerified === 'true') {
             navigate('/login');
-            dispatch(setAppSuccess('VerificatioinGreat'));
+            dispatch(setAppSuccess(AlertConst.VERIFICATIONSUCCESS));
             return;
         }
         navigate('/register');
-        dispatch(setAppError('EmailRegistrationError'));
+        dispatch(setAppError(AlertConst.EMAILREGERROR));
         dispatch(setIsAlertOpen(true));
     });
     return <></>;

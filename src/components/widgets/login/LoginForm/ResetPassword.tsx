@@ -16,6 +16,8 @@ import {
 import { Image, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 
+import { AlertConst } from '~/components/consts/AlertConsts';
+import { ErrorStatus } from '~/components/consts/ErrorStatus';
 import { BreakfastExit } from '~/icons/Icon';
 import {
     useResetPasswordMutation,
@@ -47,11 +49,11 @@ export function ResetPassword() {
     const dispatch = useAppDispatch();
     const isPasswordResetOpen = useAppSelector(authModaisIsResetPasswordOpenSelect);
     const [ResetResponce] = useResetPasswordMutation();
-    const [email, setEmail] = useState<string>('');
-    const [step, setStep] = useState<number>(0);
-    const [pinValue, setPinValue] = useState<string>('');
-    const [emailError, setEmailError] = useState<string>('');
-    const [pinError, setPinError] = useState<string>('');
+    const [email, setEmail] = useState('');
+    const [step, setStep] = useState(0);
+    const [pinValue, setPinValue] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [pinError, setPinError] = useState('');
     const emailRegExp = new RegExp(
         '^[A-Za-z0-9._%+-]{1,}(?<!\\.)@([A-Za-z0-9-]{1,})(\\.[A-Za-z]{2,})+$',
     );
@@ -66,16 +68,16 @@ export function ResetPassword() {
     const [request] = useRestoreUserMutation();
     const [verifyRequest] = useVerifyOTPMutation();
 
-    const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
-    const [isRepeatPasswordVibisle, setIsRepeatPasswordVisible] = useState<boolean>(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isRepeatPasswordVibisle, setIsRepeatPasswordVisible] = useState(false);
 
-    const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
-    const [isLoginValid, setIsLoginValid] = useState<boolean>(true);
-    const [isRepeatValid, setIsRepeatValid] = useState<boolean>(true);
+    const [isPasswordValid, setIsPasswordValid] = useState(true);
+    const [isLoginValid, setIsLoginValid] = useState(true);
+    const [isRepeatValid, setIsRepeatValid] = useState(true);
 
-    const [passwordError, setPasswordError] = useState<string>('');
-    const [loginError, setLoginError] = useState<string>('');
-    const [repeatPasswordError, setRepeatPasswordError] = useState<string>('');
+    const [passwordError, setPasswordError] = useState('');
+    const [loginError, setLoginError] = useState('');
+    const [repeatPasswordError, setRepeatPasswordError] = useState('');
 
     const password = useAppSelector(userPasswordSelect);
     const login = useAppSelector(userLoginSelect);
@@ -242,12 +244,12 @@ export function ResetPassword() {
                 if ('error' in responce) {
                     setEmail('');
                     const ErrorResponce = responce.error as AuthError;
-                    if (ErrorResponce.status === 400) {
-                        dispatch(setAppError('waitTillNewCodeWillGenerate'));
-                    } else if (ErrorResponce.status === 403) {
-                        dispatch(setAppError('not-found-user'));
-                    } else if (ErrorResponce.status >= 500) {
-                        dispatch(setAppError('Error'));
+                    if (ErrorResponce.status === ErrorStatus.ERROR) {
+                        dispatch(setAppError(AlertConst.NEWCODE));
+                    } else if (ErrorResponce.status === ErrorStatus.FORBIDDEN) {
+                        dispatch(setAppError(AlertConst.NOTFOUND));
+                    } else if (ErrorResponce.status >= ErrorStatus.SERVERERROR) {
+                        dispatch(setAppError(AlertConst.USSUALERROR));
                     }
                 }
 
@@ -266,13 +268,13 @@ export function ResetPassword() {
             const responce = await verifyRequest({ email: email, otpToken: newValue });
             if ('error' in responce) {
                 const ErrorResponce = responce.error as AuthError;
-                if (ErrorResponce.status === 403) {
+                if (ErrorResponce.status === ErrorStatus.FORBIDDEN) {
                     setPinError('WrongCode');
                     resetPin();
-                } else if (ErrorResponce.status >= 500) {
+                } else if (ErrorResponce.status >= ErrorStatus.SERVERERROR) {
                     setPinError('error');
                     resetPin();
-                    dispatch(setAppError('Error'));
+                    dispatch(setAppError(AlertConst.USSUALERROR));
                 }
             }
             if ('data' in responce) {
@@ -303,8 +305,8 @@ export function ResetPassword() {
                 });
                 if ('error' in responce) {
                     const ErrorResponce = responce.error as AuthError;
-                    if (ErrorResponce.status >= 500) {
-                        dispatch(setAppError('Error'));
+                    if (ErrorResponce.status >= ErrorStatus.SERVERERROR) {
+                        dispatch(setAppError(AlertConst.USSUALERROR));
                     }
                 }
                 if ('data' in responce) {
@@ -767,7 +769,6 @@ export function ResetPassword() {
                                         h='48px'
                                         placeholder='Пароль'
                                         value={password}
-                                        // isInvalid={!isLoginValid}
                                         onChange={handleChangePassword}
                                         sx={{
                                             '::placeholder': {

@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperType } from 'swiper/types';
 
+import { AlertConst } from '~/components/consts/AlertConsts';
+import { ErrorStatus } from '~/components/consts/ErrorStatus';
 import { useRegisterUserMutation } from '~/query/services/auth';
 import { AuthError } from '~/query/types/types';
 import { setAppError, setAppLoader } from '~/store/app-slice';
@@ -37,7 +39,7 @@ export function RegisterFormRegister() {
     const progressBar = useAppSelector(progressSelect);
     const [getRegister] = useRegisterUserMutation();
     const dispatch = useAppDispatch();
-    const [_step, setStep] = useState<number>(0);
+    const [_step, setStep] = useState(0);
     const handleOnSubmit = async () => {
         if (Object.values(progressBar).filter((i) => i === true).length === 6) {
             dispatch(setAppLoader(true));
@@ -55,12 +57,18 @@ export function RegisterFormRegister() {
                     const AuthentificationError = response.error as AuthError;
                     const ErrorData = AuthentificationError.data;
                     const ErrorStatusCode = ErrorData.statusCode;
-                    const ErrorStatus = AuthentificationError.status;
+                    const ErrorStatusClient = AuthentificationError.status;
 
-                    if (ErrorStatusCode === 400 || ErrorStatus === 400) {
+                    if (
+                        ErrorStatusCode === ErrorStatus.ERROR ||
+                        ErrorStatusClient === ErrorStatus.ERROR
+                    ) {
                         dispatch(setAppError(ErrorData.message));
-                    } else if (ErrorStatusCode >= 500 || ErrorStatus >= 500) {
-                        dispatch(setAppError('Error'));
+                    } else if (
+                        ErrorStatusCode >= ErrorStatus.SERVERERROR ||
+                        ErrorStatusClient >= ErrorStatus.SERVERERROR
+                    ) {
+                        dispatch(setAppError(AlertConst.USSUALERROR));
                     }
                 } else {
                     if ('data' in response) {
@@ -68,7 +76,7 @@ export function RegisterFormRegister() {
                     }
                 }
             } catch (_error) {
-                dispatch(setAppError('Error'));
+                dispatch(setAppError(AlertConst.USSUALERROR));
             } finally {
                 dispatch(setAppLoader(false));
             }

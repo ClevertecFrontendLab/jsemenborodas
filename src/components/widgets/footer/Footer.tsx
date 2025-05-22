@@ -4,19 +4,17 @@ import { Image } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 
 import { useAppSelector } from '~/store/hooks';
-import { selectorIsFilterOpen } from '~/store/reducers/open';
+import { selectorIsBurgerOpen, selectorIsFilterOpen } from '~/store/reducers/open';
 
 import Avatar from '../../shared/images/avatarImages/avatar.jpg';
 import Notes from '../../shared/images/FooterImages/IconButton.png';
 import Home from '../../shared/images/FooterImages/left-icon.png';
 import Search from '../../shared/images/FooterImages/Vector.png';
 
-interface FooterMenuProps {
-    isBurgerOpen: boolean;
-}
-export function Footer({ isBurgerOpen }: FooterMenuProps) {
+export function Footer() {
     const navigate = useNavigate();
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
+    const isBurgerOpen = useAppSelector(selectorIsBurgerOpen);
     const isBurgerOrFilterOpen = () => {
         if (isBurgerOpen || isFilterOpen) {
             return true;

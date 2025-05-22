@@ -17,6 +17,8 @@ import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 
+import { FetchConsts } from '~/components/consts/FetchConsts';
+import { RoutesConsts } from '~/components/consts/RoutesConsts';
 import { FavouriteNotes, Likes } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipeByLikesQuery } from '~/query/services/recipesnew';
@@ -26,12 +28,11 @@ import RightArrow from '../../shared/images/buttonImages/Vector.png';
 export function Juciest() {
     const navigate = useNavigate();
     const { data, isError } = useGetRecipeByLikesQuery({
-        limit: 4,
+        limit: FetchConsts.RECIPEBYLIKESLIMIT,
     });
 
     const { data: categoriesResponse } = useGetCategoriesQuery({});
-    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
-    const catData = Array.isArray(categoryData) ? categoryData : [];
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
     const testId = useBreakpointValue({
         base: 'juiciest-link',
         md: 'juiciest-link-mobile',
@@ -77,9 +78,8 @@ export function Juciest() {
                         borderRadius='6px'
                         data-test-id={testId}
                         onClick={() => {
-                            navigate('/the-juiciest');
+                            navigate(RoutesConsts.juiciest);
                         }}
-                        // className='custom-cursor'
                         cursor='pointer'
                         display={{ base: 'none', md: 'block' }}
                     >
@@ -120,8 +120,6 @@ export function Juciest() {
                                     w={{ base: '100%', md: '100%', xl: '100%', '3xl': '100%' }}
                                     maxW={{ '3xl': '668px' }}
                                     h={{ base: '128px', xl: '244px' }}
-                                    // className='custom-cursor'
-
                                     bg='transparent'
                                 >
                                     <CardBody p={0} w='100%' h='100%' borderLeftRadius={8}>
@@ -443,7 +441,7 @@ export function Juciest() {
                                                             borderRadius='6px'
                                                             onClick={() =>
                                                                 navigate(
-                                                                    `/the-juiciest/${recipe?._id}`,
+                                                                    `${RoutesConsts.juiciest}/${recipe?._id}`,
                                                                 )
                                                             }
                                                             data-test-id={`card-link-${index}`}
@@ -490,7 +488,7 @@ export function Juciest() {
                             pl={{ base: '15px' }}
                             bg='#B1FF2E'
                             mt={{ md: '-3px' }}
-                            onClick={() => navigate('/the-juiciest')}
+                            onClick={() => navigate(RoutesConsts.juiciest)}
                         >
                             <HStack spacing='10px' height={{ xl: '0' }}>
                                 <Text

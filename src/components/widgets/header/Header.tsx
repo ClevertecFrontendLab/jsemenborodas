@@ -2,6 +2,7 @@ import { Box, Card, CardHeader, Hide, HStack, Icon, Show } from '@chakra-ui/reac
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
+import { HeaderConsts } from '~/components/consts/HeaderConsts';
 import { UserAvatar } from '~/components/features/Avatar/Avatar';
 import { Breadcrumbs } from '~/components/features/BreadCrumb/BreadCrumbs';
 import { FavouriteNotes, FullLogo, Likes, Logo, Subscribers } from '~/icons/Icon';
@@ -16,9 +17,7 @@ export function Header() {
     const isBurgerOpen = useAppSelector(selectorIsBurgerOpen);
     const location = useLocation();
     const dispatch = useAppDispatch();
-    const pathNames = location.pathname.split('/').filter((x) => x);
-    const userName = 'Екатерина Константинопольская';
-    const userUsername = '@bake_and_pie';
+    const pathNames = location.pathname.split('/').filter(Boolean);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     const isBurgerOrFilterOpen = () => {
         if (isBurgerOpen || isFilterOpen) {
@@ -127,8 +126,8 @@ export function Header() {
                                         ml={{ base: 0, ...marginLeft }}
                                     >
                                         <UserAvatar
-                                            name={userName}
-                                            username={userUsername}
+                                            name={HeaderConsts.USERNAME}
+                                            username={HeaderConsts.USERLINK}
                                             imageSrc={AvatarImg}
                                         />
                                     </HStack>

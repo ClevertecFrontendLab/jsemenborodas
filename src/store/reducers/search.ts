@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { FetchConsts } from '~/components/consts/FetchConsts';
+
 export interface SearchState {
     page?: number;
     limit?: number;
@@ -22,7 +24,7 @@ export interface SearchState {
 
 const initialState: SearchState = {
     page: 1,
-    limit: 8,
+    limit: FetchConsts.CARDSLIMIT,
     allergens: [],
     searchString: '',
     meat: [],

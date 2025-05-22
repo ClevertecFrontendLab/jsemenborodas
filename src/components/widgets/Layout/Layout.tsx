@@ -10,11 +10,11 @@ import { Header } from '../header/Header';
 import { Loader } from '../loader/Loader';
 
 export function Layout() {
-    const [isDisplay, setIsDisplay] = useState<boolean>(true);
+    const [isDisplay, setIsDisplay] = useState(true);
     const location = useLocation();
 
     useEffect(() => {
-        const pathNames = location.pathname.split('/').filter((x) => x);
+        const pathNames = location.pathname.split('/').filter(Boolean);
         if (pathNames[0] === 'login' || pathNames[0] === 'register') {
             setIsDisplay(false);
             return;

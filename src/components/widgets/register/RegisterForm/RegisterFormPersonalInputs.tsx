@@ -1,18 +1,13 @@
 import { Box, Button, FormControl, FormLabel, Input, VStack } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
+import { useValidationPassword } from '~/components/hooks/useValidationPassword';
 import { setAppLoader } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
-    isEmailValidSelect,
-    isFirstNameValidSelect,
-    isSubNameValidSelect,
     progressSelect,
     setEmail,
     setFirstName,
-    setIsEmailValid,
-    setIsFirstNameValid,
-    setIsSubNameValid,
     setLastName,
     userEmailSelect,
     userFirstNameSelect,
@@ -28,99 +23,30 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
 
     const progressBar = useAppSelector(progressSelect);
 
-    const firstLetterRegExp = new RegExp('^[А-Я]');
-    const allRegExp = new RegExp('^[А-Яа-я-ё]{1,}$');
-    const emailRegExp = new RegExp(
-        '^[A-Za-z0-9._%+-]{1,}(?<!\\.)@([A-Za-z0-9-]{1,})(\\.[A-Za-z]{2,})+$',
-    );
-    const [firstNameError, setFirstNameError] = useState<string>('');
-    const [subNameError, setSubNameError] = useState<string>('');
-    const [emailError, setEmailError] = useState<string>('');
-    const isFirstNameValid = useAppSelector(isFirstNameValidSelect);
-    const isEmailValid = useAppSelector(isEmailValidSelect);
-    const isSubNameValid = useAppSelector(isSubNameValidSelect);
-    const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
-
+    const [isFirstMount, setIsFirstMount] = useState(true);
+    const {
+        emailState,
+        firstNameState,
+        lastNameState,
+        validateEmail,
+        validateFirstName,
+        validateLastName,
+    } = useValidationPassword({
+        email: { required: true, minLength: 0, maxLength: 50 },
+        firstName: { required: true, minLength: 0, maxLength: 50 },
+        lastName: { required: true, minLength: 0, maxLength: 50 },
+    });
     const emailCheck = (value: string) => {
-        if (value.length && value.length <= 50) {
-            const isMatch = emailRegExp.test(value);
-            if (isMatch) {
-                dispatch(setIsEmailValid(true));
-                setEmailError('');
-                return;
-            }
-            dispatch(setIsEmailValid(false));
-            setEmailError('Введите корректный e-mail');
-            return;
-        }
-        if (value.length === 0) {
-            dispatch(setIsEmailValid(false));
-            setEmailError('Введите e-mail');
-            return;
-        }
-        dispatch(setIsEmailValid(false));
-        setEmailError('Максимальная длина 50 символов');
-        return;
+        validateEmail(value);
     };
 
     const firstNameCheck = (value: string) => {
-        if (value.length && value.length <= 50) {
-            const isMatchByLetters = firstLetterRegExp.test(value);
-            const isMatchByAll = allRegExp.test(value);
-            if (isMatchByAll && isMatchByLetters) {
-                setFirstNameError('');
-                dispatch(setIsFirstNameValid(true));
-                return;
-            }
-            if (!isMatchByLetters) {
-                setFirstNameError('Должно начинаться с кириллицы А-Я');
-                dispatch(setIsFirstNameValid(false));
-                return;
-            }
-            if (!isMatchByAll) {
-                setFirstNameError('Только кириллица А-Я, и "-"');
-                dispatch(setIsFirstNameValid(false));
-                return;
-            }
-        }
-        if (value.length === 0) {
-            setFirstNameError('Введите имя');
-            dispatch(setIsFirstNameValid(false));
-            return;
-        }
-        setFirstNameError('Максимальная длина 50 символов');
-        dispatch(setIsFirstNameValid(false));
+        validateFirstName(value);
     };
 
     const subNameCheck = (value: string) => {
-        if (value.length && value.length <= 50) {
-            const isMatchByLetters = firstLetterRegExp.test(value);
-            const isMatchByAll = allRegExp.test(value);
-            if (isMatchByAll && isMatchByLetters) {
-                setSubNameError('');
-                dispatch(setIsSubNameValid(true));
-                return;
-            }
-            if (!isMatchByLetters) {
-                setSubNameError('Должно начинаться с кириллицы А-Я');
-                dispatch(setIsSubNameValid(false));
-                return;
-            }
-            if (!isMatchByAll) {
-                setSubNameError('Только кириллица А-Я, и "-"');
-                dispatch(setIsSubNameValid(false));
-                return;
-            }
-        }
-        if (value.length === 0) {
-            setSubNameError('Введите фамилию');
-            dispatch(setIsSubNameValid(false));
-            return;
-        }
-        setSubNameError('Максимальная длина 50 символов');
-        dispatch(setIsSubNameValid(false));
+        validateLastName(value);
     };
-
     const firstName = useAppSelector(userFirstNameSelect);
     const lastName = useAppSelector(userLastNameSelect);
     const email = useAppSelector(userEmailSelect);
@@ -156,19 +82,19 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
         emailCheck(newValue);
     };
     const submitCheck = () => {
-        if (!isFirstNameValid) {
+        if (!firstNameState.isValid) {
             const newValue = firstName.trim();
             firstNameCheck(newValue);
         }
-        if (!isSubNameValid) {
+        if (!lastNameState.isValid) {
             const newValue = lastName.trim();
             subNameCheck(newValue);
         }
-        if (!isEmailValid) {
+        if (!emailState.isValid) {
             const newValue = email.trim();
             emailCheck(newValue);
         }
-        if (isFirstNameValid && isSubNameValid && isEmailValid) {
+        if (firstNameState.isValid && lastNameState.isValid && emailState.isValid) {
             return true;
         }
         return false;
@@ -231,7 +157,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         h='48px'
                         placeholder='Имя'
                         value={firstName}
-                        isInvalid={!isFirstNameValid}
+                        isInvalid={!firstNameState.isValid}
                         onBlur={trimFirstName}
                         onChange={handleChangeFirstName}
                         sx={{
@@ -244,7 +170,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         }}
                     />
                 </FormControl>
-                {!isFirstNameValid && (
+                {!firstNameState.isValid && (
                     <Box
                         w={{
                             base: '100%',
@@ -257,7 +183,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         fontFamily='Inter'
                         color='#E53E3E'
                     >
-                        {firstNameError}
+                        {firstNameState.error}
                     </Box>
                 )}
             </Box>
@@ -291,7 +217,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         h='48px'
                         placeholder='Фамилия'
                         value={lastName}
-                        isInvalid={!isSubNameValid}
+                        isInvalid={!lastNameState.isValid}
                         onChange={handleChangeLastName}
                         onBlur={trimLastName}
                         sx={{
@@ -304,7 +230,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         }}
                     />
                 </FormControl>
-                {!isSubNameValid && (
+                {!lastNameState.isValid && (
                     <Box
                         w={{
                             base: '100%',
@@ -317,7 +243,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         fontFamily='Inter'
                         color='#E53E3E'
                     >
-                        {subNameError}
+                        {lastNameState.error}
                     </Box>
                 )}
             </Box>
@@ -351,7 +277,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         h='48px'
                         placeholder='e-mail'
                         value={email}
-                        isInvalid={!isEmailValid}
+                        isInvalid={!emailState.isValid}
                         onChange={handleChangeEmail}
                         onBlur={trimEmail}
                         sx={{
@@ -364,7 +290,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         }}
                     />
                 </FormControl>
-                {!isEmailValid && (
+                {!emailState.isValid && (
                     <Box
                         w={{
                             base: '100%',
@@ -377,7 +303,7 @@ export function RegisterFormPersonalInputs({ onClick }: RegisterButtonProps) {
                         fontFamily='Inter'
                         color='#E53E3E'
                     >
-                        {emailError}
+                        {emailState.error}
                     </Box>
                 )}
                 <Button

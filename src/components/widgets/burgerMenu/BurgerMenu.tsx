@@ -27,7 +27,7 @@ import exiticon from '../../../someimages/exitIcon.png';
 export function BurgerMenu() {
     const location = useLocation();
     const isOpen = useAppSelector(selectorIsBurgerOpen);
-    const pathNames = location.pathname.split('/').filter((x) => x);
+    const pathNames = location.pathname.split('/').filter(Boolean);
     const dispatch = useAppDispatch();
     const toggleMenu = () => {
         dispatch(setIsBurgerOpen());
@@ -39,8 +39,7 @@ export function BurgerMenu() {
         xl: '',
     });
     const { data: categoriesResponse, isError, isLoading } = useGetCategoriesQuery({});
-    const categoryData = categoriesResponse?.length ? categoriesResponse : [];
-    const data = Array.isArray(categoryData) ? categoryData : [];
+    const data = categoriesResponse?.length ? categoriesResponse : [];
     const filteredData = data?.filter((item) => item.subCategories !== undefined);
     useEffect(() => {
         if (!isLoading) {
@@ -61,9 +60,6 @@ export function BurgerMenu() {
         localStorage.setItem('navMenu', JSON.stringify(filteredData));
     }
 
-    // if (isLoading || isFetching) {
-    //     return <Loader />;
-    // }
     return (
         <>
             <Box onClick={toggleMenu} zIndex='11'>
