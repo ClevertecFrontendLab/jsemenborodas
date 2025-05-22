@@ -45,7 +45,7 @@ export function AppRoutes() {
             maxW={{ xl: 'calc(100vw)' }}
             overflow='hidden'
         >
-            {!isAuthPage && isAuth && (
+            {!isAuthPage && (
                 <GridItem>
                     <Header />
                 </GridItem>
@@ -94,7 +94,7 @@ export function AppRoutes() {
                 </RouterRoutes>
             </GridItem>
 
-            {!isAuthPage && isAuth && (
+            {!isAuthPage && (
                 <>
                     <GridItem>
                         <Footer />
