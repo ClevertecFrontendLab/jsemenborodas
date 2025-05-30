@@ -34,6 +34,11 @@ export function Slider() {
         '2xl': '322px',
     });
 
+    const isTouchMoveAllowed = useBreakpointValue({
+        base: true,
+        xl: false,
+    });
+
     const cardHeight = useBreakpointValue({
         base: '220px',
         xl: '402px',
@@ -71,7 +76,7 @@ export function Slider() {
                 data-test-id='carousel'
                 loop={true}
                 modules={[Navigation]}
-                allowTouchMove={true}
+                allowTouchMove={isTouchMoveAllowed}
                 style={{
                     minWidth: swiperWidth,
                     maxWidth: swiperWidth,

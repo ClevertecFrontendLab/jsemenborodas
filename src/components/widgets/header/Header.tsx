@@ -91,17 +91,32 @@ export function Header() {
                         maxW={{ xl: '1152.8px' }}
                         w='100%'
                     >
-                        <Hide above='xl'>
-                            <Box w={14} h={6} display={isBurgerOrFilterOpen() ? 'none' : 'block'}>
-                                <Metrics icon={FavouriteNotes}>185</Metrics>
-                            </Box>
-                            <Box w='58px' h={6} display={isBurgerOrFilterOpen() ? 'none' : 'block'}>
-                                <Metrics icon={Subscribers}>589</Metrics>
-                            </Box>
-                            <Box w='57px' h={6} display={isBurgerOrFilterOpen() ? 'none' : 'block'}>
-                                <Metrics icon={Likes}>587</Metrics>
-                            </Box>
-                        </Hide>
+                        {pathNames[0] !== 'new-recipe' && (
+                            <Hide above='xl'>
+                                <Box
+                                    w={14}
+                                    h={6}
+                                    display={isBurgerOrFilterOpen() ? 'none' : 'block'}
+                                >
+                                    <Metrics icon={FavouriteNotes}>185</Metrics>
+                                </Box>
+                                <Box
+                                    w='58px'
+                                    h={6}
+                                    display={isBurgerOrFilterOpen() ? 'none' : 'block'}
+                                >
+                                    <Metrics icon={Subscribers}>589</Metrics>
+                                </Box>
+                                <Box
+                                    w='57px'
+                                    h={6}
+                                    display={isBurgerOrFilterOpen() ? 'none' : 'block'}
+                                >
+                                    <Metrics icon={Likes}>587</Metrics>
+                                </Box>
+                            </Hide>
+                        )}
+
                         <Show above='xl'>
                             <Box
                                 as='span'

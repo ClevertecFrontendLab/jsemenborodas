@@ -8,6 +8,7 @@ import { userAuthSelector } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 
 import { RoutesConsts } from '../consts/RoutesConsts';
+import { CreateNewRecipePage } from '../Pages/createNewRecipe/CreateNewRecipePage';
 import { DefaultPage } from '../Pages/defaultPage/DefaultPage';
 import { ErrorPage } from '../Pages/errorPage/ErrorPage';
 import { JuciestPage } from '../Pages/juciest/JuciestPage';
@@ -83,7 +84,10 @@ export function AppRoutes() {
                                 ))}
                             </Route>
                         ))}
-
+                        <Route
+                            path={RoutesConsts.newRecipe}
+                            element={<CreateNewRecipePage />}
+                        ></Route>
                         <Route path={RoutesConsts.juiciest} element={<JuciestPage />} />
                         <Route path={`${RoutesConsts.juiciest}/*`} element={<RecipePage />} />
                         <Route path={`${RoutesConsts.vegan}/*`} element={<VeganKitchenPage />} />
