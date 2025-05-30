@@ -14,6 +14,27 @@ interface CategoriesProps {
     limit?: number;
     page?: number;
 }
+type Step = {
+    stepNumber: number;
+    description: string;
+    image: string;
+};
+
+type ingridient = {
+    title: string;
+    count: number;
+    measureUnit: string;
+};
+type Recipe = {
+    title: string;
+    description: string;
+    time: number;
+    categoriesIds: string[];
+    portions: number;
+    image: string;
+    steps: Step[];
+    ingredients: ingridient[];
+};
 
 export const categoryApiSlice = apiSlice
     .enhanceEndpoints({
@@ -97,6 +118,17 @@ export const categoryApiSlice = apiSlice
                 },
                 keepUnusedDataFor: Infinity,
             }),
+            createRecipe: builder.mutation<void, Recipe>({
+                query: (restoreRequest) => ({
+                    url: ApiEndpoints.TEST,
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+                    body: restoreRequest,
+                    apiGroupName: ApiGroupNames.RECIPES,
+                    name: EndpointNames.GET_RECIPES,
+                }),
+                invalidatesTags: [Tags.RECIPES],
+            }),
         }),
     });
 
@@ -104,4 +136,5 @@ export const {
     useGetRecipeByCategoryQuery,
     useGetRecipeByLikesQuery,
     useGetRecipeByCreateDateQuery,
+    useCreateRecipeMutation,
 } = categoryApiSlice;

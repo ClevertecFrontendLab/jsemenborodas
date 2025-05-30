@@ -4,6 +4,7 @@ import { apiSlice } from '~/query/create-api';
 
 import appReducer, { appSlice } from './app-slice';
 import authReducer, { authModalsSlice } from './reducers/authModals';
+import createRecipeReducer, { createRecipeSlice } from './reducers/createRecipe';
 import filterReducer, { filterSlice } from './reducers/filter';
 import openReducer, { openSlice } from './reducers/open';
 import searchReducer, { searchSlice } from './reducers/search';
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     [filterSlice.name]: filterReducer,
     [userSlice.name]: userReducer,
     [authModalsSlice.name]: authReducer,
+    [createRecipeSlice.name]: createRecipeReducer,
 });
 
 export type ApplicationState = ReturnType<typeof rootReducer>;
