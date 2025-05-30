@@ -1,4 +1,6 @@
 import {
+    Box,
+    Checkbox,
     Flex,
     FlexProps,
     HStack,
@@ -6,6 +8,7 @@ import {
     InputGroup,
     Menu,
     MenuButton,
+    MenuItem,
     MenuList,
     NumberDecrementStepper,
     NumberIncrementStepper,
@@ -17,10 +20,26 @@ import {
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
 import { useState } from 'react';
+
+import { useGetCategoriesQuery } from '~/query/services/categories';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { addCategory, removeCategory, selectCategories } from '~/store/reducers/search';
 export function Header() {
     const [isTagMenuOpen, setIsTagMenuOpen] = useState(false);
+    const dispatch = useAppDispatch();
     const [peopleCounter, setPeopleCounter] = useState(1);
     const [timeCounter, setTimeCounter] = useState(1);
+    const { data: categoriesResponse } = useGetCategoriesQuery({});
+    const handleCategories = (category: string) => {
+        if (categories?.includes(category)) {
+            dispatch(removeCategory(category));
+            return;
+        }
+        dispatch(addCategory(category));
+    };
+
+    const categories = useAppSelector(selectCategories);
+    const catData = categoriesResponse?.length ? categoriesResponse : [];
     const handlePeopleChange = (valueString: string) => {
         const valueNumber = parseInt(valueString, 10);
         setPeopleCounter(valueNumber);
@@ -32,6 +51,7 @@ export function Header() {
     const flexDirection = useBreakpointValue<FlexProps['direction']>({
         base: 'column',
     });
+    const visibleItemsCount = useBreakpointValue({ base: 1, xl: 2 });
     return (
         <>
             <Flex
@@ -54,6 +74,7 @@ export function Header() {
                         Выберите не менее 3-х тегов
                     </Text>
                     <Menu
+                        closeOnSelect={false}
                         onOpen={() => setIsTagMenuOpen(true)}
                         onClose={() => setIsTagMenuOpen(false)}
                     >
@@ -62,34 +83,123 @@ export function Header() {
                             h={10}
                             border='1px solid rgba(0, 0, 0, 0.08)'
                         >
-                            <HStack spacing={{ md: 3 }} justifyContent={{ xl: 'space-between' }}>
-                                <Text
-                                    fontFamily='Inter'
-                                    fontWeight={400}
-                                    fontSize={16}
-                                    lineHeight='24px'
-                                    color='rgba(0, 0, 0, 0.64)'
-                                    textAlign='left'
-                                    whiteSpace='nowrap'
-                                    textOverflow='ellipsis'
-                                    overflow='hidden'
-                                    pl={{ base: 4, xl: 6 }}
-                                >
-                                    Выберите из списка...
-                                </Text>
+                            <HStack
+                                spacing={{ md: 2 }}
+                                overflow='hidden'
+                                pl={2}
+                                position='relative'
+                            >
+                                {categories && categories.length ? (
+                                    categories.slice(0, visibleItemsCount).map((cat) => (
+                                        <Box
+                                            border='1px solid #B1FF2E'
+                                            borderRadius='6px'
+                                            h='24px'
+                                            px={2}
+                                            py='2px'
+                                            whiteSpace='nowrap'
+                                        >
+                                            <Text
+                                                lineHeight='16px'
+                                                fontSize='12px'
+                                                fontWeight={500}
+                                                fontFamily='Inter'
+                                                color='#2DB100'
+                                            >
+                                                {cat}
+                                            </Text>
+                                        </Box>
+                                    ))
+                                ) : (
+                                    <Text
+                                        fontFamily='Inter'
+                                        fontWeight={400}
+                                        fontSize={16}
+                                        lineHeight='24px'
+                                        color='rgba(0, 0, 0, 0.64)'
+                                        textAlign='left'
+                                        whiteSpace='nowrap'
+                                        textOverflow='ellipsis'
+                                        overflow='hidden'
+                                        pr={{ base: 42 }}
+                                        pl={
+                                            categories?.length
+                                                ? { base: 4, xl: 6 }
+                                                : { base: 2, xl: 6 }
+                                        }
+                                    >
+                                        Выберите из списка...
+                                    </Text>
+                                )}
+                                {categories &&
+                                    visibleItemsCount &&
+                                    categories?.length > visibleItemsCount && (
+                                        <Box
+                                            lineHeight='16px'
+                                            fontSize='12px'
+                                            fontWeight={500}
+                                            fontFamily='Inter'
+                                            color='#2DB100'
+                                            border='1px solid #B1FF2E'
+                                            borderRadius='6px'
+                                            h='24px'
+                                            px={2}
+                                            py='2px'
+                                            whiteSpace='nowrap'
+                                        >
+                                            <Text
+                                                lineHeight='16px'
+                                                fontSize='12px'
+                                                fontWeight={500}
+                                                fontFamily='Inter'
+                                                color='#2DB100'
+                                            >
+                                                +{categories.length - visibleItemsCount}
+                                            </Text>
+                                        </Box>
+                                    )}
                                 <Image
                                     src='/src/components/shared/images/icons/arrowDown.png'
-                                    pr={{ base: 3, xl: 1 }}
+                                    position='absolute'
+                                    right={{ base: 3, xl: 1 }}
                                     display={isTagMenuOpen ? 'none' : ''}
                                 />
                                 <Image
                                     src='/src/components/shared/images/icons/arrowUp.png'
-                                    pr={{ base: 3, xl: 1 }}
+                                    position='absolute'
+                                    right={{ base: 3, xl: 1 }}
                                     display={isTagMenuOpen ? '' : 'none'}
                                 />
                             </HStack>
                         </MenuButton>
-                        <MenuList></MenuList>
+                        <MenuList>
+                            {catData &&
+                                catData
+                                    ?.filter((cat) => cat.subCategories !== undefined)
+                                    .map((item, index) => (
+                                        <MenuItem
+                                            bg={index % 2 === 0 ? '#0000000F' : '#FFFFFF'}
+                                            key={`filter-${item._id}`}
+                                        >
+                                            <Checkbox
+                                                isChecked={categories?.includes(item.title)}
+                                                onChange={() => {
+                                                    handleCategories(item.title);
+                                                }}
+                                            >
+                                                <Text
+                                                    data-test-id={
+                                                        item.category === 'vegan'
+                                                            ? 'checkbox-веганская кухня'
+                                                            : ''
+                                                    }
+                                                >
+                                                    {item.title}
+                                                </Text>
+                                            </Checkbox>
+                                        </MenuItem>
+                                    ))}
+                        </MenuList>
                     </Menu>
                 </HStack>
                 <InputGroup>

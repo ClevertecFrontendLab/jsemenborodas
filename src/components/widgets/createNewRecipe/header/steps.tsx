@@ -7,20 +7,41 @@ import {
     HStack,
     Icon,
     Image,
+    Input,
     Text,
     Textarea,
     useBreakpointValue,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
-import { BlackPlus, DefaultImage } from '../assets/Icons';
+import { useUploadImageMutation } from '~/query/services/upload';
+import { FipleUploadResponce } from '~/query/types/types';
+
+import { BlackPlus, DefaultImage, DeleteButton } from '../assets/Icons';
+type Card = {
+    step: number;
+    stepDescription: string;
+};
 export function Steps() {
-    const [recipeImage, _setRecipeImage] = useState('');
-    const [step, setStep] = useState([1]);
-
+    const [step, setStep] = useState<Card[]>([{ step: 1, stepDescription: '' }]);
+    const [recipeImage, setRecipeImage] = useState<string[]>(Array(step.length).fill(''));
+    const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const addStep = () => {
-        setStep((prev) => [...prev, prev.length + 1]);
+        setStep((prev) => [...prev, { step: step.length + 1, stepDescription: '' }]);
+        setRecipeImage((prev) => [...prev, '']);
     };
+
+    const deleteStep = (index: number) => {
+        setStep((prev) =>
+            prev.filter((_, i) => i !== index).map((s, i) => ({ ...s, step: i + 1 })),
+        );
+        setRecipeImage((prev) => prev.filter((_, i) => i !== index));
+    };
+
+    const changeDescription = (index: number, value: string) => {
+        setStep((prev) => prev.map((s, i) => (i === index ? { ...s, stepDescription: value } : s)));
+    };
+
     const recipeImageWidth = useBreakpointValue({
         base: '328px',
         md: '346px',
@@ -28,6 +49,36 @@ export function Steps() {
     const recipeImageHeight = useBreakpointValue({
         base: '160px',
     });
+
+    const filePicker = useRef<HTMLInputElement>(null);
+    const [fileUpload] = useUploadImageMutation();
+
+    const handleImageClick = (index: number) => {
+        setSelectedIndex(index);
+        filePicker.current?.click();
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files && event.target.files[0];
+        uploadFile(selectedIndex, file);
+    };
+
+    const uploadFile = async (index: number, file: File | null) => {
+        if (file) {
+            console.log('changed');
+            const formData = new FormData();
+            formData.append('file', file);
+            const responce = (await fileUpload(formData)) as FipleUploadResponce;
+            if ('data' in responce) {
+                setRecipeImage((prev) =>
+                    prev.map((r, i) => (i === index ? (r = responce.data.url) : r)),
+                );
+                return;
+            }
+            setRecipeImage((prev) => prev.map((r, i) => (i === index ? (r = '') : r)));
+        }
+    };
+
     return (
         <>
             <Text
@@ -57,17 +108,19 @@ export function Steps() {
                         flexDirection={{ md: 'row' }}
                     >
                         <CardHeader p={0} boxShadow='none'>
-                            {recipeImage.length ? (
+                            {recipeImage[index].length ? (
                                 <Image
+                                    onClick={() => handleImageClick(index)}
                                     minW={recipeImageWidth}
                                     maxW={recipeImageWidth}
                                     minH={recipeImageHeight}
                                     maxH={recipeImageHeight}
-                                    src={recipeImage}
+                                    src={`https://training-api.clevertec.ru/${recipeImage[index]}`}
                                     alt='defaultImage'
                                 ></Image>
                             ) : (
                                 <Box
+                                    onClick={() => handleImageClick(index)}
                                     minW={recipeImageWidth}
                                     maxW={recipeImageWidth}
                                     minH={recipeImageHeight}
@@ -81,7 +134,16 @@ export function Steps() {
                                 </Box>
                             )}
                         </CardHeader>
-                        <CardBody boxShadow='none'>
+                        <CardBody boxShadow='none' position='relative'>
+                            <Icon
+                                as={DeleteButton}
+                                position='absolute'
+                                w='14px'
+                                h='14px'
+                                top={6}
+                                right={5}
+                                onClick={() => deleteStep(index)}
+                            ></Icon>
                             <Box
                                 w='fit-content'
                                 borderRadius='4px'
@@ -95,10 +157,14 @@ export function Steps() {
                                     fontSize={12}
                                     lineHeight={4}
                                 >
-                                    Шаг {s}
+                                    Шаг {s.step}
                                 </Text>
                             </Box>
                             <Textarea
+                                value={step[index].stepDescription}
+                                onChange={(e) => {
+                                    changeDescription(index, e.target.value);
+                                }}
                                 placeholder='Шаг'
                                 mt={4}
                                 p={0}
@@ -123,7 +189,7 @@ export function Steps() {
                     </Card>
                 ))}
                 <Box
-                    w={{ base: '98.5%', md: '604px', xl: 658, '2xl': 668 }}
+                    w={{ base: '100%', md: '604px', xl: 658, '2xl': 668 }}
                     textAlign='right'
                     mt={{ base: 4 }}
                 >
@@ -148,6 +214,19 @@ export function Steps() {
                         </HStack>
                     </Button>
                 </Box>
+                <Input
+                    type='file'
+                    accept='image/*, .png, .jpg, .web'
+                    opacity='0'
+                    height={0}
+                    w={0}
+                    lineHeight={0}
+                    p={0}
+                    m={0}
+                    overflow='hidden'
+                    onChange={(e) => handleChange(e)}
+                    ref={filePicker}
+                ></Input>
             </Box>
         </>
     );

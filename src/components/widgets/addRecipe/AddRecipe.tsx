@@ -1,13 +1,16 @@
 import { Box, Button, VStack } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { Image } from '@chakra-ui/react';
+import { useNavigate } from 'react-router';
 
 import Notes from '../../../assets/images/Notes.png';
 export function AddRecipe() {
+    const navigate = useNavigate();
     return (
         <>
             <Box w='208px' h='208px'>
                 <Button
+                    onClick={() => navigate('/new-recipe')}
                     w='100%'
                     h='100%'
                     _hover={{ background: 'normal' }}

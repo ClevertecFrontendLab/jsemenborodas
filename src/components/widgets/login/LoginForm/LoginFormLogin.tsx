@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router';
 import { AlertConst } from '~/components/consts/AlertConsts';
 import { ErrorStatus } from '~/components/consts/ErrorStatus';
 import { useValidationLogin } from '~/components/hooks/useValidationLogin';
-import { useGetAuthMutation } from '~/query/services/auth';
+import { useGetAuthMutation, useGetRefreshTokenMutation } from '~/query/services/auth';
 import { setAppError, setAppLoader, setIsAuth } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { toggleIsAlertOpen, toggleIsResetPasswordOpen } from '~/store/reducers/authModals';
@@ -53,6 +53,7 @@ export function LoginFormLogin() {
     const togglePasswordVisibility = () => {
         setShowPasswordBoolean(!ShowPasswordBoolean);
     };
+    const [updateRefreshToken] = useGetRefreshTokenMutation();
     const resetPasswordVisibility = () => {
         setShowPasswordBoolean(false);
     };
@@ -71,6 +72,8 @@ export function LoginFormLogin() {
                 const responce = await getAuth({ login: login, password: password });
                 if ('data' in responce) {
                     sessionStorage.setItem('isAuth', 'true');
+                    const responceRefresh = updateRefreshToken();
+                    console.log(responceRefresh);
                     navigate('/');
                     dispatch(setIsAuth(true));
                     dispatch(setAppLoader(false));

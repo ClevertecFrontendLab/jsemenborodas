@@ -9,8 +9,8 @@ export function Buttons() {
             <Stack
                 mt={{ base: 6, xl: 8 }}
                 spacing={{ base: 5 }}
-                flexDirection={{ md: 'row' }}
-                mx={{ md: 'auto' }}
+                flexDirection={{ base: 'column', md: 'row' }}
+                mx='auto'
                 w={{ xl: 720, '2xl': 788 }}
             >
                 <Button

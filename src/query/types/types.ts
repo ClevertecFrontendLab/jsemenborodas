@@ -111,3 +111,25 @@ export type RestoreRequest = {
     password?: string;
     passwordConfirm?: string;
 };
+
+export type UploadImageRequest = {
+    file: FormData;
+};
+
+export type FileUploadResponceSuccess = {
+    data: {
+        name: string;
+        url: string;
+        _id: string;
+    };
+};
+
+export type FileUploadResponceError = {
+    error: {
+        data: { message: string; statusCode: number };
+        status: number;
+    };
+};
+
+export type FipleUploadResponce = FileUploadResponceSuccess | FileUploadResponceError;
+export type MeasureUnit = { _id: string; name: string };

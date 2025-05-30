@@ -1,4 +1,5 @@
 import {
+    Box,
     Hide,
     HStack,
     Icon,
@@ -6,16 +7,54 @@ import {
     InputGroup,
     Menu,
     MenuButton,
+    MenuItem,
     MenuList,
     Show,
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 
-import { BlackPlus, Plus } from '../assets/Icons';
+import { useGetMeasureUnitsQuery } from '~/query/services/measureUnits';
+
+import { BlackPlus, DeleteButton, Plus } from '../assets/Icons';
+
+type Ingredient = {
+    ingredient: string;
+    count: string;
+    measure: string;
+};
 
 export function AddIngridients() {
-    const [isMeasureMenuOpen, setIsMeasureMenuOpen] = useState(false);
+    const [ingredients, setIngredients] = useState<Ingredient[]>([
+        { ingredient: '', count: '', measure: '' },
+    ]);
+    const [isMeasureMenuOpen, setIsMeasureMenuOpen] = useState<boolean[]>(
+        Array(ingredients.length).fill(false),
+    );
+    const addIngridients = () => {
+        setIngredients((prev) => [...prev, { ingredient: '', count: '', measure: '' }]);
+        setIsMeasureMenuOpen((prev) => [...prev, false]);
+    };
+
+    const deleteIngridient = (index: number) => {
+        setIngredients((prevIngredients) => prevIngredients.filter((_, i) => i !== index));
+        setIsMeasureMenuOpen((prev) => prev.filter((_, i) => i !== index));
+    };
+
+    const handleIngredientChange = (index: number, field: string, value: string) => {
+        setIngredients((prevIngredients) =>
+            prevIngredients.map((ingredient, i) =>
+                i === index ? { ...ingredient, [field]: value } : ingredient,
+            ),
+        );
+    };
+
+    const toggleMenu = (index: number, value: boolean) => {
+        setIsMeasureMenuOpen((prev) => prev.map((state, i) => (i === index ? value : state)));
+    };
+
+    const { data: measureUnits } = useGetMeasureUnitsQuery();
+
     return (
         <>
             <HStack
@@ -34,29 +73,13 @@ export function AddIngridients() {
                 </Text>
                 <Icon as={Plus}></Icon>
             </HStack>
-            <Hide above='md'>
-                <InputGroup>
-                    <Input
-                        w={{ base: '328px', md: '83%' }}
-                        textAlign='left'
-                        mt={1}
-                        h={10}
-                        placeholder='Ингредиент'
-                        sx={{
-                            '::placeholder': {
-                                fontFamily: 'Inter',
-                                fontWeight: 400,
-                                fontSize: '16px',
-                                lineHeight: '24px',
-                                color: 'rgba(0, 0, 0, 0.64)',
-                                pt: 2,
-                            },
-                        }}
-                    ></Input>
-                </InputGroup>
-            </Hide>
+
             <Show above='md'>
-                <HStack mt={{ base: 3, xl: 4, '2xl': 3 }} mx='auto' w={{ xl: 900, '2xl': 983 }}>
+                <HStack
+                    mt={{ base: 3, xl: 4, '2xl': 3 }}
+                    mx={{ md: 'auto' }}
+                    w={{ xl: 900, '2xl': 983 }}
+                >
                     <Text
                         w='295px'
                         h='24px'
@@ -101,89 +124,148 @@ export function AddIngridients() {
                     </Text>
                 </HStack>
             </Show>
-            <HStack spacing={{ base: 3, '2xl': 4 }} mx={{ md: 'auto' }} w={{ xl: 866, '2xl': 950 }}>
-                {' '}
-                <Show above='md'>
-                    <InputGroup w={{ md: '241px', xl: '295px' }}>
-                        <Input
-                            mt={1}
-                            w='100%'
-                            h={10}
-                            pl={4}
-                            letterSpacing='0.5px'
-                            placeholder='Ингредиент'
-                            sx={{
-                                '::placeholder': {
-                                    fontFamily: 'Inter',
-                                    fontWeight: 400,
-                                    fontSize: '16px',
-                                    lineHeight: '24px',
-                                    color: 'rgba(0, 0, 0, 0.64)',
-                                    pt: 2,
-                                },
-                            }}
-                        ></Input>
-                    </InputGroup>
-                </Show>
-                <InputGroup w={{ base: '80px' }}>
-                    <Input
-                        mt={1}
-                        h={10}
-                        w='100%'
-                        placeholder='100'
-                        sx={{
-                            '::placeholder': {
-                                fontFamily: 'Inter',
-                                fontWeight: 400,
-                                fontSize: '16px',
-                                lineHeight: '24px',
-                                color: 'rgba(0, 0, 0, 0.64)',
-                                pt: 2,
-                            },
-                        }}
-                    ></Input>
-                </InputGroup>
-                <Menu
-                    onOpen={() => setIsMeasureMenuOpen(true)}
-                    onClose={() => setIsMeasureMenuOpen(false)}
-                >
-                    <MenuButton
-                        minW={{ base: '196px', md: '215px' }}
-                        h={10}
-                        border='1px solid rgba(0, 0, 0, 0.08)'
-                        borderRadius='6px'
-                    >
-                        <HStack>
-                            <Text
-                                fontFamily='Inter'
-                                fontWeight={400}
-                                fontSize={16}
-                                lineHeight='24px'
-                                color='rgba(0, 0, 0, 0.64)'
+            {ingredients.map((ingredient, index) => (
+                <Box w='fit-content' mx='auto'>
+                    <Hide above='md'>
+                        <InputGroup>
+                            <Input
+                                w={{ base: '328px', md: '83%' }}
                                 textAlign='left'
-                                whiteSpace='nowrap'
-                                textOverflow='ellipsis'
-                                overflow='hidden'
-                                pl={4}
+                                mt={1}
+                                h={10}
+                                placeholder='Ингредиент'
+                                sx={{
+                                    '::placeholder': {
+                                        fontFamily: 'Inter',
+                                        fontWeight: 400,
+                                        fontSize: '16px',
+                                        lineHeight: '24px',
+                                        color: 'rgba(0, 0, 0, 0.64)',
+                                        pt: 2,
+                                    },
+                                }}
+                            ></Input>
+                        </InputGroup>
+                    </Hide>
+                    <HStack
+                        spacing={{ base: 3, '2xl': 4 }}
+                        mx={{ md: 'auto' }}
+                        w={{ xl: 866, '2xl': 950 }}
+                    >
+                        <Show above='md'>
+                            <InputGroup w={{ md: '241px', xl: '295px' }}>
+                                <Input
+                                    mt={1}
+                                    w='100%'
+                                    h={10}
+                                    pl={4}
+                                    letterSpacing='0.5px'
+                                    value={ingredient.ingredient}
+                                    onChange={(e) =>
+                                        handleIngredientChange(index, 'ingredient', e.target.value)
+                                    }
+                                    placeholder='Ингредиент'
+                                    sx={{
+                                        '::placeholder': {
+                                            fontFamily: 'Inter',
+                                            fontWeight: 400,
+                                            fontSize: '16px',
+                                            lineHeight: '24px',
+                                            color: 'rgba(0, 0, 0, 0.64)',
+                                            pt: 2,
+                                        },
+                                    }}
+                                ></Input>
+                            </InputGroup>
+                        </Show>
+                        <InputGroup w={{ base: '80px' }}>
+                            <Input
+                                mt={1}
+                                h={10}
+                                value={ingredient.count}
+                                w='100%'
+                                placeholder='100'
+                                onChange={(e) =>
+                                    handleIngredientChange(index, 'count', e.target.value)
+                                }
+                                sx={{
+                                    '::placeholder': {
+                                        fontFamily: 'Inter',
+                                        fontWeight: 400,
+                                        fontSize: '16px',
+                                        lineHeight: '24px',
+                                        color: 'rgba(0, 0, 0, 0.64)',
+                                        pt: 2,
+                                    },
+                                }}
+                            ></Input>
+                        </InputGroup>
+                        <Menu
+                            onOpen={() => toggleMenu(index, true)}
+                            onClose={() => toggleMenu(index, false)}
+                        >
+                            <MenuButton
+                                minW={{ base: '196px', md: '215px' }}
+                                h={10}
+                                border='1px solid rgba(0, 0, 0, 0.08)'
+                                borderRadius='6px'
                             >
-                                Единица измерения
-                            </Text>
-                            <Image
-                                src='/src/components/shared/images/icons/arrowDown.png'
-                                pr={3}
-                                display={isMeasureMenuOpen ? 'none' : ''}
-                            />
-                            <Image
-                                src='/src/components/shared/images/icons/arrowUp.png'
-                                pr={3}
-                                display={isMeasureMenuOpen ? '' : 'none'}
-                            />
-                        </HStack>
-                    </MenuButton>
-                    <MenuList></MenuList>
-                </Menu>
-                <Icon as={BlackPlus} w={8} h={8}></Icon>
-            </HStack>
+                                <HStack position='relative'>
+                                    <Text
+                                        fontFamily='Inter'
+                                        fontWeight={400}
+                                        fontSize={16}
+                                        lineHeight='24px'
+                                        color='rgba(0, 0, 0, 0.64)'
+                                        textAlign='left'
+                                        whiteSpace='nowrap'
+                                        textOverflow='ellipsis'
+                                        overflow='hidden'
+                                        pl={4}
+                                    >
+                                        {ingredient.measure || 'Единица измерения'}
+                                    </Text>
+                                    <Image
+                                        src='/src/components/shared/images/icons/arrowDown.png'
+                                        position='absolute'
+                                        right={3}
+                                        display={isMeasureMenuOpen[index] ? 'none' : ''}
+                                    />
+                                    <Image
+                                        src='/src/components/shared/images/icons/arrowUp.png'
+                                        position='absolute'
+                                        right={3}
+                                        display={isMeasureMenuOpen[index] ? '' : 'none'}
+                                    />
+                                </HStack>
+                            </MenuButton>
+                            <MenuList>
+                                {measureUnits?.map((mu) => (
+                                    <MenuItem
+                                        onClick={() =>
+                                            handleIngredientChange(index, 'measure', mu.name)
+                                        }
+                                    >
+                                        {mu.name}
+                                    </MenuItem>
+                                ))}
+                            </MenuList>
+                        </Menu>
+                        {index !== ingredients.length - 1 && (
+                            <Icon
+                                ml={2}
+                                as={DeleteButton}
+                                w='14px'
+                                h='14px'
+                                onClick={() => deleteIngridient(index)}
+                            ></Icon>
+                        )}
+                        {index === ingredients.length - 1 && (
+                            <Icon as={BlackPlus} w={8} h={8} onClick={addIngridients}></Icon>
+                        )}
+                    </HStack>
+                </Box>
+            ))}
         </>
     );
 }

@@ -1,10 +1,18 @@
 import { Grid, GridItem } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
-import { Navigate, Outlet, Route, Routes as RouterRoutes, useLocation } from 'react-router';
+import {
+    Navigate,
+    Outlet,
+    Route,
+    Routes as RouterRoutes,
+    useLocation,
+    useNavigate,
+} from 'react-router';
 
+import { useCheckRefreshTokenMutation } from '~/query/services/auth';
 import { useGetCategoriesQuery } from '~/query/services/categories';
-import { userAuthSelector } from '~/store/app-slice';
+import { setIsAuth, userAuthSelector } from '~/store/app-slice';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 
 import { RoutesConsts } from '../consts/RoutesConsts';
@@ -23,19 +31,44 @@ import { Footer } from '../widgets/footer/Footer';
 import { Header } from '../widgets/header/Header';
 import { Loader } from '../widgets/loader/Loader';
 
+type responceType = {
+    data?: { message?: string; statusText?: string };
+};
+
 export function AppRoutes() {
     const location = useLocation();
     const { data: categoriesAll, isLoading } = useGetCategoriesQuery({
         isOnlyParent: true,
     });
+    const navigate = useNavigate();
+    const [checkRefreshToken] = useCheckRefreshTokenMutation();
+    const [isAuthorisated, setIsAuthorisated] = useState(true);
     const isAuth = useAppSelector(userAuthSelector);
     const sessionAuth = sessionStorage.getItem('isAuth');
+    console.log(sessionAuth);
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const dispatch = useAppDispatch();
     const isAuthPage = ['login', 'register', 'verification'].includes(pathSegments[0]);
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [location.pathname, dispatch]);
+        const checkAuth = async () => {
+            const responce = (await checkRefreshToken()) as responceType;
+            if ('data' in responce) {
+                sessionStorage.setItem('isAuth', 'true');
+                console.log(sessionStorage.getItem('isAuth'));
+                dispatch(setIsAuth(true));
+                setIsAuthorisated(true);
+                if (location.pathname === '/login' || location.pathname === '/register')
+                    navigate('/');
+                return;
+            }
+            sessionStorage.removeItem('isAuth');
+            console.log('false');
+            dispatch(setIsAuth(false));
+            setIsAuthorisated(false);
+        };
+        checkAuth();
+    }, [location.pathname, dispatch, checkRefreshToken, navigate]);
 
     if (isLoading) return <Loader />;
 
@@ -59,7 +92,7 @@ export function AppRoutes() {
                     <Route path={RoutesConsts.register} element={<RegisterPage />} />
                     <Route path={RoutesConsts.verification} element={<VerificationPage />} />
 
-                    <Route element={<ProtectedRoute isAuth={isAuth || !!sessionAuth} />}>
+                    <Route element={<ProtectedRoute isAuth={isAuthorisated} />}>
                         <Route path='/' element={<Main />} />
 
                         {categoriesAll?.map((cat) => (

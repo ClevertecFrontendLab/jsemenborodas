@@ -29,9 +29,12 @@ export const authApiSlice = apiSlice
                     body: authrequest,
                     apiGroupName: ApiGroupNames.AUTH,
                     name: EndpointNames.GET_AUTH,
+                    credentials: 'include',
                 }),
                 transformResponse: (responce: SignInResponce, meta): SignInResponce => {
-                    const token = meta?.response?.headers.get('authentication-access');
+                    const token = meta?.response?.headers.get('Authentication-Access');
+                    console.log(token);
+                    localStorage.removeItem('accessToken');
                     if (token) {
                         localStorage.setItem('accessToken', token);
                     }
@@ -79,6 +82,26 @@ export const authApiSlice = apiSlice
                 }),
                 invalidatesTags: [Tags.AUTH],
             }),
+            getRefreshToken: builder.mutation<void, void>({
+                query: () => ({
+                    url: ApiEndpoints.REFRESHTOKEN,
+                    method: 'GET',
+                    credentials: 'include',
+                    apiGroupName: ApiGroupNames.AUTH,
+                    name: EndpointNames.GET_AUTH,
+                }),
+                invalidatesTags: [Tags.AUTH],
+            }),
+            checkRefreshToken: builder.mutation<void, void>({
+                query: () => ({
+                    url: ApiEndpoints.CHECKTOKEN,
+                    method: 'GET',
+                    credentials: 'include',
+                    apiGroupName: ApiGroupNames.AUTH,
+                    name: EndpointNames.GET_AUTH,
+                }),
+                invalidatesTags: [Tags.AUTH],
+            }),
         }),
     });
 
@@ -88,4 +111,6 @@ export const {
     useRestoreUserMutation,
     useVerifyOTPMutation,
     useResetPasswordMutation,
+    useGetRefreshTokenMutation,
+    useCheckRefreshTokenMutation,
 } = authApiSlice;

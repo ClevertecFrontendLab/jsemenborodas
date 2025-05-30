@@ -78,7 +78,6 @@ export function Filter() {
 
     const { data: categoriesResponse } = useGetCategoriesQuery({});
     const catData = categoriesResponse?.length ? categoriesResponse : [];
-
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleCategories = (category: string) => {
@@ -242,6 +241,7 @@ export function Filter() {
                                                 h='24px'
                                                 px={2}
                                                 py='2px'
+                                                whiteSpace='nowrap'
                                             >
                                                 <Text
                                                     fontFamily='Inter'
