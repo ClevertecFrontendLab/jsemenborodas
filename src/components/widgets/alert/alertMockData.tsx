@@ -49,4 +49,24 @@ export const alertMockData = [
         heading: 'Такого e-mail нет',
         description: 'Попробуйте другой e-mail или проверьте правильность его написания',
     },
+    {
+        errorMesage: 'RecipeExist',
+        heading: 'Ошибка',
+        description: 'Рецепт с таким названием уже существует',
+    },
+    {
+        errorMesage: 'RecipeServerError',
+        heading: 'Ошибка сервера',
+        description: 'Попробуйте пока сохранить в черновик',
+    },
+    {
+        errorMesage: 'DraftServerError',
+        heading: 'Ошибка сервера',
+        description: 'Не удалось сохранить черновик рецепта',
+    },
+    {
+        errorMesage: 'DraftError',
+        heading: 'Ошибка',
+        description: 'Не удалось сохранить черновик рецепта',
+    },
 ];

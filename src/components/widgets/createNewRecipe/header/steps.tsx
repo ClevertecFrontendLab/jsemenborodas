@@ -7,39 +7,58 @@ import {
     HStack,
     Icon,
     Image,
-    Input,
     Text,
     Textarea,
     useBreakpointValue,
 } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { useUploadImageMutation } from '~/query/services/upload';
-import { FipleUploadResponce } from '~/query/types/types';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import {
+    isStepUploadImageModalOpenSelect,
+    toggleIsStepUploadImageOpen,
+} from '~/store/reducers/authModals';
+import {
+    selectorIsSaveDraftStarted,
+    selectorIsValidateStarted,
+    setStep4,
+    setSteps,
+} from '~/store/reducers/createRecipe';
 
 import { BlackPlus, DefaultImage, DeleteButton } from '../assets/Icons';
+import { SaveStepImageModal } from './saveImageModal';
 type Card = {
-    step: number;
-    stepDescription: string;
+    stepNumber: number;
+    description: string;
+    image: string;
 };
 export function Steps() {
-    const [step, setStep] = useState<Card[]>([{ step: 1, stepDescription: '' }]);
+    const dispatch = useAppDispatch();
+    const isSaveDraftStarted = useAppSelector(selectorIsSaveDraftStarted);
+    const isValidateStarted = useAppSelector(selectorIsValidateStarted);
+    const [step, setStep] = useState<Card[]>([{ stepNumber: 1, description: '', image: '' }]);
+    const [isStepValidate, setIsStepValidate] = useState<boolean[]>([true]);
     const [recipeImage, setRecipeImage] = useState<string[]>(Array(step.length).fill(''));
-    const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const addStep = () => {
-        setStep((prev) => [...prev, { step: step.length + 1, stepDescription: '' }]);
+        setStep((prev) => [
+            ...prev,
+            { stepNumber: step.length + 1, description: '', image: 'none' },
+        ]);
         setRecipeImage((prev) => [...prev, '']);
     };
-
+    const isModalOpen = useAppSelector(isStepUploadImageModalOpenSelect);
+    const toggleModalOpen = () => {
+        dispatch(toggleIsStepUploadImageOpen());
+    };
     const deleteStep = (index: number) => {
         setStep((prev) =>
-            prev.filter((_, i) => i !== index).map((s, i) => ({ ...s, step: i + 1 })),
+            prev.filter((_, i) => i !== index).map((s, i) => ({ ...s, stepNumber: i + 1 })),
         );
         setRecipeImage((prev) => prev.filter((_, i) => i !== index));
     };
 
     const changeDescription = (index: number, value: string) => {
-        setStep((prev) => prev.map((s, i) => (i === index ? { ...s, stepDescription: value } : s)));
+        setStep((prev) => prev.map((s, i) => (i === index ? { ...s, description: value } : s)));
     };
 
     const recipeImageWidth = useBreakpointValue({
@@ -49,36 +68,45 @@ export function Steps() {
     const recipeImageHeight = useBreakpointValue({
         base: '160px',
     });
-
-    const filePicker = useRef<HTMLInputElement>(null);
-    const [fileUpload] = useUploadImageMutation();
-
-    const handleImageClick = (index: number) => {
-        setSelectedIndex(index);
-        filePicker.current?.click();
+    const uploadImage = (index: number, value: string) => {
+        setRecipeImage((prev) => prev.map((r, i) => (i === index ? value : r)));
     };
+    const [subStep, setSubStep] = useState(false);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files && event.target.files[0];
-        uploadFile(selectedIndex, file);
-    };
-
-    const uploadFile = async (index: number, file: File | null) => {
-        if (file) {
-            console.log('changed');
-            const formData = new FormData();
-            formData.append('file', file);
-            const responce = (await fileUpload(formData)) as FipleUploadResponce;
-            if ('data' in responce) {
-                setRecipeImage((prev) =>
-                    prev.map((r, i) => (i === index ? (r = responce.data.url) : r)),
-                );
-                return;
-            }
-            setRecipeImage((prev) => prev.map((r, i) => (i === index ? (r = '') : r)));
+    useEffect(() => {
+        if (isValidateStarted) {
+            setIsStepValidate(
+                step.map((s) => s.description.length !== 0 && s.description.length <= 300),
+            );
         }
-    };
+    }, [isValidateStarted, step]);
 
+    useEffect(() => {
+        if (step.every((s) => s.description.length) && isStepValidate.every((s) => s === true)) {
+            setSubStep(true);
+            return;
+        }
+        setSubStep(false);
+    }, [step, isStepValidate]);
+
+    if (subStep) {
+        const newStep = step.map((s, i) => ({
+            ...s,
+            image: recipeImage[i].length ? recipeImage[i] : 'defaultImage',
+        }));
+        dispatch(setSteps(newStep));
+        dispatch(setStep4(true));
+    } else {
+        dispatch(setStep4(false));
+    }
+    if (isSaveDraftStarted) {
+        const newStep = step.map((s, i) => ({
+            ...s,
+            image: recipeImage[i].length ? recipeImage[i] : 'defaultImage',
+        }));
+
+        dispatch(setSteps(newStep));
+    }
     return (
         <>
             <Text
@@ -107,10 +135,11 @@ export function Steps() {
                         display={{ md: 'flex' }}
                         flexDirection={{ md: 'row' }}
                     >
+                        {isModalOpen && <SaveStepImageModal onclick={uploadImage} index={index} />}
                         <CardHeader p={0} boxShadow='none'>
                             {recipeImage[index].length ? (
                                 <Image
-                                    onClick={() => handleImageClick(index)}
+                                    onClick={toggleModalOpen}
                                     minW={recipeImageWidth}
                                     maxW={recipeImageWidth}
                                     minH={recipeImageHeight}
@@ -120,7 +149,7 @@ export function Steps() {
                                 ></Image>
                             ) : (
                                 <Box
-                                    onClick={() => handleImageClick(index)}
+                                    onClick={toggleModalOpen}
                                     minW={recipeImageWidth}
                                     maxW={recipeImageWidth}
                                     minH={recipeImageHeight}
@@ -135,15 +164,17 @@ export function Steps() {
                             )}
                         </CardHeader>
                         <CardBody boxShadow='none' position='relative'>
-                            <Icon
-                                as={DeleteButton}
-                                position='absolute'
-                                w='14px'
-                                h='14px'
-                                top={6}
-                                right={5}
-                                onClick={() => deleteStep(index)}
-                            ></Icon>
+                            {step.length > 1 && (
+                                <Icon
+                                    as={DeleteButton}
+                                    position='absolute'
+                                    w='14px'
+                                    h='14px'
+                                    top={6}
+                                    right={5}
+                                    onClick={() => deleteStep(index)}
+                                ></Icon>
+                            )}
                             <Box
                                 w='fit-content'
                                 borderRadius='4px'
@@ -157,11 +188,11 @@ export function Steps() {
                                     fontSize={12}
                                     lineHeight={4}
                                 >
-                                    Шаг {s.step}
+                                    Шаг {s.stepNumber}
                                 </Text>
                             </Box>
                             <Textarea
-                                value={step[index].stepDescription}
+                                value={step[index].description}
                                 onChange={(e) => {
                                     changeDescription(index, e.target.value);
                                 }}
@@ -180,7 +211,11 @@ export function Steps() {
                                     },
                                 }}
                                 size='sm'
-                                border='1px solid rgba(226, 232, 240, 1)'
+                                border={
+                                    isStepValidate[index]
+                                        ? '1px solid rgba(226, 232, 240, 1)'
+                                        : '1px solid red'
+                                }
                                 borderRadius='6px'
                                 h={{ base: '116px', md: '84px' }}
                                 maxH={{ base: '130px', md: '100px' }}
@@ -214,19 +249,6 @@ export function Steps() {
                         </HStack>
                     </Button>
                 </Box>
-                <Input
-                    type='file'
-                    accept='image/*, .png, .jpg, .web'
-                    opacity='0'
-                    height={0}
-                    w={0}
-                    lineHeight={0}
-                    p={0}
-                    m={0}
-                    overflow='hidden'
-                    onChange={(e) => handleChange(e)}
-                    ref={filePicker}
-                ></Input>
             </Box>
         </>
     );

@@ -17,7 +17,7 @@ export interface Category {
 export interface step {
     stepNumber: number;
     description: string;
-    image: string;
+    image?: string;
 }
 
 export interface ingridient {
@@ -133,3 +133,36 @@ export type FileUploadResponceError = {
 
 export type FipleUploadResponce = FileUploadResponceSuccess | FileUploadResponceError;
 export type MeasureUnit = { _id: string; name: string };
+
+export type CreateRecipeError = {
+    error: {
+        data: {
+            error: string;
+            message: string;
+            statusCode: number;
+        };
+        status: 409;
+    };
+};
+
+export type CreateRecipeSuccess = {
+    data: recipe;
+};
+
+export type saveDraftSuccess = {
+    data: {
+        categoriesIds: string[];
+        description: string;
+        image: string;
+        ingredients: ingridient[];
+        portions: number;
+        steps: step[];
+        time: number;
+        title: string;
+        _id: string;
+    };
+};
+
+export type saveDraftError = {
+    error: { data: { error: string; message: string[]; statusCode: number }; status: number };
+};

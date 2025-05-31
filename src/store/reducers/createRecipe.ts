@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 type Step = {
     stepNumber: number;
     description: string;
-    image: string;
+    image?: string;
 };
 
 type ingridient = {
@@ -19,6 +19,15 @@ export interface CreateRecipeState {
     image: string;
     steps: Step[];
     ingredients: ingridient[];
+    isValidateStarted: boolean;
+    isValidateSuccess: boolean;
+    validSteps: {
+        step1: boolean;
+        step2: boolean;
+        step3: boolean;
+        step4: boolean;
+    };
+    isSaveDraftStarted: boolean;
 }
 
 const initialState: CreateRecipeState = {
@@ -30,6 +39,15 @@ const initialState: CreateRecipeState = {
     image: '',
     steps: [],
     ingredients: [],
+    isValidateStarted: false,
+    isValidateSuccess: false,
+    validSteps: {
+        step1: false,
+        step2: false,
+        step3: false,
+        step4: false,
+    },
+    isSaveDraftStarted: false,
 };
 
 export const createRecipeSlice = createSlice({
@@ -39,7 +57,7 @@ export const createRecipeSlice = createSlice({
         setTitle(state, { payload }: PayloadAction<string>) {
             state.title = payload;
         },
-        setDescription(state, { payload }: PayloadAction<string>) {
+        setDescriptionn(state, { payload }: PayloadAction<string>) {
             state.description = payload;
         },
         setTime(state, { payload }: PayloadAction<number>) {
@@ -55,10 +73,33 @@ export const createRecipeSlice = createSlice({
             state.image = payload;
         },
         setSteps(state, { payload }: PayloadAction<Step[]>) {
-            state.steps = payload;
+            state.steps = payload.map(({ image, ...s }) =>
+                image === 'defaultImage' ? s : { ...s, image },
+            );
         },
         setIngridients(state, { payload }: PayloadAction<ingridient[]>) {
             state.ingredients = payload;
+        },
+        setIsValidateStarted(state, { payload }: PayloadAction<boolean>) {
+            state.isValidateStarted = payload;
+        },
+        setIsSaveDraftStarted(state, { payload }: PayloadAction<boolean>) {
+            state.isSaveDraftStarted = payload;
+        },
+        setIsValidateSuccess(state, { payload }: PayloadAction<boolean>) {
+            state.isValidateSuccess = payload;
+        },
+        setStep1(state, { payload }: PayloadAction<boolean>) {
+            state.validSteps.step1 = payload;
+        },
+        setStep2(state, { payload }: PayloadAction<boolean>) {
+            state.validSteps.step2 = payload;
+        },
+        setStep3(state, { payload }: PayloadAction<boolean>) {
+            state.validSteps.step3 = payload;
+        },
+        setStep4(state, { payload }: PayloadAction<boolean>) {
+            state.validSteps.step4 = payload;
         },
     },
 });
@@ -78,15 +119,30 @@ export const selectorSteps = (state: { createRecipe: CreateRecipeState }) =>
     state.createRecipe.steps;
 export const selectorIngridients = (state: { createRecipe: CreateRecipeState }) =>
     state.createRecipe.ingredients;
+export const selectorIsValidateStarted = (state: { createRecipe: CreateRecipeState }) =>
+    state.createRecipe.isValidateStarted;
+export const selectorIsValidateSuccess = (state: { createRecipe: CreateRecipeState }) =>
+    state.createRecipe.isValidateSuccess;
+export const selectorValidSteps = (state: { createRecipe: CreateRecipeState }) =>
+    state.createRecipe.validSteps;
+export const selectorIsSaveDraftStarted = (state: { createRecipe: CreateRecipeState }) =>
+    state.createRecipe.isSaveDraftStarted;
 
 export const {
     setCategoriesIds,
-    setDescription,
+    setDescriptionn,
     setImage,
     setIngridients,
     setPortions,
     setSteps,
     setTime,
     setTitle,
-} = createRecipe.actions;
-export default createRecipe.reducer;
+    setIsValidateStarted,
+    setIsValidateSuccess,
+    setStep1,
+    setStep2,
+    setStep3,
+    setStep4,
+    setIsSaveDraftStarted,
+} = createRecipeSlice.actions;
+export default createRecipeSlice.reducer;

@@ -18,6 +18,7 @@ import { Burger, OpenBurger } from '~/icons/Icon';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { Category } from '~/query/types/types';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { setIsCloseAndSaveTemplateData } from '~/store/reducers/authModals';
 import { resetBurger, selectorIsBurgerOpen, setIsBurgerOpen } from '~/store/reducers/open';
 
 import exiticon from '../../../someimages/exitIcon.png';
@@ -145,7 +146,9 @@ export function BurgerMenu() {
                                         _expanded={{ bg: '#EAFFC7' }}
                                         onClick={() => {
                                             const path = `/${item.category}/${item.subCategories[0].category}`;
-                                            navigate(path);
+                                            pathNames[0] === 'new-recipe'
+                                                ? dispatch(setIsCloseAndSaveTemplateData(path))
+                                                : navigate(path);
                                         }}
                                     >
                                         <HStack

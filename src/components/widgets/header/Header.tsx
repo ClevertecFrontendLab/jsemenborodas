@@ -21,7 +21,6 @@ export function Header() {
     const isAuth = !!sessionAuth;
     const navigate = useNavigate();
     const pathNames = location.pathname.split('/').filter(Boolean);
-    console.log(pathNames);
     const isFilterOpen = useAppSelector(selectorIsFilterOpen);
     const isBurgerOrFilterOpen = () => {
         if (isBurgerOpen || isFilterOpen) {

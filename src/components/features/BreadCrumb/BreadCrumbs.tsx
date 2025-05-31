@@ -4,11 +4,17 @@ import { useLocation, useNavigate } from 'react-router';
 import { GetBreadcrumb } from '~/components/shared/utils/getBreadcrumbsUtil';
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { useGetRecipesQuery } from '~/query/services/recipes';
+import { useAppDispatch } from '~/store/hooks';
+import {
+    setIsCloseAndSaveTemplateData,
+    toggleIsCloseAndSaveTemplateOpen,
+} from '~/store/reducers/authModals';
 
 interface BreadcrumbsProps {}
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
     const location = useLocation();
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const displayPaths = location.pathname.split('/').filter(Boolean);
     const recipeId =
@@ -27,7 +33,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
         (cat) => (cat.category === displayPaths[0] && cat.subCategories !== undefined) || undefined,
     );
     const juiciest = 'the-juiciest';
-
+    const newRecipe = 'new-recipe';
     if (isCategoriesError) {
         return null;
     }
@@ -42,9 +48,33 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
             data-test-id='breadcrumbs'
         >
             <BreadcrumbItem>
-                <BreadcrumbLink href='/'>Главная</BreadcrumbLink>
+                <BreadcrumbLink
+                    href='/'
+                    onClick={(e) => {
+                        if (displayPaths[0] === newRecipe) {
+                            e.preventDefault();
+                            dispatch(setIsCloseAndSaveTemplateData('/'));
+                            dispatch(toggleIsCloseAndSaveTemplateOpen());
+                        }
+                    }}
+                >
+                    Главная
+                </BreadcrumbLink>
             </BreadcrumbItem>
-
+            {displayPaths[0] === newRecipe && (
+                <BreadcrumbItem>
+                    <BreadcrumbLink
+                        href={`/${newRecipe}`}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            dispatch(setIsCloseAndSaveTemplateData(`/${newRecipe}`));
+                            dispatch(toggleIsCloseAndSaveTemplateOpen());
+                        }}
+                    >
+                        Новый рецепт
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+            )}
             {displayPaths[0] === juiciest && (
                 <BreadcrumbItem>
                     <BreadcrumbLink href={`/${juiciest}`}>Самое сочное</BreadcrumbLink>
@@ -52,6 +82,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = () => {
             )}
 
             {displayPaths[0] !== juiciest &&
+                displayPaths[0] !== newRecipe &&
                 GetBreadcrumb(displayPaths, categories, redirectedCategory).map(
                     ({ key, name, secondRoute }) => (
                         <BreadcrumbItem key={key}>

@@ -88,7 +88,7 @@ export function AlertNote() {
             return () => clearTimeout(timer);
         }
     }, [error, dispatch]);
-
+    console.log(error);
     if (!error) return null;
     if (isModalOpen && error === 'ServerError') {
         return (
@@ -164,6 +164,7 @@ export function AlertNote() {
             </AbsoluteCenter>
         );
     }
+
     if (isModalOpen && error === 'EmailRegistrationError') {
         return (
             <AbsoluteCenter

@@ -12,39 +12,61 @@ import {
     Show,
 } from '@chakra-ui/react';
 import { Image, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useGetMeasureUnitsQuery } from '~/query/services/measureUnits';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import {
+    selectorIsSaveDraftStarted,
+    selectorIsValidateStarted,
+    setIngridients,
+    setStep3,
+} from '~/store/reducers/createRecipe';
 
 import { BlackPlus, DeleteButton, Plus } from '../assets/Icons';
 
 type Ingredient = {
-    ingredient: string;
-    count: string;
-    measure: string;
+    title: string;
+    count: number;
+    measureUnit: string;
 };
 
 export function AddIngridients() {
-    const [ingredients, setIngredients] = useState<Ingredient[]>([
-        { ingredient: '', count: '', measure: '' },
+    const dispatch = useAppDispatch();
+    const isValidateStarted = useAppSelector(selectorIsValidateStarted);
+    const [isNameOfIngridienstValid, setIsNameOfIngridienstValid] = useState<boolean[]>([true]);
+    const [isMeasureUnitesValid, setIsMeasureUnitsValid] = useState<boolean[]>([true]);
+    const isSaveDraftStarted = useAppSelector(selectorIsSaveDraftStarted);
+    const [ingredients, setIngredientsLocal] = useState<Ingredient[]>([
+        { title: '', count: 100, measureUnit: '' },
     ]);
     const [isMeasureMenuOpen, setIsMeasureMenuOpen] = useState<boolean[]>(
         Array(ingredients.length).fill(false),
     );
+    const [isCountValid, setIsCountValid] = useState<boolean[]>([true]);
     const addIngridients = () => {
-        setIngredients((prev) => [...prev, { ingredient: '', count: '', measure: '' }]);
+        setIngredientsLocal((prev) => [...prev, { title: '', count: 100, measureUnit: '' }]);
         setIsMeasureMenuOpen((prev) => [...prev, false]);
+        setIsNameOfIngridienstValid((prev) => [...prev, true]);
+        setIsCountValid((prev) => [...prev, true]);
     };
 
     const deleteIngridient = (index: number) => {
-        setIngredients((prevIngredients) => prevIngredients.filter((_, i) => i !== index));
+        setIngredientsLocal((prevIngredients) => prevIngredients.filter((_, i) => i !== index));
         setIsMeasureMenuOpen((prev) => prev.filter((_, i) => i !== index));
+        setIsNameOfIngridienstValid((prev) => prev.filter((_, i) => i !== index));
+        setIsCountValid((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleIngredientChange = (index: number, field: string, value: string) => {
-        setIngredients((prevIngredients) =>
+        setIngredientsLocal((prevIngredients) =>
             prevIngredients.map((ingredient, i) =>
-                i === index ? { ...ingredient, [field]: value } : ingredient,
+                i === index
+                    ? {
+                          ...ingredient,
+                          [field]: field === 'count' ? Number(value) : value,
+                      }
+                    : ingredient,
             ),
         );
     };
@@ -54,7 +76,33 @@ export function AddIngridients() {
     };
 
     const { data: measureUnits } = useGetMeasureUnitsQuery();
+    useEffect(() => {
+        if (isValidateStarted) {
+            setIsNameOfIngridienstValid(
+                ingredients.map((i) => i.title.length <= 50 && i.title.length !== 0),
+            );
+            setIsCountValid(
+                ingredients.map((i) => Number.isInteger(Number(i.count)) && Number(i.count) > 0),
+            );
 
+            setIsMeasureUnitsValid(ingredients.map((i) => i.measureUnit.length > 0));
+        }
+    }, [isValidateStarted, ingredients]);
+
+    if (
+        ingredients.every((i) => i.title.length && Number.isInteger(Number(i.count))) &&
+        isNameOfIngridienstValid.every((i) => i === true) &&
+        isCountValid.every((i) => Number.isInteger(Number(i))) &&
+        isMeasureUnitesValid.every((i) => i === true)
+    ) {
+        dispatch(setStep3(true));
+        dispatch(setIngridients(ingredients));
+    } else {
+        dispatch(setStep3(false));
+    }
+    if (isSaveDraftStarted) {
+        dispatch(setIngridients(ingredients));
+    }
     return (
         <>
             <HStack
@@ -156,13 +204,18 @@ export function AddIngridients() {
                             <InputGroup w={{ md: '241px', xl: '295px' }}>
                                 <Input
                                     mt={1}
+                                    border={
+                                        isNameOfIngridienstValid[index]
+                                            ? '1px solid rgba(0, 0, 0, 0.08)'
+                                            : '1px solid red'
+                                    }
                                     w='100%'
                                     h={10}
                                     pl={4}
                                     letterSpacing='0.5px'
-                                    value={ingredient.ingredient}
+                                    value={ingredient.title}
                                     onChange={(e) =>
-                                        handleIngredientChange(index, 'ingredient', e.target.value)
+                                        handleIngredientChange(index, 'title', e.target.value)
                                     }
                                     placeholder='Ингредиент'
                                     sx={{
@@ -185,6 +238,11 @@ export function AddIngridients() {
                                 value={ingredient.count}
                                 w='100%'
                                 placeholder='100'
+                                border={
+                                    isCountValid[index]
+                                        ? '1px solid rgba(0, 0, 0, 0.08)'
+                                        : '1px solid red'
+                                }
                                 onChange={(e) =>
                                     handleIngredientChange(index, 'count', e.target.value)
                                 }
@@ -207,7 +265,11 @@ export function AddIngridients() {
                             <MenuButton
                                 minW={{ base: '196px', md: '215px' }}
                                 h={10}
-                                border='1px solid rgba(0, 0, 0, 0.08)'
+                                border={
+                                    isMeasureUnitesValid[index]
+                                        ? '1px solid rgba(0, 0, 0, 0.08)'
+                                        : '1px solid red'
+                                }
                                 borderRadius='6px'
                             >
                                 <HStack position='relative'>
@@ -223,7 +285,7 @@ export function AddIngridients() {
                                         overflow='hidden'
                                         pl={4}
                                     >
-                                        {ingredient.measure || 'Единица измерения'}
+                                        {ingredient.measureUnit || 'Единица измерения'}
                                     </Text>
                                     <Image
                                         src='/src/components/shared/images/icons/arrowDown.png'
@@ -243,7 +305,7 @@ export function AddIngridients() {
                                 {measureUnits?.map((mu) => (
                                     <MenuItem
                                         onClick={() =>
-                                            handleIngredientChange(index, 'measure', mu.name)
+                                            handleIngredientChange(index, 'measureUnit', mu.name)
                                         }
                                     >
                                         {mu.name}

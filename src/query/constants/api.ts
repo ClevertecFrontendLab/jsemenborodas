@@ -12,4 +12,5 @@ export enum ApiEndpoints {
     REFRESHTOKEN = '/auth/refresh',
     CHECKTOKEN = '/auth/check-auth',
     MEASURE_UNITS = '/measure-units',
+    DRAFT = '/recipe/draft',
 }

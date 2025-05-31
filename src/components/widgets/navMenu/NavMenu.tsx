@@ -15,9 +15,15 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { useGetCategoriesQuery } from '~/query/services/categories';
 import { Category } from '~/query/types/types';
+import { useAppDispatch } from '~/store/hooks';
+import {
+    setIsCloseAndSaveTemplateData,
+    toggleIsCloseAndSaveTemplateOpen,
+} from '~/store/reducers/authModals';
 
 import exiticon from '../../../someimages//exitIcon.png';
 export function NavMenu() {
+    const dispatch = useAppDispatch();
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const navigate = useNavigate();
@@ -99,7 +105,12 @@ export function NavMenu() {
                                     pl='4px'
                                     onClick={() => {
                                         const path = `/${item.category}/${item.subCategories[0].category}`;
-                                        navigate(path);
+                                        if (pathSegments[0] === 'new-recipe') {
+                                            dispatch(setIsCloseAndSaveTemplateData(path));
+                                            dispatch(toggleIsCloseAndSaveTemplateOpen());
+                                        } else {
+                                            navigate(path);
+                                        }
                                     }}
                                 >
                                     <Box as='span' flex='1' textAlign='left'>

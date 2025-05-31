@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { scrollController } from '~/components/shared/utils/scrollController';
 import { CurrentRecipe } from '~/components/widgets/currentRecipe/currentRecipe';
 import { Slider } from '~/components/widgets/slider/Slider';
+import { Success } from '~/components/widgets/success/Success';
 import { useAppSelector } from '~/store/hooks';
 import { selectorIsBurgerOpen } from '~/store/reducers/open';
 
@@ -96,6 +97,7 @@ export function RecipePage() {
                         </Show>
                     </GridItem>
                 </Grid>
+                <Success />
             </Box>
         </>
     );

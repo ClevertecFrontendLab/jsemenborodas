@@ -17,7 +17,7 @@ interface CategoriesProps {
 type Step = {
     stepNumber: number;
     description: string;
-    image: string;
+    image?: string;
 };
 
 type ingridient = {
@@ -129,6 +129,17 @@ export const categoryApiSlice = apiSlice
                 }),
                 invalidatesTags: [Tags.RECIPES],
             }),
+            createRecipeDraft: builder.mutation<void, Recipe>({
+                query: (restoreRequest) => ({
+                    url: ApiEndpoints.DRAFT,
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+                    body: restoreRequest,
+                    apiGroupName: ApiGroupNames.RECIPES,
+                    name: EndpointNames.GET_RECIPES,
+                }),
+                invalidatesTags: [Tags.RECIPES],
+            }),
         }),
     });
 
@@ -137,4 +148,5 @@ export const {
     useGetRecipeByLikesQuery,
     useGetRecipeByCreateDateQuery,
     useCreateRecipeMutation,
+    useCreateRecipeDraftMutation,
 } = categoryApiSlice;

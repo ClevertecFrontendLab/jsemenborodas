@@ -8,4 +8,7 @@ export const AlertConst = {
     TRYTOFINDLATER: 'TryToFindLater',
     EMAILREGERROR: 'EmailRegistrationError',
     VERIFICATIONSUCCESS: 'VerificatioinGreat',
+    RECIPEEXIST: 'RecipeExist',
+    RECIPESERVERERROR: 'RecipeServerError',
+    DRAFTSERVERERROR: 'DraftServerError',
 };
